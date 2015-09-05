@@ -32,25 +32,47 @@ namespace ClassroomAdministration_WPF
         Person person;
         RentTable schedule;
         DateTime firstDate = RentTime.FirstDate;
+        TimeSpan day = new TimeSpan(1, 0, 0, 0);
         DateTime currDate = new DateTime(2015, 9, 14);
         int weeks = 1, weekDay = 0, currClass = 1;
 
-        List<TextBlock> RectangleRent = new List<TextBlock>();
+        List<TextBlock> TextBlockRents = new List<TextBlock>();
+
+        private void SetWeeks(int w)
+        {
+            if (w != weeks)
+            {
+                DateTime date = firstDate;
+                List<Rent> list;
+
+                date += new TimeSpan(7 * (w - 1), 0, 0, 0);
+
+                list = schedule.GetFromWeek(date);
+
+                foreach (TextBlock tb in TextBlockRents)
+                    if (list.Contains((Rent)tb.Tag)) tb.Visibility = Visibility.Visible;
+                    else tb.Visibility = Visibility.Collapsed;
+            }
+
+            weeks = w;
+        }
 
         private void SetDateClass(DateTime date, int cc)
         {
+            if (date < firstDate)
+            {
+                MessageBox.Show("您选择的日期不在本学期内。");
+                return;
+            }
+
             currDate = date;
             currClass = cc;
             TimeSpan ts = currDate - firstDate;
             int days = ts.Days;
 
-            weeks = days / 7 + 1;
+            SetWeeks(days / 7 + 1);
             weekDay = days % 7;
-            if (weekDay < 0)
-            {
-                weekDay += 7;
-                MessageBox.Show("您选择的日期不在本学期内。");
-            }
+            if (weekDay < 0) { weekDay += 7; }
             
             LabelWeek.Content = "第" + weeks + "周";
             DateChosen.SelectedDate = date;
@@ -76,7 +98,10 @@ namespace ClassroomAdministration_WPF
             foreach (Rent r in schedule.Rents)
             {
                 TextBlock rect = new TextBlock();
+                rect.Tag = r;
                 GridSchdeuleSmall.Children.Add(rect);
+                TextBlockRents.Add(rect);
+
                 rect.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
                 rect.Text = r.Info;
                 rect.FontSize = 30;
@@ -119,10 +144,10 @@ namespace ClassroomAdministration_WPF
                     if (currClass < cntRow) ++currClass;
                     break;
                 case Key.Left:
-                    if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0);
+                    if (currDate > firstDate) currDate -= day;
                     break;
                 case Key.Right:
-                    currDate += new TimeSpan(1, 0, 0, 0);
+                    currDate += day;
                     break;
             }
             SetDateClass(currDate, currClass);

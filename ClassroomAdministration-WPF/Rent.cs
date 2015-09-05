@@ -22,7 +22,7 @@ namespace ClassroomAdministration_WPF
         public int pId { get { return pid; } }// 教室申请人
         public string Info { get { return info; } }// 活动概述
 
-        public List<int> Students;
+   //     public List<int> Students;
 
         public Rent(int id, string info, int classroomId, int host ,bool approved, RentTime time)
         {

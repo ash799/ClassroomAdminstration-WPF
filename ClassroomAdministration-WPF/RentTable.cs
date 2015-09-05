@@ -25,7 +25,30 @@ namespace ClassroomAdministration_WPF
             }
             return list;
         }
-        
+        public List<Rent> GetFromDate(DateTime date)
+        {
+            List<Rent> list = new List<Rent>();
+            foreach (Rent r in Rents)
+            {
+                if (r.Time.Include(date)) list.Add(r);
+            }
+            return list;
+        }
+        public List<Rent> GetFromWeek(DateTime date)
+        {
+            List<Rent> list = new List<Rent>();
+            TimeSpan day = new TimeSpan(1, 0, 0, 0);
+
+            list.AddRange(GetFromDate(date));
+
+            for (int i = 0; i < 6; ++i)
+            {
+                date += day;
+                list.AddRange(GetFromDate(date));
+            }
+            return list;
+        }
+
         //public List<Rent> GetTableFromDate(DateTime date)
         //{
         //    List<Rent> table = new List<Rent>();
@@ -38,7 +61,7 @@ namespace ClassroomAdministration_WPF
         //        List<Rent> list = GetFromDateClass(date, i);
         //        if (list.Count == 0) continue;
         //        table[i] = list[0];
-                
+
         //        list.RemoveAt(0);
         //        unTable.AddRange(list);
         //    }
@@ -47,7 +70,7 @@ namespace ClassroomAdministration_WPF
 
         //    return table;
         //}
-        
+
         public void MoveRentToFirst(int rId)
         {
             Rent r = GetRent(rId);

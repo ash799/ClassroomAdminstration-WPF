@@ -29,10 +29,10 @@ namespace ClassroomAdministration_WPF
             
         }
 
-        public bool Include(DateTime date, int c)
+        public bool Include(DateTime date, int c = -1)
         {
             if (date < startDate || date > endDate) return false;
-            if (c < startClass || c > endClass) return false;
+            if (c != -1) if (c < startClass || c > endClass) return false;
 
             if (cycDays == 0) return true;
 
@@ -42,7 +42,7 @@ namespace ClassroomAdministration_WPF
             return true;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             string s = "";
             s += "\'" + startDate.ToString("yyyy-MM-dd") + "\', ";
