@@ -40,6 +40,17 @@ namespace ClassroomAdministration_WPF
             foreach (SysMsg m in list) Console.WriteLine(m.Info);
         }
 
+        private void Grid_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+            const int cntCol = 7, cntRow = 14;
+            Point pos = e.GetPosition(GridSchdeuleSmall);
+            double aCol = GridSchdeuleSmall.ActualWidth, aRow = GridSchdeuleSmall.ActualHeight;
+
+            int col = (int)(pos.X / aCol * cntCol), row = (int)(pos.Y / aRow * cntRow);
+            RectangleChosonClass.SetValue(Grid.ColumnProperty, col);
+            RectangleChosonClass.SetValue(Grid.RowProperty, row);
+        }
+
 
     }
 }

@@ -66,6 +66,8 @@ namespace ClassroomAdministration_WPF
 
             mConnect.Close();
 
+            if (!found) return null;
+
             if (password != tPassword) return null;
             if (pId == 0) return new Administrator(0, name);
             else return new User(pId, name, sex, department, GetPersonRentTable(pId));
@@ -81,7 +83,6 @@ namespace ClassroomAdministration_WPF
             bool approved = true;
             string info = "";
             RentTime rentTime;
-            bool found = false;
 
             try
             {
@@ -103,8 +104,6 @@ namespace ClassroomAdministration_WPF
 
             while (mReader.Read())
             {
-                found = true;
-
                 cId = int.Parse(mReader["cId"].ToString());
                 pId = int.Parse(mReader["pId"].ToString());
                 approved = "True" == mReader["approved"].ToString();
