@@ -37,7 +37,7 @@ namespace ClassroomAdministration_WPF
             if (null == p) MessageBox.Show("密码错误或未注册。");
             else if (p is Person)
             {
-                MessageBox.Show("Welcome, " + p.Name + "!");
+                //MessageBox.Show("Welcome, " + p.Name + "!");
                 new WindowIndex(p).Show();
                 this.Close();
             }
