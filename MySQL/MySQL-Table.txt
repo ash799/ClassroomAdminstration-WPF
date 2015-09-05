@@ -1,0 +1,46 @@
+load data local infile 'D:\\Programming\\C#\\ClassroomAdministration-WPF\\MySQL\\Person.txt' into table person lines terminated by '\r\n';
+load data local infile 'D:\\Programming\\C#\\ClassroomAdministration-WPF\\MySQL\\Rent.txt' into table rent lines terminated by '\r\n';
+load data local infile 'D:\\Programming\\C#\\ClassroomAdministration-WPF\\MySQL\\TakePartIn.txt' into table takepartin lines terminated by '\r\n';
+
+create table person
+(
+pId 			int not null primary key,
+name 			varchar(10) not null,
+password 		varchar(32),
+department		varchar(20),
+sex				char(1)
+);
+
+
+create table rent
+(
+rId				int(9) not null auto_increment primary key,
+cId				int(6) not null,
+approved		bool not null,
+pId				int,
+info			varchar(280),
+startDate		date,
+endDate			date,
+cycDays			int,
+startClass		int,
+endClass		int
+);
+
+
+create table takePartIn
+(
+pId				int,
+rId				int
+);
+
+
+create table SysMsg
+(
+sendId			int,
+recvId			int,
+time			date,
+info			varchar(280)
+);
+
+insert into sysmsg values(0,2014010205,'2015-09-05','Your application R4902145 has been approved.');
+insert into sysmsg values(0,0,'2015-09-03','Vacation from 2015-09-03 to 2015-09-05. ');

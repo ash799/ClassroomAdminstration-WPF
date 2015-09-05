@@ -18,15 +18,6 @@ namespace ClassroomAdministration_WPF
         public RentTable RentTable { get { return rentTable; } } //教室使用情况
         public Building Building { get { return building; } } //所在的教学楼
 
-        public bool AddRentTable()
-        {
-            return false;
-        }
-        public bool DeleteRentTable()
-        {
-            return false;
-        }
-
         public Classroom(int id, string name, Building building, RentTable rentTable = null)
         {
             this.cid = id;

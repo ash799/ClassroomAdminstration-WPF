@@ -70,7 +70,7 @@ namespace ClassroomAdministration_WPF
 
             if (password != tPassword) return null;
             if (pId == 0) return new Administrator(0, name);
-            else return new User(pId, name, sex, department, GetPersonRentTable(pId));
+            else return new User(pId, name, sex, department);
 
         }
 
@@ -388,7 +388,7 @@ namespace ClassroomAdministration_WPF
                 + " false , "
                 + r.pId + " , "
                 + "\"" + r.Info + "\" , "
-                + r.Time.Display()
+                + r.Time.ToString()
                 + ");";
 
             mCommand.Prepare();

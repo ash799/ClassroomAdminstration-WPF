@@ -10,30 +10,21 @@ namespace ClassroomAdministration_WPF
     {
 
         protected string department; // 专业
-        protected RentTable schedule;
+     //   protected RentTable schedule;
         protected char sex;
 
         public string Department { get { return department;  } }
-        public RentTable Schedule { get { return schedule; } }
+      //  public RentTable Schedule { get { return schedule; } }
         public bool IsMale { get { return sex != 'f'; } }
 
-        public bool AddRentTable()
-        {
-            return false;
-        }
-        public bool DeleteRentTable()
-        {
-            return false;
-        }
-
-        public User(int id, string nm, char sx = 'm', string dpt = "???", RentTable scd = null)
+        public User(int id, string nm, char sx = 'm', string dpt = "???")
         {
             this.pid = id;
             this.name = nm;
             this.sex = sx;
             this.department = dpt;
 
-            this.schedule = scd;
+         //   this.schedule = scd;
         }
 
     }

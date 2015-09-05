@@ -31,10 +31,7 @@ namespace ClassroomAdministration_WPF
             this.cid = classroomId;
             this.approved = approved;
             this.pid = host;
-
             this.time = time;
-
-            //this.Students = DatabaseLinker.GetPIdList(rid);
         }
 
         public string Display()
@@ -44,6 +41,8 @@ namespace ClassroomAdministration_WPF
 
             Classroom c = Building.GetClassroom(cid);
             if (c != null) s += " 教室:"+ c.Display();
+            s += Time.Display();
+            s += "\t" + info;
 
             //s += " :: ";
             //foreach (int id in Students)

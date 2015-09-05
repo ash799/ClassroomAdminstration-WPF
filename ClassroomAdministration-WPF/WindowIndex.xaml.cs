@@ -18,17 +18,7 @@ namespace ClassroomAdministration_WPF
     /// WindowIndex.xaml 的交互逻辑
     /// </summary>
     public partial class WindowIndex : Window
-    {
-        const int cntCol = 7, cntRow = 14;
-
-        Person person;
-        
-        DateTime firstDate = new DateTime(2015, 9, 14); //开学第一天
-        int weeks = 1, weekDay = 0, currClass = 1;
-        DateTime currDate = new DateTime(2015, 9, 14);
-
-        public int Weeks { get { return weeks; } }
-
+    {        
         public WindowIndex(Person p)
         {
             InitializeComponent();
@@ -36,38 +26,16 @@ namespace ClassroomAdministration_WPF
             person = p;
         }
 
-        private void Grid_Loaded_1(object sender, RoutedEventArgs e)
-        {
-            Building.Initialize();
+         //开学第一天
 
-            SetDateClass(currDate, currClass);
+        const int cntCol = 7, cntRow = 14;
+        Person person;
+        RentTable schedule;
+        DateTime firstDate = RentTime.FirstDate;
+        DateTime currDate = new DateTime(2015, 9, 14);
+        int weeks = 1, weekDay = 0, currClass = 1;
 
-            //DateTime d = new DateTime(2015, 10, 14);
-            //RentTable rt = DatabaseLinker.GetDateRentTable(d);
-            //Console.WriteLine(new RentTable(rt.GetTableFromDate(d)).Display());
-            //List<SysMsg> list = DatabaseLinker.GetPersonSysMsgList(person.pId);
-            //foreach (SysMsg m in list) Console.WriteLine(m.Info);
-        }
-
-        private void Grid_MouseDown_1(object sender, MouseButtonEventArgs e)
-        {
-            
-            Point pos = e.GetPosition(GridSchdeuleSmall);
-            double aCol = GridSchdeuleSmall.ActualWidth, aRow = GridSchdeuleSmall.ActualHeight;
-
-            int col = (int)(pos.X / aCol * cntCol), row = (int)(pos.Y / aRow * cntRow);
-
-            SetDateClass(col, row + 1);
-
-         //   RectangleChosonClass.SetValue(Grid.ColumnProperty, col);
-         //   RectangleChosonClass.SetValue(Grid.RowProperty, row);
-        }
-
-        private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
-        {
-            DateTime date = (DateTime)DateChosen.SelectedDate;
-            SetDateClass(date, currClass);
-        }
+        List<TextBlock> RectangleRent = new List<TextBlock>();
 
         private void SetDateClass(DateTime date, int cc)
         {
@@ -86,9 +54,11 @@ namespace ClassroomAdministration_WPF
             
             LabelWeek.Content = "第" + weeks + "周";
             DateChosen.SelectedDate = date;
+            TextBlockClassTime.Text = RentTime.ClassTime[currClass - 1];
 
             RectangleChosonClass.SetValue(Grid.ColumnProperty, weekDay);
-            RectangleChosonClass.SetValue(Grid.RowProperty, cc - 1);
+            RectangleChosonClass.SetValue(Grid.RowProperty, currClass - 1);
+
         }
         private void SetDateClass(int wkDay, int cc)
         {
@@ -96,6 +66,46 @@ namespace ClassroomAdministration_WPF
             currDate = firstDate + new TimeSpan(7 * (weeks - 1) + wkDay, 0, 0, 0);
 
             SetDateClass(currDate, cc);
+        }
+
+        private void Grid_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            Building.Initialize();
+            schedule = DatabaseLinker.GetPersonRentTable(person.pId);
+
+            foreach (Rent r in schedule.Rents)
+            {
+                TextBlock rect = new TextBlock();
+                GridSchdeuleSmall.Children.Add(rect);
+                rect.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
+                rect.Text = r.Info;
+                rect.FontSize = 30;
+                rect.FontWeight = FontWeights.Bold;
+                rect.Foreground = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
+                rect.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
+                rect.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
+                rect.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
+            }
+
+            Console.WriteLine(schedule.Display());
+
+            SetDateClass(currDate, currClass);
+        }        
+
+        private void GridSchedule_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+            
+            Point pos = e.GetPosition(GridSchdeuleSmall);
+            double aCol = GridSchdeuleSmall.ActualWidth, aRow = GridSchdeuleSmall.ActualHeight;
+
+            int col = (int)(pos.X / aCol * cntCol), row = (int)(pos.Y / aRow * cntRow);
+
+            SetDateClass(col, row + 1);
+        }
+        private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
+        {
+            DateTime date = (DateTime)DateChosen.SelectedDate;
+            SetDateClass(date, currClass);
         }
 
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)

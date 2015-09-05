@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="用户登录" Height="255.999" Width="370.858">
     <Grid>
-        <TextBox x:Name="TextBoxPId" HorizontalAlignment="Left" Height="28" Margin="115,48,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="175" FontSize="20"/>
-        <PasswordBox x:Name="TextBoxPassword" HorizontalAlignment="Left" Margin="115,92,0,0" VerticalAlignment="Top" Width="175" Height="28" FontSize="20" Password="Admin"/>
+        <TextBox x:Name="TextBoxPId" HorizontalAlignment="Left" Height="28" Margin="115,48,0,0" TextWrapping="Wrap" Text="2014010204" VerticalAlignment="Top" Width="175" FontSize="20"/>
+        <PasswordBox x:Name="TextBoxPassword" HorizontalAlignment="Left" Margin="115,92,0,0" VerticalAlignment="Top" Width="175" Height="28" FontSize="20"/>
         <TextBlock HorizontalAlignment="Left" Margin="51,51,0,0" TextWrapping="Wrap" Text="学号" VerticalAlignment="Top" FontSize="20"/>
         <TextBlock HorizontalAlignment="Left" Margin="51,93,0,0" TextWrapping="Wrap" Text="密码" VerticalAlignment="Top" FontSize="20"/>
         <Button Content="登录" HorizontalAlignment="Left" Margin="178,147,0,0" VerticalAlignment="Top" Width="130" FontSize="20" Height="38" Click="Button_Click_1" TabIndex="0"/>
