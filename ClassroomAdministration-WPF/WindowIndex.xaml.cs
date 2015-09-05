@@ -59,8 +59,8 @@ namespace ClassroomAdministration_WPF
 
             SetDateClass(col, row + 1);
 
-            RectangleChosonClass.SetValue(Grid.ColumnProperty, col);
-            RectangleChosonClass.SetValue(Grid.RowProperty, row);
+         //   RectangleChosonClass.SetValue(Grid.ColumnProperty, col);
+         //   RectangleChosonClass.SetValue(Grid.RowProperty, row);
         }
 
         private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
@@ -72,6 +72,7 @@ namespace ClassroomAdministration_WPF
         private void SetDateClass(DateTime date, int cc)
         {
             currDate = date;
+            currClass = cc;
             TimeSpan ts = currDate - firstDate;
             int days = ts.Days;
 
