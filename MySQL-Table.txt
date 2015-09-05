@@ -1,0 +1,55 @@
+create table person
+(
+pId 			int not null primary key,
+name 			varchar(10) not null,
+password 		varchar(32),
+department		varchar(20),
+sex				char(1)
+);
+
+insert into person values(0,'Admin','Admin','',' ');
+insert into person values(2014010204,'Peter','','DA','m');
+insert into person values(2014010205,'Susan','','DA','f');
+
+create table rent
+(
+rId				int(9) not null auto_increment primary key,
+cId				int(6) not null,
+approved		bool not null,
+pId				int,
+info			varchar(280),
+startDate		date,
+endDate			date,
+cycDays			int,
+startClass		int,
+endClass		int
+);
+
+insert into rent values(1302130,61203,true,2014010204,'dada','2015-09-02','2015-12-31',7,3,4);
+insert into rent values(1302134,61205,true,0,'admin','2015-09-02','2015-12-31',7,1,2);
+insert into rent values(1302139,61205,true,0,'admin2','2015-09-02','2015-12-31',7,3,4);
+insert into rent values(4902145,61203,false,2014010205,'applying','2015-09-02','2015-12-31',7,7,8);
+insert into rent values(9900000,0,false,0,'MAX for apply','2015-09-02','2015-12-31',0,0,0);
+
+(tClass >= startClass) and (tClass <= endClass) and (tDate >= startDate) and (tDate <= endDate) and (timestampdiff(day,startDate, tDate) % cycDays = 0)
+
+create table takePartIn
+(
+pId				int,
+rId				int
+);
+
+insert into takePartIn values(2014010204,1302130);
+insert into takePartIn values(2014010204,1302134);
+insert into takePartIn values(2014010205,1302134);
+
+create table SysMsg
+(
+sendId			int,
+recvId			int,
+time			date,
+info			varchar(280)
+);
+
+insert into sysmsg values(0,2014010205,'2015-09-05','Your application R4902145 has been approved.');
+insert into sysmsg values(0,0,'2015-09-03','Vacation from 2015-09-03 to 2015-09-05. ');

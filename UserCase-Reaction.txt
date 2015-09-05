@@ -1,0 +1,47 @@
+UI & User Case
+
+# 任何人
+[选择日期和课号]
+	默认数值是正在上的课
+	显示一个日历,一个小课程表
+	小课程表是[我的课程表]的缩略版,用于选取精确时间
+	currDateRentTable=DatabaseLinker.GetDateRentTable(DateTime currDate);
+	currDateClassRentTable=currDateRentTable.GetFromDateClass(currDate,currClass);
+[我的课程表(大表)] grid
+	与已选时间相符的课应该高亮显示
+	点击有课程的地方,进入[课程详情]
+	myRentTable=DatabaseLinker.GetPersonRentTable(int pId);
+	Row[i]=myRentTable.GetTableFromDate(DateTime date);
+[教学楼列表] image
+	放梦幻的大图即可,从一教到六教C区
+	可以考虑显示在选定时间时教学楼里粗略的上课情况
+	点击教学楼,进入[教室列表]
+	//static绑定bId
+	double usagePercentage = currDateClassRentTable.CntRentsInBuilding(bId) / bId.CntClassrooms;
+[教室列表] scrollview{flowlayout}
+	分楼层显示
+	每一间教室显示指定时间正在上的课程
+	点击教室进入[教室课程表]
+	//static绑定cId
+	myClassRent=currDateClassRentTable.GetClassroom(cId)[0];	
+[教室课程表] grid
+	与已选时间相符的课应该高亮显示
+	点击有课程的地方,进入[课程详情]
+	点击无课程的地方,进入[申请活动]
+	myRentTable=DatabaseLinker.GetClassroomRentTable(int cId);
+	Row[i]=myRentTable.GetTableFromDate(DateTime date);
+[课程详情]
+	显示课程的详情.
+	可以点击添加到我的课程
+	GetRent(int rId);
+	DatabaseLinker.GetPIdList(int rId);
+[申请活动]
+	一个人只能同时申请一个活动
+	SetRent();
+[我收到的信息]
+	我收到的系统信息(主要是针对审核情况的)
+
+# 管理员
+[查看所有审核中活动]
+	审核通过/不通过
+	向用户发送审核消息
