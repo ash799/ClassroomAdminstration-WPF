@@ -7,8 +7,8 @@
         >
     <Grid Loaded="Grid_Loaded_1" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
         <DatePicker x:Name="DateChosen" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" Width="118" HorizontalAlignment="Left" CalendarClosed="DateChosen_CalendarClosed" SelectedDateFormat="Short" FontSize="14" Focusable="False"/>
         <Grid x:Name="GridScheduleSmall" Margin="10,95,10,10"
@@ -123,6 +123,7 @@
         <TextBox x:Name="TextBoxCId" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="18" TextChanged="TextBoxCId_TextChanged"/>
         <Label Content="当前教室编号：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14"/>
         <Label x:Name="LabelClassroom" Content="未知的教室" Height="53" Margin="135,10,8,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1"/>
-        
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Margin="-2,0,0,0" Width="4" Focusable="False"/>
+
     </Grid>
 </Window>
