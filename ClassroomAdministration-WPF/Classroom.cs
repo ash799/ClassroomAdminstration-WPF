@@ -39,5 +39,10 @@ namespace ClassroomAdministration_WPF
         {
             return (cId / 100) % 10;
         }
+
+        public const int MaxCId = 63300;
+        public const int MinCId = 10101;
+
+
     }
 }

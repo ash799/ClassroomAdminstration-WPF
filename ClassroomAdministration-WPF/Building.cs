@@ -82,6 +82,8 @@ namespace ClassroomAdministration_WPF
                 if (c.cId == id) return c;
             return null;
         }
-        
+
+        public const int MinBId = 10;
+        public const int MaxBId = 63;
     }
 }

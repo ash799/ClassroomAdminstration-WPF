@@ -81,8 +81,8 @@ namespace ClassroomAdministration_WPF
             SetWeeks(days / 7 + 1);
             weekDay = days % 7;
             if (weekDay < 0) { weekDay += 7; }
-            
-            LabelWeek.Content = person.Name+" 第" + weeks + "周";
+
+            LabelWeek.Content = " 第" + weeks + "周@" + person.Name;
             DateChosen.SelectedDate = date;
             TextBlockClassTime.Text = RentTime.StringClassTime[currClass - 1];
 
@@ -141,35 +141,94 @@ namespace ClassroomAdministration_WPF
         }
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
-            if (TextBoxCId.IsKeyboardFocused) return;
-            switch (e.Key)
+            if (!TextBoxCId.IsKeyboardFocused)
             {
-                case Key.Up:
-                    if (currClass > 1) --currClass;
-                    break;
-                case Key.Down:
-                    if (currClass < cntRow) ++currClass;
-                    break;
-                case Key.Left:
-                    if (currDate > firstDate) currDate -= day;
-                    break;
-                case Key.Right:
-                    currDate += day;
-                    break;
-                case Key.Home:
-                    currClass = 1;
-                    break;
-                case Key.End:
-                    currClass = cntRow;
-                    break;
-                case Key.PageUp:
-                    if (weeks > 1) currDate -= new TimeSpan(7, 0, 0, 0);
-                    break;
-                case Key.PageDown:
-                    currDate += new TimeSpan(7, 0, 0, 0);
-                    break;
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        if (currClass > 1) --currClass;
+                        break;
+                    case Key.Down:
+                        if (currClass < cntRow) ++currClass;
+                        break;
+                    case Key.Left:
+                        if (currDate > firstDate) currDate -= day;
+                        break;
+                    case Key.Right:
+                        currDate += day;
+                        break;
+                    case Key.Home:
+                        currClass = 1;
+                        break;
+                    case Key.End:
+                        currClass = cntRow;
+                        break;
+                    case Key.PageUp:
+                        if (weeks > 1) currDate -= new TimeSpan(7, 0, 0, 0);
+                        break;
+                    case Key.PageDown:
+                        currDate += new TimeSpan(7, 0, 0, 0);
+                        break;
+                }
+                SetDateClass(currDate, currClass);
             }
-            SetDateClass(currDate, currClass);
+            else
+            {
+                int b, c;
+                if (classroom == null)
+                {
+                    b = 0;
+                    c = 0;
+                }
+                else
+                {
+                    b = classroom.Building.bId;
+                    c = classroom.cId;
+                }
+               
+
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        while (c < Classroom.MaxCId)
+                        {
+                            ++c;
+                            if (Building.GetClassroom(c) != null) break;
+                        }
+                        break;
+                    case Key.Down:
+                        while (c > Classroom.MinCId)
+                        {
+                            --c;
+                            if (Building.GetClassroom(c) != null) break;
+                        }
+                        break;
+                    case Key.PageUp:
+                        while (b < Building.MaxBId)
+                        {
+                            ++b;
+                            if (Building.GetBuilding(b) != null)
+                            {
+                                c = Building.GetBuilding(b).Classrooms[0].cId;
+                                break;
+                            }
+                        }
+                        break;
+                    case Key.PageDown:
+                        while (b > Building.MinBId)
+                        {
+                            --b;
+                            if (Building.GetBuilding(b) != null)
+                            {
+                                c = Building.GetBuilding(b).Classrooms[0].cId;
+                                break;
+                            }
+                        }
+                        break;
+
+                }
+                SetCId(c);
+            }
         }
 
         Classroom classroom = null;
@@ -186,6 +245,8 @@ namespace ClassroomAdministration_WPF
         }
         private void SetCId(int cId)
         {
+            TextBoxCId.Text = cId.ToString();
+
             Classroom C = Building.GetClassroom(cId);
             if (null == C) return;
             if (classroom != null && classroom.cId == C.cId) return;
@@ -206,21 +267,23 @@ namespace ClassroomAdministration_WPF
         {
             foreach (Rent r in rentTable.Rents)
             {
-                TextBlock rect = new TextBlock();
-                rect.Tag = r;
-                grid.Children.Add(rect);
-                textBlockList.Add(rect);
+                TextBlock tb = new TextBlock();
+                tb.Tag = r;
+                grid.Children.Add(tb);
+                textBlockList.Add(tb);
 
-                rect.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
-                rect.Text = r.Info;
-                rect.FontSize = 30;
-                rect.FontWeight = FontWeights.Bold;
-                rect.Foreground = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
-                rect.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
-                rect.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
-                rect.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
+                tb.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
+                tb.Text = r.Info;
+                tb.FontSize = 18;
+                tb.FontWeight = FontWeights.Bold;
+                tb.Foreground = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0));
+                tb.TextWrapping = TextWrapping.Wrap;
+                tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
+                tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
+                tb.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
             }
 
         }
+
     }
 }

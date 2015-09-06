@@ -25,11 +25,6 @@ namespace ClassroomAdministration_WPF
             InitializeComponent();
         }
 
-        private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
         private void Border_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
