@@ -56,6 +56,8 @@ namespace ClassroomAdministration_WPF
 
         private void CheckoutWeek(RentTable rentTable, DateTime date, List<TextBlock> TBList)
         {
+            if (rentTable == null) return;
+
             List<Rent> list = rentTable.GetFromWeek(date);
 
             foreach (TextBlock tb in TBList)
@@ -112,7 +114,8 @@ namespace ClassroomAdministration_WPF
 
         private void GridSchedule_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            
+            TextBoxCId_Copy.Focus();
+
             Point pos = e.GetPosition(GridScheduleSmall);
             double aCol = GridScheduleSmall.ActualWidth, aRow = GridScheduleSmall.ActualHeight;
 
@@ -122,6 +125,8 @@ namespace ClassroomAdministration_WPF
         }
         private void GridScheduleClass_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
+            TextBoxCId_Copy.Focus();
+
             Point pos = e.GetPosition(GridScheduleClass);
             double aCol = GridScheduleClass.ActualWidth, aRow = GridScheduleClass.ActualHeight;
 
@@ -136,6 +141,7 @@ namespace ClassroomAdministration_WPF
         }
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
+            if (TextBoxCId.IsKeyboardFocused) return;
             switch (e.Key)
             {
                 case Key.Up:
@@ -165,7 +171,6 @@ namespace ClassroomAdministration_WPF
             }
             SetDateClass(currDate, currClass);
         }
-
 
         Classroom classroom = null;
         RentTable scheduleClassroom;
