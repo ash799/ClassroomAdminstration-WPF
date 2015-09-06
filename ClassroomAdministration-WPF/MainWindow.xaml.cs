@@ -53,9 +53,6 @@ namespace ClassroomAdministration_WPF
             CloseLabel.Margin = new Thickness(6, 0, 0.333, 0);
         }
 
-
-        private void CloseLabel_MouseDown(object sender, MouseButtonEventArgs e) { }
-
         private void CloseBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
             this.Close();
@@ -93,11 +90,6 @@ namespace ClassroomAdministration_WPF
             LoginBorder.Background = new SolidColorBrush(Color.FromArgb(153, 0, 0, 255));
             lockImage.Margin = new Thickness(42, 5, 0, 5);
         }
-
-
-        private void Stackpanel_MouseDown(object sender, MouseButtonEventArgs e) { }
-        private void Loginlabel_MouseDown(object sender, MouseButtonEventArgs e) { }
-        private void lockImage_MouseDown(object sender, MouseButtonEventArgs e) { }
 
         private void LoginBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
