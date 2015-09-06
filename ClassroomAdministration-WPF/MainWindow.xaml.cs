@@ -39,84 +39,74 @@ namespace ClassroomAdministration_WPF
 
         private void CloseBorder_MouseEnter_1(object sender, MouseEventArgs e)
         {
-            CloseBorder.Background = new SolidColorBrush(Color.FromArgb(20,255,255,255));
+            CloseBorder.Background = new SolidColorBrush(Color.FromArgb(100,255,255,255));
         }
 
         private void CloseBorder_MouseLeave(object sender, MouseEventArgs e)
         {
+            CloseLabel.Margin = new Thickness(4, 0, 0.333, 0);
             CloseBorder.Background = null;
         }
 
         private void CloseBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            CloseLabel.Margin = new Thickness(5, 0, 0.333, 0);
+            CloseLabel.Margin = new Thickness(6, 0, 0.333, 0);
         }
-        private void CloseLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            CloseLabel.Margin = new Thickness(5, 0, 0.333, 0);
-        }
+
+
+        private void CloseLabel_MouseDown(object sender, MouseButtonEventArgs e) { }
 
         private void CloseBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            CloseLabel.Margin = new Thickness(4, 0, 0.333, 0);
             this.Close();
         }
 
         private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
         {
-            MinBorder.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
+            MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
         }
 
         private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MinLabel.Margin = new Thickness(5, 0, 0.333, 0);
+            MinLabel.Margin = new Thickness(0, 0, 1, 0);
         }
-
         private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
         {
+            MinLabel.Margin = new Thickness(0, 0, 3, 0);
             MinBorder.Background = null;
         }
 
         private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            MinLabel.Margin = new Thickness(4, 0, 0.333, 0);
+            MinLabel.Margin = new Thickness(0, 0, 3, 0);
             this.WindowState = WindowState.Minimized;
         }
 
+
         private void LoginBorder_MouseEnter(object sender, MouseEventArgs e)
         {
-            LoginBorder.Background = new SolidColorBrush(Color.FromArgb(240, 30, 30, 255));
+            LoginBorder.Background = new SolidColorBrush(Color.FromArgb(100, 0, 0, 255));
         }
 
         private void LoginBorder_MouseLeave(object sender, MouseEventArgs e)
         {
-            LoginBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
+            LoginBorder.Background = new SolidColorBrush(Color.FromArgb(153, 0, 0, 255));
+            lockImage.Margin = new Thickness(42, 5, 0, 5);
         }
 
-        private void LoginBorder_MouseDown_1(object sender, MouseButtonEventArgs e)
+
+        private void Stackpanel_MouseDown(object sender, MouseButtonEventArgs e) { }
+        private void Loginlabel_MouseDown(object sender, MouseButtonEventArgs e) { }
+        private void lockImage_MouseDown(object sender, MouseButtonEventArgs e) { }
+
+        private void LoginBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            lockImage.Margin = new Thickness(34, 5, 0, 5);
+            lockImage.Margin = new Thickness(44, 5, 0, 5);
         }
-        private void Stackpanel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            lockImage.Margin = new Thickness(34, 5, 0, 5);
-        }
-
-        private void Loginlabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            lockImage.Margin = new Thickness(34, 5, 0, 5);
-        }
-
-        private void lockImage_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            lockImage.Margin = new Thickness(34, 5, 0, 5);
-        }
-
-
 
         private void Border_MouseUp_1(object sender, MouseButtonEventArgs e)
         {
-            lockImage.Margin = new Thickness(30, 5, 0, 5);
+            lockImage.Margin = new Thickness(42, 5, 0, 5);
 
             //LoginBorder.Visibility = Visibility.Hidden;
             //TextBoxPId.Visibility = Visibility.Hidden;
@@ -179,6 +169,7 @@ namespace ClassroomAdministration_WPF
                 else MessageBox.Show("密码错误或未注册。");    
             }
         }
+
 
 
 
