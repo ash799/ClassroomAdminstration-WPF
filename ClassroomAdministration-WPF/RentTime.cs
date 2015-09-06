@@ -58,7 +58,7 @@ namespace ClassroomAdministration_WPF
         }
 
         static public DateTime FirstDate = new DateTime(2015, 9, 14);
-        static public string[] ClassTime =
+        static public string[] StringClassTime =
         {
             "08:00~08:45",
             "08:50~09:35",
@@ -75,6 +75,8 @@ namespace ClassroomAdministration_WPF
             "20:10~20:55",
             "21:00~21:45"
         };
+
+        
 
     }
 }

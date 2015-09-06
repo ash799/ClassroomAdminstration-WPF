@@ -28,7 +28,7 @@ namespace ClassroomAdministration_WPF
 
         public string Display()
         {
-            return Building.Name + Name;
+            return Name + "@" + Building.Name;
         }
 
         static public int CId2BId(int cId)
