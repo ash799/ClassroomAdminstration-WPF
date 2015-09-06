@@ -46,15 +46,23 @@ namespace ClassroomAdministration_WPF
 
                 date += new TimeSpan(7 * (w - 1), 0, 0, 0);
 
-                list = schedule.GetFromWeek(date);
+                CheckoutWeek(schedule, date, TextBlockRents);
+                CheckoutWeek(scheduleClassroom, date, TextBlockRentsClassroom);
 
-                foreach (TextBlock tb in TextBlockRents)
-                    if (list.Contains((Rent)tb.Tag)) tb.Visibility = Visibility.Visible;
-                    else tb.Visibility = Visibility.Collapsed;
             }
 
             weeks = w;
         }
+
+        private void CheckoutWeek(RentTable rentTable, DateTime date, List<TextBlock> TBList)
+        {
+            List<Rent> list = rentTable.GetFromWeek(date);
+
+            foreach (TextBlock tb in TBList)
+                if (list.Contains((Rent)tb.Tag)) tb.Visibility = Visibility.Visible;
+                else tb.Visibility = Visibility.Collapsed;
+        }
+
         private void SetDateClass(DateTime date, int cc)
         {
             if (date < firstDate)
@@ -96,23 +104,6 @@ namespace ClassroomAdministration_WPF
             schedule = DatabaseLinker.GetPersonRentTable(person.pId);
 
             ScheduleInitialize(GridScheduleSmall, schedule, TextBlockRents);
-
-            //foreach (Rent r in schedule.Rents)
-            //{
-            //    TextBlock rect = new TextBlock();
-            //    rect.Tag = r;
-            //    GridSchdeuleSmall.Children.Add(rect);
-            //    TextBlockRents.Add(rect);
-
-            //    rect.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
-            //    rect.Text = r.Info;
-            //    rect.FontSize = 30;
-            //    rect.FontWeight = FontWeights.Bold;
-            //    rect.Foreground = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
-            //    rect.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
-            //    rect.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
-            //    rect.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
-            //}
 
             Console.WriteLine(schedule.Display());
 
