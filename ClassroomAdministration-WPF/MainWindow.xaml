@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         Title="MainWindow" Height="325" Width="425" 
         AllowsTransparency="True" WindowStyle="None" 
-        Icon="Resources/logo.ico" 
+        Icon="Resources/logo-light.ico" 
         PreviewKeyDown="Window_PreviewKeyDown_1"
         Background="Transparent"
         >

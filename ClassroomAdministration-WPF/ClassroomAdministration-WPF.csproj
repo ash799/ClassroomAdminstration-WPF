@@ -127,7 +127,7 @@
     <Resource Include="Resources\lock.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\logo.ico" />
+    <Resource Include="Resources\logo-light.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
