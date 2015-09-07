@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class RentTime
+    public class RentTime
     {
         private DateTime startDate, endDate;
         private int cycDays, startClass, endClass, weekDay;

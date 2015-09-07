@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class RentTable
+    public class RentTable
     {
         public const int maxClass = 15;
         public  List<Rent> Rents;
@@ -100,6 +100,21 @@ namespace ClassroomAdministration_WPF
                 if (bId == Classroom.CId2BId(r.cId)) ++cnt;
             return cnt;
 
+        }
+
+        public bool Contains(int rId)
+        {
+            foreach (Rent r in Rents)
+                if (r.rId == rId) return true;
+            return false;
+        }
+        public bool Add(Rent r)
+        {
+            if (!Rents.Contains(r)) Rents.Add(r);  return true;
+        }
+        public void Remove(Rent r)
+        {
+            if (Rents.Contains(r)) Rents.Remove(r);
         }
 
         public string Display()

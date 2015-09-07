@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class Rent
+    public class Rent
     {
         protected int rid;
         protected int cid;// 所在的教室

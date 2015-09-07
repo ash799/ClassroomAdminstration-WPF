@@ -128,7 +128,7 @@
         <TextBox x:Name="TextBoxCId_Copy" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="14" />
         <TextBox x:Name="TextBoxCId" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="18" TextChanged="TextBoxCId_TextChanged"/>
         <Label Content="当前教室编号：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14"/>
-        <Label x:Name="LabelClassroom" Content="请选择一间教室" Height="53" Margin="135,10,8,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1"/>
+        <Label x:Name="LabelClassroom" Content="选择一间教室" Height="53" Margin="135,10,8,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1"/>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Margin="-2,0,0,0" Width="4" Focusable="False"/>
 
     </Grid>

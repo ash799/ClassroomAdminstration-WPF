@@ -43,6 +43,7 @@ namespace ClassroomAdministration_WPF
         RentTable schedule;
         List<TextBlock> TextBlockRents = new List<TextBlock>();
 
+
         //设置周数。在周数发生变化的时刻改变UI
         private void SetWeeks(int w)
         {
@@ -350,9 +351,9 @@ namespace ClassroomAdministration_WPF
             if (null == C) return;
             if (classroom != null && classroom.cId == C.cId) return;
 
-            foreach (TextBlock tb in TextBlockRentsClassroom)
-                if (GridScheduleClass.Children.Contains(tb)) GridScheduleClass.Children.Remove(tb);
-            TextBlockRentsClassroom.Clear();
+            //foreach (TextBlock tb in TextBlockRentsClassroom)
+            //    if (GridScheduleClass.Children.Contains(tb)) GridScheduleClass.Children.Remove(tb);
+            //TextBlockRentsClassroom.Clear();
 
             classroom = C;
             scheduleClassroom = DatabaseLinker.GetClassroomRentTable(cId);
@@ -366,6 +367,10 @@ namespace ClassroomAdministration_WPF
         //左右课程表的初始化设置
         private void ScheduleInitialize(Grid grid, RentTable rentTable, List<TextBlock> textBlockList, Label chosen)
         {
+            foreach (TextBlock tb in textBlockList)
+                if (grid.Children.Contains(tb)) grid.Children.Remove(tb);
+            textBlockList.Clear();
+
             foreach (Rent r in rentTable.Rents)
             {
                 TextBlock tb = new TextBlock();
@@ -396,7 +401,8 @@ namespace ClassroomAdministration_WPF
             if (chosenRent == null && chosenClassroomRent == null && scheduleClassroom != null)
                 MessageBox.Show("新建活动");
             else
-                if (chosenRent != null) MessageBox.Show(chosenRent.Display());
+                if (chosenRent != null) // MessageBox.Show(chosenRent.Display());
+                    new WindowRent(chosenRent, this).ShowDialog();
             e.Handled = true;
         }
 
@@ -405,9 +411,23 @@ namespace ClassroomAdministration_WPF
             if (chosenRent == null && chosenClassroomRent == null && scheduleClassroom != null)
                 MessageBox.Show("新建活动");
             else
-                if (chosenClassroomRent != null) MessageBox.Show(chosenClassroomRent.Display());
+                if (chosenClassroomRent != null) //MessageBox.Show(chosenClassroomRent.Display());
+                    new WindowRent(chosenClassroomRent, this).ShowDialog();
             e.Handled = true;
         }
 
+        public void SetClassroom(int cId)
+        {
+            TextBoxCId.Text = cId.ToString();
+            SetCId(cId);
+        }
+        public void RefreshSchedule()
+        {
+            schedule = DatabaseLinker.GetPersonRentTable(person.pId);
+            ScheduleInitialize(GridScheduleSmall, schedule, TextBlockRents, RectangleChosonClass);
+        }
+
+        public Person Peron { get { return person; } }
+        public RentTable Schedule { get { return schedule; } }
     }
 }

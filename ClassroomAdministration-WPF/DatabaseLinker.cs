@@ -36,12 +36,12 @@ namespace ClassroomAdministration_WPF
             char sex = ' ';
             bool found = false;
 
-            try 
+            try
             {
                 mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
                 mCommand = new MySqlCommand();
                 mCommand.Connection = mConnect;
-                mConnect.Open();     
+                mConnect.Open();
             }
             catch
             {
@@ -71,7 +71,6 @@ namespace ClassroomAdministration_WPF
             if (password != tPassword) return null;
             if (pId == 0) return new Administrator(0, name);
             else return new User(pId, name, sex, department);
-
         }
 
         public static Rent GetRent(int rId)
@@ -364,7 +363,7 @@ namespace ClassroomAdministration_WPF
             mConnect.Close();
             return new RentTable(list);
         }
-        
+
         public static bool SetRent(Rent r)
         {
             MySqlConnection mConnect = null;
@@ -428,6 +427,67 @@ namespace ClassroomAdministration_WPF
 
             return i > 0;
         }
-    
+
+        public static bool AddTakepartin(int pId, int rId)
+        {
+            if (GetPIdList(rId).Contains(pId)) return true;
+
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<int> list = new List<int>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in AddTakepartin(" + pId + "," + rId + ")");
+                return false;
+            }
+
+            mCommand.CommandText = "INSERT INTO takepartin VALUES(" + pId + "," + rId + ");";
+
+            mCommand.Prepare();
+            int i = mCommand.ExecuteNonQuery();
+
+            mConnect.Close();
+
+            return i > 0;
+        }
+        public static bool DeleteTakepartin(int pId, int rId)
+        {
+
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<int> list = new List<int>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in DeleteTakepartin(" + pId + "," + rId + ")");
+                return false;
+            }
+
+            mCommand.CommandText = "DELETE FROM takepartin WHERE pId=" + pId + " and rId=" + rId + ";";
+
+            mCommand.Prepare();
+            int i = mCommand.ExecuteNonQuery();
+
+            mConnect.Close();
+
+            return i > 0;
+        }
     }
 }
