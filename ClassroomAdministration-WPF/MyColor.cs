@@ -10,10 +10,10 @@ namespace ClassroomAdministration_WPF
     class MyColor
     {
         //从色环上提取一个颜色：0红~120绿~240蓝
-        static public Color HSI(double H, double alpha = 0.3)
+        static public Color HSI(double H, double alpha = 0.3, double i = 150)
         {
             double R = 0, G = 0, B = 0;
-            double I = 150, S = 1, r60 = Math.PI / 3;
+            double I = i, S = 1, r60 = Math.PI / 3;
 
             while (H < 0) H += 360;
             while (H > 360) H -= 360;
@@ -53,9 +53,9 @@ namespace ClassroomAdministration_WPF
             for (int i = 0; i < s.Length; ++i) h += s[i];
             return h % 360;
         }
-        static public Color NameColor(string s, double alpha = 0.3)
+        static public Color NameColor(string s, double alpha = 0.3, double i=150)
         {
-            return HSI(NameColorId(s), alpha);
+            return HSI(NameColorId(s), alpha, i);
         }
         
         

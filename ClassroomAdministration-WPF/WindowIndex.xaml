@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ClassroomAdministration_WPF.WindowIndex"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="WindowIndex" Height="468" Width="816.05"
+        Title="课程表" Height="468" Width="816.05"
         Icon="Resources/logo-light.ico" 
         xmlns:ext="clr-namespace:SilverlightApplicationGridBorderSample" PreviewKeyDown="Window_PreviewKeyDown_1" MinWidth="700" MinHeight="400"
         >
