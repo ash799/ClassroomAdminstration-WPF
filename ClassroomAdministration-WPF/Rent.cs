@@ -33,6 +33,7 @@ namespace ClassroomAdministration_WPF
             this.pid = host;
             this.time = time;
         }
+        public Rent() { }
 
         public string Display()
         {

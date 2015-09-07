@@ -70,6 +70,23 @@ namespace ClassroomAdministration_WPF
 
         //    return table;
         //}
+        public Rent CheckMe()
+        {
+            DateTime date = RentTime.FirstDate;
+            TimeSpan days = new TimeSpan(8, 0, 0, 0);
+
+            for (int ii = 0; ii < 14; ++ii)
+            {
+                for (int i = 1; i < maxClass; ++i)
+                {
+                    List<Rent> list = GetFromDateClass(date, i);
+                    if (list.Count > 1) return list[0];
+                }
+                date += days;
+            }
+
+            return null;
+        }
 
         public void MoveRentToFirst(int rId)
         {
@@ -108,9 +125,18 @@ namespace ClassroomAdministration_WPF
                 if (r.rId == rId) return true;
             return false;
         }
-        public bool Add(Rent r)
+        public Rent Add(int rId)
         {
-            if (!Rents.Contains(r)) Rents.Add(r);  return true;
+            Rent r = DatabaseLinker.GetRent(rId); if (r == null) return new Rent();
+            if (Contains(rId)) return null;
+
+            Rents.Add(r);
+
+            Rent rr = CheckMe();
+            if (rr == null) return null;
+            
+            Rents.Remove(r);
+            return rr;
         }
         public void Remove(Rent r)
         {
