@@ -55,6 +55,7 @@ namespace ClassroomAdministration_WPF
             return true;
         }
 
+        //ToString in DatabaseLinker
         public override string ToString()
         {
             string s = "";
@@ -65,11 +66,13 @@ namespace ClassroomAdministration_WPF
             return s;
         }
 
+        //Display 
         public string Display()
         {
             return "周" + weekDayName[weekDay] + ", 第" + startClass + "节至第" + endClass + "节";
         }
 
+        //static items of time
         static public DateTime FirstDate = new DateTime(2015, 9, 14);
         static public int[,] typicalClassRent =
         {

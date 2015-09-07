@@ -95,11 +95,6 @@ namespace ClassroomAdministration_WPF
             }
             else
                 MessageBox.Show("活动申请发送失败。");
-            
         }
-
-
-
-
     }
 }

@@ -9,25 +9,7 @@ namespace ClassroomAdministration_WPF
 {
     class DatabaseLinker
     {
-        public static int Initialize()
-        {
-            MySqlConnection mConnect = null;
-            MySqlCommand mCommand = null;
-
-            try
-            {
-                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
-                mCommand = new MySqlCommand();
-                mCommand.Connection = mConnect;
-            }
-            catch
-            {
-                Console.WriteLine("FAILED to link MySQL.");
-                return 1;
-            }
-            return 0;
-        }
-
+        //Get person Info
         public static Person Login(int pId, string tPassword)
         {
             MySqlConnection mConnect = null;
@@ -72,7 +54,40 @@ namespace ClassroomAdministration_WPF
             if (pId == 0) return new Administrator(0, name);
             else return new User(pId, name, sex, department);
         }
+        public static string GetName(int pId)
+        {
+            string s = "";
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
 
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in GetName(" + pId + ")");
+                return null;
+            }
+
+            mCommand.CommandText = "SELECT name FROM person WHERE ";
+            mCommand.CommandText += "pId=" + pId + ";";
+
+            MySqlDataReader mReader = mCommand.ExecuteReader();
+
+            while (mReader.Read())
+            {
+                s = mReader["name"].ToString();
+            }
+
+            mConnect.Close();
+            return s;
+        }
+
+        //Get rent and RentTable
         public static Rent GetRent(int rId)
         {
             MySqlConnection mConnect = null;
@@ -226,109 +241,6 @@ namespace ClassroomAdministration_WPF
             return new RentTable(list);
 
         }
-        public static string GetName(int pId)
-        {
-            string s = "";
-            MySqlConnection mConnect = null;
-            MySqlCommand mCommand = null;
-
-            try
-            {
-                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
-                mCommand = new MySqlCommand();
-                mCommand.Connection = mConnect;
-                mConnect.Open();
-            }
-            catch
-            {
-                Console.WriteLine("FAILED to link MySQL in GetName(" + pId + ")");
-                return null;
-            }
-
-            mCommand.CommandText = "SELECT name FROM person WHERE ";
-            mCommand.CommandText += "pId=" + pId + ";";
-
-            MySqlDataReader mReader = mCommand.ExecuteReader();
-
-            while (mReader.Read())
-            {
-                s = mReader["name"].ToString();
-            }
-
-            mConnect.Close();
-            return s;
-        }
-        public static List<SysMsg> GetPersonSysMsgList(int pId)
-        {
-            MySqlConnection mConnect = null;
-            MySqlCommand mCommand = null;
-
-            List<SysMsg> list = new List<SysMsg>();
-
-            try
-            {
-                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
-                mCommand = new MySqlCommand();
-                mCommand.Connection = mConnect;
-                mConnect.Open();
-            }
-            catch
-            {
-                Console.WriteLine("FAILED to link MySQL in GetPersonSysMsgList(" + pId + ")");
-                return null;
-            }
-
-            mCommand.CommandText = "SELECT * FROM SysMsg WHERE ";
-            mCommand.CommandText += " recvId = " + pId + " or recvId = 0;";
-
-            MySqlDataReader mReader = mCommand.ExecuteReader();
-
-            while (mReader.Read())
-            {
-                int sendId = int.Parse(mReader["sendId"].ToString());
-                DateTime time = DateTime.Parse(mReader["time"].ToString());
-                string info = mReader["info"].ToString();
-                list.Add(new SysMsg(sendId, pId, time, info));
-            }
-            mConnect.Close();
-            return list;
-        }
-
-        public static List<int> GetPIdList(int rId)
-        {
-            MySqlConnection mConnect = null;
-            MySqlCommand mCommand = null;
-
-            List<int> list = new List<int>();
-
-            try
-            {
-                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
-                mCommand = new MySqlCommand();
-                mCommand.Connection = mConnect;
-                mConnect.Open();
-            }
-            catch
-            {
-                Console.WriteLine("FAILED to link MySQL in GetRentPIdList(" + rId + ")");
-                return null;
-            }
-
-            mCommand.CommandText = "SELECT pId FROM takePartIn WHERE ";
-            mCommand.CommandText += " rId=" + rId + ";";
-
-            MySqlDataReader mReader = mCommand.ExecuteReader();
-
-            while (mReader.Read())
-            {
-                int pId = int.Parse(mReader["pId"].ToString());
-                list.Add(pId);
-            }
-
-            mConnect.Close();
-            return list;
-        }
-
         public static RentTable GetUnapprovedRentTable()
         {
             MySqlConnection mConnect = null;
@@ -428,6 +340,78 @@ namespace ClassroomAdministration_WPF
             return i > 0;
         }
 
+        //Get SysMsg
+        public static List<SysMsg> GetPersonSysMsgList(int pId)
+        {
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<SysMsg> list = new List<SysMsg>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in GetPersonSysMsgList(" + pId + ")");
+                return null;
+            }
+
+            mCommand.CommandText = "SELECT * FROM SysMsg WHERE ";
+            mCommand.CommandText += " recvId = " + pId + " or recvId = 0;";
+
+            MySqlDataReader mReader = mCommand.ExecuteReader();
+
+            while (mReader.Read())
+            {
+                int sendId = int.Parse(mReader["sendId"].ToString());
+                DateTime time = DateTime.Parse(mReader["time"].ToString());
+                string info = mReader["info"].ToString();
+                list.Add(new SysMsg(sendId, pId, time, info));
+            }
+            mConnect.Close();
+            return list;
+        }
+
+        //Get takepartin
+        public static List<int> GetPIdList(int rId)
+        {
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<int> list = new List<int>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in GetRentPIdList(" + rId + ")");
+                return null;
+            }
+
+            mCommand.CommandText = "SELECT pId FROM takePartIn WHERE ";
+            mCommand.CommandText += " rId=" + rId + ";";
+
+            MySqlDataReader mReader = mCommand.ExecuteReader();
+
+            while (mReader.Read())
+            {
+                int pId = int.Parse(mReader["pId"].ToString());
+                list.Add(pId);
+            }
+
+            mConnect.Close();
+            return list;
+        }
         public static bool AddTakepartin(int pId, int rId)
         {
             if (GetPIdList(rId).Contains(pId)) return true;

@@ -8,14 +8,15 @@ namespace ClassroomAdministration_WPF
 {
     public class RentTable
     {
-        public const int maxClass = 15;
-        public  List<Rent> Rents;
+        public const int maxClass = 14;
+        public List<Rent> Rents;
 
         public RentTable(List<Rent> list)
         {
             Rents = list;          
         }
 
+        //Get from time
         public List<Rent> GetFromDateClass(DateTime date, int c)
         {
             List<Rent> list = new List<Rent>();
@@ -31,7 +32,6 @@ namespace ClassroomAdministration_WPF
                 if (r.Time.Include(date, c)) return r;
             return null;
         }
-
         public List<Rent> GetFromDate(DateTime date)
         {
             List<Rent> list = new List<Rent>();
@@ -89,10 +89,12 @@ namespace ClassroomAdministration_WPF
         //    return table;
         //}
 
-        public Rent CheckMe()
+        public Rent CheckMyTime()
         {
             DateTime date = RentTime.FirstDate;
             TimeSpan days = new TimeSpan(1, 0, 0, 0);
+
+            if (DateTime.Now > date) date = DateTime.Now;
 
             for (int ii = 0; ii < 180; ++ii)
             {
@@ -107,6 +109,7 @@ namespace ClassroomAdministration_WPF
             return null;
         }
 
+        //Rent Control
         public void MoveRentToFirst(int rId)
         {
             Rent r = GetRent(rId);
@@ -122,6 +125,31 @@ namespace ClassroomAdministration_WPF
             return null;
         }
 
+        public bool Contains(int rId)
+        {
+            foreach (Rent r in Rents)
+                if (r.rId == rId) return true;
+            return false;
+        }
+        public Rent Add(int rId)
+        {
+            Rent r = DatabaseLinker.GetRent(rId); if (r == null) return new Rent();
+            if (Contains(rId)) return null;
+
+            Rents.Add(r);
+
+            Rent rr = CheckMyTime();
+            if (rr == null) return null;
+            
+            Rents.Remove(r);
+            return rr;
+        }
+        public void Remove(Rent r)
+        {
+            if (Rents.Contains(r)) Rents.Remove(r);
+        }
+ 
+        //Get From classroom and building
         public List<Rent> GetClassroom(int cId)
         {
             List<Rent> list = new List<Rent>();
@@ -138,30 +166,7 @@ namespace ClassroomAdministration_WPF
 
         }
 
-        public bool Contains(int rId)
-        {
-            foreach (Rent r in Rents)
-                if (r.rId == rId) return true;
-            return false;
-        }
-        public Rent Add(int rId)
-        {
-            Rent r = DatabaseLinker.GetRent(rId); if (r == null) return new Rent();
-            if (Contains(rId)) return null;
-
-            Rents.Add(r);
-
-            Rent rr = CheckMe();
-            if (rr == null) return null;
-            
-            Rents.Remove(r);
-            return rr;
-        }
-        public void Remove(Rent r)
-        {
-            if (Rents.Contains(r)) Rents.Remove(r);
-        }
-
+        //ToString
         public string Display()
         {
             string s="";

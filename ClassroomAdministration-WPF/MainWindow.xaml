@@ -15,14 +15,13 @@
         <Border  HorizontalAlignment="Left" Height="325" VerticalAlignment="Top" Width="425" 
                  MouseLeftButtonDown="Border_MouseLeftButtonDown_1" 
                  CornerRadius="6" >
-
             <Border.Background>
                 <ImageBrush ImageSource="Resources/background2.jpg"/>
             </Border.Background>
         </Border>
-        <TextBox x:Name="TextBoxPId" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="186" Margin="119,199,0,0" FontSize="20" MaxLength="16" Text="2014010204" Background="#BFFFFFFF" Padding="4,0,0,0"/>
-        <PasswordBox x:Name="TextBoxPassword" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Margin="119,230,0,0" Height="25" FontSize="16" MaxLength="16" Background="#BFFFFFFF" Padding="4,0,0,0"/>
-        <Border x:Name="LoginBorder" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="186" Margin="119,271,0,0" CornerRadius="6" Background="#7F0000FF" MouseUp="Border_MouseUp_1" MouseEnter="LoginBorder_MouseEnter" MouseLeave="LoginBorder_MouseLeave" MouseDown="LoginBorder_MouseDown">
+        <TextBox x:Name="TextBoxPId" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="186" Margin="119,199,0,0" FontSize="20" MaxLength="15" Text="2014010204" Background="#BFFFFFFF" Padding="3,0,0,0"/>
+        <PasswordBox x:Name="TextBoxPassword" HorizontalAlignment="Left" VerticalAlignment="Top" Width="186" Margin="119,230,0,0" Height="26" FontSize="16" MaxLength="16" Background="#BFFFFFFF" Padding="3,0,0,0"/>
+        <Border x:Name="LoginBorder" BorderThickness="0" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="186" Margin="119,271,0,0" CornerRadius="6" Background="#7F0000FF" MouseUp="Border_MouseUp_1" MouseEnter="LoginBorder_MouseEnter" MouseLeave="LoginBorder_MouseLeave" MouseDown="LoginBorder_MouseDown">
             <StackPanel x:Name="Stackpanel" Orientation="Horizontal">
                 <Image x:Name="lockImage" Source="Resources\lock.png"  Width="25" Height="25" Margin="42,5,0,5"/>
                 <Label x:Name="Loginlabel" Content="安全登陆" VerticalAlignment="Center" FontSize="16" Margin="0,2,0,3" Foreground="#FFFDFAFA" FontWeight="Bold"/>
@@ -41,7 +40,6 @@
                     <EventTrigger RoutedEvent="Ellipse.MouseUp">
                         <BeginStoryboard>
                             <Storyboard x:Name="Wait1" SpeedRatio="1.5">
-
                                 <DoubleAnimationUsingKeyFrames Duration="0:0:6.5"
                                  Storyboard.TargetProperty="(Canvas.Left)"
                                                            RepeatBehavior="1x">
