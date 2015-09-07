@@ -28,21 +28,24 @@ namespace ClassroomAdministration_WPF
 
         const int cntCol = 7, cntRow = 14;
         
+        //时间相关的数据
         DateTime firstDate = RentTime.FirstDate;
         TimeSpan day = new TimeSpan(1, 0, 0, 0);
         DateTime currDate = new DateTime(2015, 9, 14);
         int weeks = 1, weekDay = 0, currClass = 1;
+        Label[] head1, head2;
 
+        //左侧个人课程表的后台数据
         Person person;
         RentTable schedule;
         List<TextBlock> TextBlockRents = new List<TextBlock>();
 
+        //设置周数。在周数发生变化的时刻改变UI
         private void SetWeeks(int w)
         {
             if (w != weeks)
             {
                 DateTime date = firstDate;
-                List<Rent> list;
 
                 date += new TimeSpan(7 * (w - 1), 0, 0, 0);
 
@@ -53,7 +56,7 @@ namespace ClassroomAdministration_WPF
 
             weeks = w;
         }
-
+        //按照周数更新课程表
         private void CheckoutWeek(RentTable rentTable, DateTime date, List<TextBlock> TBList)
         {
             if (rentTable == null) return;
@@ -65,6 +68,7 @@ namespace ClassroomAdministration_WPF
                 else tb.Visibility = Visibility.Collapsed;
         }
 
+        //用户选择了某个日期时间
         private void SetDateClass(DateTime date, int cc)
         {
             if (date < firstDate)
@@ -100,6 +104,7 @@ namespace ClassroomAdministration_WPF
             SetDateClass(currDate, cc);
         }
 
+        //页面加载
         private void Grid_Loaded_1(object sender, RoutedEventArgs e)
         {
             Building.Initialize();
@@ -112,6 +117,7 @@ namespace ClassroomAdministration_WPF
             SetDateClass(currDate, currClass);
         }        
 
+        //鼠标单击Grid
         private void GridSchedule_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
             TextBoxCId_Copy.Focus();
@@ -134,11 +140,15 @@ namespace ClassroomAdministration_WPF
 
             SetDateClass(col, row + 1);
         }        
+        
+        //通过Calendar选择了date后
         private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
         {
             DateTime date = (DateTime)DateChosen.SelectedDate;
             SetDateClass(date, currClass);
         }
+        
+        //全体键盘托管
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
             if (!TextBoxCId.IsKeyboardFocused)
@@ -231,10 +241,12 @@ namespace ClassroomAdministration_WPF
             }
         }
 
+        //右侧教室课程表的后台信息
         Classroom classroom = null;
         RentTable scheduleClassroom;
         List<TextBlock> TextBlockRentsClassroom = new List<TextBlock>();
 
+        //通过textBox选择教室
         private void TextBoxCId_TextChanged(object sender, TextChangedEventArgs e)
         {
             int cId;
@@ -243,6 +255,8 @@ namespace ClassroomAdministration_WPF
                 SetCId(cId);
             }
         }
+        
+        //设置教室。在教师发生变化的时候切换UI
         private void SetCId(int cId)
         {
             TextBoxCId.Text = cId.ToString();
@@ -263,6 +277,7 @@ namespace ClassroomAdministration_WPF
 
         }
 
+        //左右课程表的初始化设置
         private void ScheduleInitialize(Grid grid, RentTable rentTable, List<TextBlock> textBlockList)
         {
             foreach (Rent r in rentTable.Rents)
