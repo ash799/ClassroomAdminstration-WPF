@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ClassroomAdministration_WPF
 {
@@ -20,6 +21,8 @@ namespace ClassroomAdministration_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        bool timerRunning = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,8 +32,6 @@ namespace ClassroomAdministration_WPF
         {
             this.DragMove();
         }
-
-
 
         private void CloseBorder_MouseEnter_1(object sender, MouseEventArgs e)
         {
@@ -88,79 +89,118 @@ namespace ClassroomAdministration_WPF
 
         private void LoginBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
+
             lockImage.Margin = new Thickness(44, 5, 0, 5);
         }
 
+
+        private enum Status{errorId,errorPassword,success};
+        private Status status;
+        private WindowIndex winindex;
+        private DispatcherTimer timer;
+
+
+
         private void Border_MouseUp_1(object sender, MouseButtonEventArgs e)
         {
+            lockImage.Margin = new Thickness(44, 5, 0, 5);
+            
+            TimerStart();
+
+            login();
+           
+        }
+
+        private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
+        {
+            
+            if (e.Key == Key.Enter)
+            {
+                lockImage.Margin = new Thickness(44, 5, 0, 5);
+
+                TimerStart();
+
+                login();
+            }
+        }
+
+        private void TimerStart()
+        {
+            LoginBorder.Visibility = Visibility.Hidden;
+            TextBoxPId.Visibility = Visibility.Hidden;
+            TextBoxPassword.Visibility = Visibility.Hidden;
+
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 0, 2, 300);
+            timer.Tick += new EventHandler(timer_tick);
+            Wait1.Begin(ellipse1);
+            Wait2.Begin(ellipse2);
+            Wait3.Begin(ellipse3);
+            Wait4.Begin(ellipse4);
+            Wait5.Begin(ellipse5);
+            timer.Start();
+            timerRunning = true;
+
+        }
+
+        private void timer_tick(object sender, EventArgs e)
+        {
+
             lockImage.Margin = new Thickness(42, 5, 0, 5);
-
-            //LoginBorder.Visibility = Visibility.Hidden;
-            //TextBoxPId.Visibility = Visibility.Hidden;
-            //TextBoxPassword.Visibility = Visibility.Hidden;
-
-            int id;
-            try { id = int.Parse(TextBoxPId.Text); }
-            catch 
+            timer.Stop();
+            Wait1.SeekAlignedToLastTick(TimeSpan.FromSeconds(7));
+            if (status == Status.errorId)
             {
                 MessageBox.Show("ID输入有误，请重试。");
                 LoginBorder.Visibility = Visibility.Visible;
                 TextBoxPId.Visibility = Visibility.Visible;
                 TextBoxPassword.Visibility = Visibility.Visible;
-                return; 
+            }
+            else if (status == Status.errorPassword)
+            {
+                MessageBox.Show("密码错误或未注册。");
+            }
+            else if (status == Status.success)
+            {
+                winindex.Show();
+                this.Close();
+            }
+
+            LoginBorder.Visibility = Visibility.Visible;
+            TextBoxPId.Visibility = Visibility.Visible;
+            TextBoxPassword.Visibility = Visibility.Visible;
+
+            TextBoxPId.Focus();
+        }
+
+        private void login()
+        {
+            int id;
+            try { id = int.Parse(TextBoxPId.Text); }
+            catch
+            {
+                status = Status.errorId;
+                return;
             }
 
             Person p = DatabaseLinker.Login(id, TextBoxPassword.Password);
             Console.WriteLine(TextBoxPassword.Password + " " + id);
 
-            if (null == p) MessageBox.Show("密码错误或未注册。");
+            if (null == p) status = Status.errorPassword;
             else if (p is Person)
             {
                 //MessageBox.Show("Welcome, " + p.Name + "!");
-                new WindowIndex(p).Show();
-                this.Close();
+                winindex = new WindowIndex(p);
+                //winindex.Hide();
+                status = Status.success;
             }
-            else MessageBox.Show("密码错误或未注册。");
-
-
-            LoginBorder.Visibility = Visibility.Visible;
-            TextBoxPId.Visibility = Visibility.Visible;
-            TextBoxPassword.Visibility = Visibility.Visible;
+            else status = Status.errorPassword;
         }
 
-        private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
+        private void Grid_Loaded_1(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                int id;
-                try { id = int.Parse(TextBoxPId.Text); }
-                catch
-                {
-                    MessageBox.Show("ID输入有误，请重试。");
-                    LoginBorder.Visibility = Visibility.Visible;
-                    TextBoxPId.Visibility = Visibility.Visible;
-                    TextBoxPassword.Visibility = Visibility.Visible;
-                    return;
-                }
-
-                Person p = DatabaseLinker.Login(id, TextBoxPassword.Password);
-                Console.WriteLine(TextBoxPassword.Password + " " + id);
-
-                if (null == p) MessageBox.Show("密码错误或未注册。");
-                else if (p is Person)
-                {
-                    //MessageBox.Show("Welcome, " + p.Name + "!");
-                    new WindowIndex(p).Show();
-                    this.Close();
-                }
-                else MessageBox.Show("密码错误或未注册。");    
-            }
+            TextBoxPId.Focus();
         }
-
-
-
-
-
 
 
     }
