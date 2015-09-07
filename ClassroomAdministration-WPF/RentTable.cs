@@ -25,6 +25,13 @@ namespace ClassroomAdministration_WPF
             }
             return list;
         }
+        public Rent GetRentFromDateClass(DateTime date, int c)
+        {
+            foreach (Rent r in Rents)
+                if (r.Time.Include(date, c)) return r;
+            return null;
+        }
+
         public List<Rent> GetFromDate(DateTime date)
         {
             List<Rent> list = new List<Rent>();
@@ -49,6 +56,17 @@ namespace ClassroomAdministration_WPF
             return list;
         }
 
+        public bool QuiteFreeTime(DateTime date, int c)
+        {
+            for (int i=0;i<6;++i)
+                if (c >= RentTime.typicalClassRent[i, 0] && c <= RentTime.typicalClassRent[i, 1])
+                {
+                    for (int j = RentTime.typicalClassRent[i, 0]; j < RentTime.typicalClassRent[i, 1]; ++j)
+                        if (GetRentFromDateClass(date, j) != null) return false;
+                    return true;
+                }
+            return false;
+        }
         //public List<Rent> GetTableFromDate(DateTime date)
         //{
         //    List<Rent> table = new List<Rent>();
@@ -70,12 +88,13 @@ namespace ClassroomAdministration_WPF
 
         //    return table;
         //}
+
         public Rent CheckMe()
         {
             DateTime date = RentTime.FirstDate;
-            TimeSpan days = new TimeSpan(8, 0, 0, 0);
+            TimeSpan days = new TimeSpan(1, 0, 0, 0);
 
-            for (int ii = 0; ii < 14; ++ii)
+            for (int ii = 0; ii < 180; ++ii)
             {
                 for (int i = 1; i < maxClass; ++i)
                 {

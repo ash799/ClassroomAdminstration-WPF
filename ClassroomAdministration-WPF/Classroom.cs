@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class Classroom //: IRentTableControl
+    public class Classroom //: IRentTableControl
     {
         private int cid;
         private string name;

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace ClassroomAdministration_WPF
 {
-    class Building
+    public class Building
     {
         private int bid;
         private string name;

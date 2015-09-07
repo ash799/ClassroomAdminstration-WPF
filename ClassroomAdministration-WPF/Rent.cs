@@ -38,7 +38,6 @@ namespace ClassroomAdministration_WPF
         public string Display()
         {
 
-
             string s="";
             s += info + "\r\n";
             s += "申请人: " + DatabaseLinker.GetName(pId) + " 编号: R" + rid + "\r\n";

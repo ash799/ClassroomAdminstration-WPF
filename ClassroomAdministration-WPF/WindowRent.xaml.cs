@@ -89,7 +89,7 @@ namespace ClassroomAdministration_WPF
                 if (rr == null)
                     DatabaseLinker.AddTakepartin(father.Peron.pId, rent.rId);
                 else
-                    MessageBox.Show("添加失败。此课程同您的课程 "+rr.Info+" 存在时间冲突。");
+                    MessageBox.Show("添加失败。此课程同您的课程 "+rr.Info+" 存在冲突。");
                 father.RefreshSchedule();
                 this.Close();
             }

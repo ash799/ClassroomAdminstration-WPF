@@ -45,24 +45,29 @@ namespace ClassroomAdministration_WPF
 
 
         //设置周数。在周数发生变化的时刻改变UI
+        private void ResetWeeks()
+        {
+            int w = weeks;
+            DateTime date = firstDate;
+
+            date += new TimeSpan(7 * (w - 1), 0, 0, 0);
+
+            CheckoutWeek(schedule, date, TextBlockRents);
+            CheckoutWeek(scheduleClassroom, date, TextBlockRentsClassroom);
+
+            for (int i = 0; i < 7; ++i)
+            {
+                DateTime theDate = firstDate + new TimeSpan(7 * (w - 1) + i, 0, 0, 0);
+                head1[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
+                head2[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
+            }
+        }
         private void SetWeeks(int w)
         {
             if (w != weeks)
             {
-                DateTime date = firstDate;
-
-                date += new TimeSpan(7 * (w - 1), 0, 0, 0);
-
-                CheckoutWeek(schedule, date, TextBlockRents);
-                CheckoutWeek(scheduleClassroom, date, TextBlockRentsClassroom);
-
-                for (int i = 0; i < 7; ++i)
-                {
-                    DateTime theDate = firstDate + new TimeSpan(7 * (weeks - 1) + i, 0, 0, 0);
-                    head1[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
-                    head2[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
-                }
-
+                weeks = w;
+                ResetWeeks();
             }
 
             weeks = w;
@@ -128,13 +133,10 @@ namespace ClassroomAdministration_WPF
         {
             if (schedule != null && scheduleClassroom != null)
             {
-                List<Rent> list = schedule.GetFromDateClass(currDate, currClass);
-                if (list.Count == 0) chosenRent = null; else chosenRent = list[0]; //if (list.Count > 1) MessageBox.Show("这个时间点似乎安排了多个时间冲突的课程。");
+                chosenRent = schedule.GetRentFromDateClass(currDate, currClass);
+                chosenClassroomRent = scheduleClassroom.GetRentFromDateClass(currDate, currClass);
 
-                list = scheduleClassroom.GetFromDateClass(currDate, currClass);
-                if (list.Count == 0) chosenClassroomRent = null; else chosenClassroomRent = list[0]; //if (list.Count > 1) MessageBox.Show("这个时间点似乎安排了多个时间冲突的课程。");
-
-                if (chosenRent == null && chosenClassroomRent == null)
+                if (schedule.QuiteFreeTime(currDate, currClass) && scheduleClassroom.QuiteFreeTime(currDate, currClass))
                 {
                     RectangleChosonClass.Content = "新建活动";
                     RectangleChosonClassInClassroom.Content = "新建活动";
@@ -147,8 +149,7 @@ namespace ClassroomAdministration_WPF
             }
             else if (schedule != null)
             {
-                List<Rent> list = schedule.GetFromDateClass(currDate, currClass);
-                if (list.Count == 0) chosenRent = null; else chosenRent = list[0]; if (list.Count > 1) MessageBox.Show("这个时间点似乎安排了多个时间冲突的课程。");
+                chosenRent = schedule.GetRentFromDateClass(currDate, currClass);
 
                 RectangleChosonClass.Content = chosenRent == null ? "" : "查看信息";
             }
@@ -209,6 +210,8 @@ namespace ClassroomAdministration_WPF
         {
             TextBoxCId_Copy.Focus();
 
+            if (classroom == null) return;
+
             Point pos = e.GetPosition(GridScheduleClass);
             double aCol = GridScheduleClass.ActualWidth, aRow = GridScheduleClass.ActualHeight;
 
@@ -256,11 +259,8 @@ namespace ClassroomAdministration_WPF
                         currDate += new TimeSpan(7, 0, 0, 0);
                         break;
                     case Key.Enter:
-                        if (chosenRent == null && chosenClassroomRent == null && scheduleClassroom != null)
-                            MessageBox.Show("新建活动");
-                        else
-                            if (chosenRent != null) 
-                                new WindowRent(chosenRent, this).ShowDialog();
+                        if (chosenRent != null)
+                            new WindowRent(chosenRent, this).ShowDialog();
                         break;
                 }
                 SetDateClass(currDate, currClass);
@@ -384,7 +384,7 @@ namespace ClassroomAdministration_WPF
                 Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
                 tb.FontSize = 16;
               //  tb.FontWeight = FontWeights.Bold;
-                tb.Foreground = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0));
+                tb.Foreground = new SolidColorBrush(Color.FromArgb(200, 0, 0, 0));
                 tb.TextWrapping = TextWrapping.Wrap;
                 tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
                 tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
@@ -397,12 +397,13 @@ namespace ClassroomAdministration_WPF
             grid.Children.Add(chosen);
 
             SetDateClass(currDate, currClass);
+            ResetWeeks();
         }
 
         private void RectangleChosonClass_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (chosenRent == null && chosenClassroomRent == null && scheduleClassroom != null)
-                MessageBox.Show("新建活动");
+            if (schedule.QuiteFreeTime(currDate, currClass) && scheduleClassroom.QuiteFreeTime(currDate, currClass) && scheduleClassroom != null)
+                new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
             else
                 if (chosenRent != null) // MessageBox.Show(chosenRent.Display());
                     new WindowRent(chosenRent, this).ShowDialog();
@@ -410,8 +411,8 @@ namespace ClassroomAdministration_WPF
         }
         private void RectangleChosonClassInClassroom_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (chosenRent == null && chosenClassroomRent == null && scheduleClassroom != null)
-                MessageBox.Show("新建活动");
+            if (schedule.QuiteFreeTime(currDate, currClass) && scheduleClassroom.QuiteFreeTime(currDate, currClass) && scheduleClassroom != null)
+                new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
             else
                 if (chosenClassroomRent != null) //MessageBox.Show(chosenClassroomRent.Display());
                     new WindowRent(chosenClassroomRent, this).ShowDialog();
@@ -427,6 +428,12 @@ namespace ClassroomAdministration_WPF
         {
             schedule = DatabaseLinker.GetPersonRentTable(person.pId);
             ScheduleInitialize(GridScheduleSmall, schedule, TextBlockRents, RectangleChosonClass);
+
+            if (classroom != null)
+            {
+                scheduleClassroom = DatabaseLinker.GetClassroomRentTable(classroom.cId);
+                ScheduleInitialize(GridScheduleClass, scheduleClassroom, TextBlockRentsClassroom, RectangleChosonClassInClassroom);
+            }
         }
 
         public Person Peron { get { return person; } }

@@ -28,6 +28,19 @@ namespace ClassroomAdministration_WPF
             endClass = edC;
             
         }
+        public RentTime(DateTime stD, DateTime edD, int cycD, int stC, int edC)
+        {
+            startDate = stD;
+            endDate = edD;
+
+            TimeSpan ts = startDate - FirstDate;
+            weekDay = ts.Days % 7; if (weekDay < 0) weekDay += 7;
+
+            cycDays = cycD;
+            startClass = stC;
+            endClass = edC;
+
+        }
 
         public bool Include(DateTime date, int c = -1)
         {
@@ -54,10 +67,19 @@ namespace ClassroomAdministration_WPF
 
         public string Display()
         {
-            return "周" + weekDayName[weekDay] + ",第" + startClass + "节至第" + endClass + "节";
+            return "周" + weekDayName[weekDay] + ", 第" + startClass + "节至第" + endClass + "节";
         }
 
         static public DateTime FirstDate = new DateTime(2015, 9, 14);
+        static public int[,] typicalClassRent =
+        {
+            {1,2},
+            {3,5},
+            {6,7},
+            {8,9},
+            {10,11},
+            {12,14}
+        };
         static public string[] StringClassTime =
         {
             "08:00~08:45",
