@@ -36,13 +36,16 @@ namespace ClassroomAdministration_WPF
 
         public string Display()
         {
-            string s = "R" + rid              
-                + " 申请人:" + DatabaseLinker.GetName(pId);
+
+
+            string s="";
+            s += info + "\r\n";
+            s += "申请人: " + DatabaseLinker.GetName(pId) + " 编号: R" + rid + "\r\n";
 
             Classroom c = Building.GetClassroom(cid);
-            if (c != null) s += " 教室:"+ c.Display();
-            s += Time.Display();
-            s += "\t" + info;
+            if (c != null) s += "教室: "+ c.Name+"  ";
+            s += "上课时间: " + Time.Display();
+           
 
             //s += " :: ";
             //foreach (int id in Students)
