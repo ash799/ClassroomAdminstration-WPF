@@ -1,0 +1,14 @@
+﻿<Window x:Class="ClassroomAdministration_WPF.WindowRent"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WindowRent" Height="300" Width="300" Loaded="Window_Loaded_1" WindowStartupLocation="CenterScreen">
+    <StackPanel>
+        <TextBlock x:Name="TBinfo" Margin="0" TextWrapping="Wrap" Text="数学" VerticalAlignment="Top" FontSize="24" Padding="24,16,24,10"/>
+        <TextBlock x:Name="TBhost" TextWrapping="Wrap" Text="申请人: Admin" Margin="0" FontSize="14" Padding="36,5,24,5"/>
+        <TextBlock x:Name="TBrentTime" TextWrapping="Wrap" Text="上课时间" Margin="0" FontSize="14" Padding="36,5,24,5"/>
+        <TextBlock x:Name="TBclassroom" TextWrapping="Wrap" Text="教室: 一教101" Margin="0" FontSize="14" Padding="36,5,24,5" MouseDown="TBclassroom_MouseDown" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave"/>
+        <TextBlock x:Name="TBChoose" TextWrapping="Wrap" Text="加入我的课程表" Margin="0" FontSize="14" Padding="36,5,24,5" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave" MouseDown="TBChoose_MouseDown"/>
+        <TextBlock x:Name="TBexit" TextWrapping="Wrap" Text="取消" Margin="0" FontSize="14" Padding="36,5,24,5" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave" MouseDown="TBexit_MouseDown"/>
+
+    </StackPanel>
+</Window>

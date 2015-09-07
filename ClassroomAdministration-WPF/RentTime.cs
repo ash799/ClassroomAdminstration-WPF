@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class RentTime
+    public class RentTime
     {
         private DateTime startDate, endDate;
         private int cycDays, startClass, endClass, weekDay;
@@ -54,7 +54,7 @@ namespace ClassroomAdministration_WPF
 
         public string Display()
         {
-            return "周" + (weekDay + 1) + " " + startClass + "~" + endClass;
+            return "周" + weekDayName[weekDay] + ",第" + startClass + "节至第" + endClass + "节";
         }
 
         static public DateTime FirstDate = new DateTime(2015, 9, 14);
@@ -75,7 +75,7 @@ namespace ClassroomAdministration_WPF
             "20:10~20:55",
             "21:00~21:45"
         };
-
+        static public string[] weekDayName = { "一", "二", "三", "四", "五", "六", "日" };
         
 
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class Rent
+    public class Rent
     {
         protected int rid;
         protected int cid;// 所在的教室
@@ -33,16 +33,20 @@ namespace ClassroomAdministration_WPF
             this.pid = host;
             this.time = time;
         }
+        public Rent() { }
 
         public string Display()
         {
-            string s = "R" + rid              
-                + " 申请人:" + DatabaseLinker.GetName(pId);
+
+
+            string s="";
+            s += info + "\r\n";
+            s += "申请人: " + DatabaseLinker.GetName(pId) + " 编号: R" + rid + "\r\n";
 
             Classroom c = Building.GetClassroom(cid);
-            if (c != null) s += " 教室:"+ c.Display();
-            s += Time.Display();
-            s += "\t" + info;
+            if (c != null) s += "教室: "+ c.Name+"  ";
+            s += "上课时间: " + Time.Display();
+           
 
             //s += " :: ";
             //foreach (int id in Students)

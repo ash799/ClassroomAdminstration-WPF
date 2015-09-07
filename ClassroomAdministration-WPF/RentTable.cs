@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    class RentTable
+    public class RentTable
     {
         public const int maxClass = 15;
         public  List<Rent> Rents;
@@ -70,6 +70,23 @@ namespace ClassroomAdministration_WPF
 
         //    return table;
         //}
+        public Rent CheckMe()
+        {
+            DateTime date = RentTime.FirstDate;
+            TimeSpan days = new TimeSpan(8, 0, 0, 0);
+
+            for (int ii = 0; ii < 14; ++ii)
+            {
+                for (int i = 1; i < maxClass; ++i)
+                {
+                    List<Rent> list = GetFromDateClass(date, i);
+                    if (list.Count > 1) return list[0];
+                }
+                date += days;
+            }
+
+            return null;
+        }
 
         public void MoveRentToFirst(int rId)
         {
@@ -100,6 +117,30 @@ namespace ClassroomAdministration_WPF
                 if (bId == Classroom.CId2BId(r.cId)) ++cnt;
             return cnt;
 
+        }
+
+        public bool Contains(int rId)
+        {
+            foreach (Rent r in Rents)
+                if (r.rId == rId) return true;
+            return false;
+        }
+        public Rent Add(int rId)
+        {
+            Rent r = DatabaseLinker.GetRent(rId); if (r == null) return new Rent();
+            if (Contains(rId)) return null;
+
+            Rents.Add(r);
+
+            Rent rr = CheckMe();
+            if (rr == null) return null;
+            
+            Rents.Remove(r);
+            return rr;
+        }
+        public void Remove(Rent r)
+        {
+            if (Rents.Contains(r)) Rents.Remove(r);
         }
 
         public string Display()
