@@ -101,11 +101,11 @@ namespace ClassroomAdministration_WPF
             TextBlock tb = (TextBlock)sender;
             if (!tb.Text.Contains(":"))
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.2)); 
+                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5)); 
             }
             else
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5)); 
+                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.8)); 
             }
         }
 

@@ -11,9 +11,11 @@
             <ColumnDefinition Width="*" MinWidth="350"/>
         </Grid.ColumnDefinitions>
         <DatePicker x:Name="DateChosen" Margin="10,36,0,0" VerticalAlignment="Top" Height="25" Width="118" HorizontalAlignment="Left" CalendarClosed="DateChosen_CalendarClosed" SelectedDateFormat="Short" FontSize="14" Focusable="False"/>
-        <Grid x:Name="GridScheduleSmall" Margin="40,95,10,10"
-               ext:GridHelper.ShowBorder="True" MouseDown="GridSchedule_MouseDown_1" Background="#00000000">
-            <Grid.RowDefinitions>
+        <!--<Grid x:Name="GridSchedule1" Margin="40,95,10,10"
+               ext:GridHelper.ShowBorder="True" MouseDown="GridSchedule1_MouseDown" Background="#00000000">-->
+            <Grid x:Name="GridSchedule1" Margin="40,95,10,10"
+                MouseDown="GridSchedule1_MouseDown" Background="#00000000">
+                <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -39,16 +41,21 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" />
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="1"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="2"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="3"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="4"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="5"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="6"/>
             <Border BorderBrush="#4C000000" BorderThickness="1,1,1,3" Grid.ColumnSpan="7" Margin="0" Grid.RowSpan="5"/>
             <Border BorderBrush="#4C000000" BorderThickness="1,1,1,3" Grid.ColumnSpan="7" Margin="0" Grid.RowSpan="6" Grid.Row="5"/>
             <Border BorderBrush="#4C000000" BorderThickness="1,1,1,3" Grid.ColumnSpan="7" Margin="0" Grid.RowSpan="3" Grid.Row="11"/>
 
-            <!--<Rectangle x:Name="RectangleChosonClass" Margin="0" Stroke="#7F1700FF" StrokeThickness="2" Fill="#330000FF"/>-->
-            <Label x:Name="RectangleChosonClass" Margin="0" BorderBrush="#7F1700FF" Background="#330000FF" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#97000000" FontWeight="Bold" Padding="0" MouseDown="RectangleChosonClass_MouseDown" />
+            <Label x:Name="RectangleChosonClass1" Margin="0" BorderBrush="#7F1700FF" Background="#330000FF" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#97000000" FontWeight="Bold" Padding="0" MouseDown="RectangleChosonRent1_MouseDown" />
             
         </Grid>
-        <Label x:Name="LabelWeek" Content="第1周" Height="53" Margin="133,10,10,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center"/>
+        <Label x:Name="LabelWeek" Content="第1周" Height="53" Margin="133,10,10,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" BorderThickness="2"/>
         <Grid x:Name="GridScheduleHead" Height="25" Margin="40,70,10,0" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -59,18 +66,13 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!--<Label Content="一" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Content="二" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1"/>
-            <Label Content="三" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="2"/>
-            <Label Content="四" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="3"/>
-            <Label Content="五" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="4"/>
-            <Label Content="六" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="5"/>
-            <Label Content="日" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="6"/>-->
         </Grid>
 
-        <Grid x:Name="GridScheduleClass" Margin="10,95,10,10"
-               ext:GridHelper.ShowBorder="True" MouseDown="GridScheduleClass_MouseDown_1" Background="#00000000" Grid.Column="1">
-            <Grid.RowDefinitions>
+        <!--<Grid x:Name="GridSchedule2" Margin="10,95,10,10"
+               ext:GridHelper.ShowBorder="True" Grid.Column="1" MouseDown="GridSchedule2_MouseDown" Background="#00000000">-->
+            <Grid x:Name="GridSchedule2" Margin="10,95,10,10"
+                Grid.Column="1" MouseDown="GridSchedule2_MouseDown" Background="#00000000">
+                <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -96,12 +98,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" />
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="1"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="2"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="3"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="4"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="5"/>
+            <Rectangle Grid.RowSpan="14" Stroke="#4C000000" StrokeThickness="0.3" Grid.Column="6"/>
             <Border BorderBrush="#4C000000" BorderThickness="1,1,1,3" Grid.ColumnSpan="7" Margin="0" Grid.RowSpan="5"/>
             <Border BorderBrush="#4C000000" BorderThickness="1,1,1,3" Grid.ColumnSpan="7" Margin="0" Grid.RowSpan="6" Grid.Row="5"/>
             <Border BorderBrush="#4C000000" BorderThickness="1,1,1,3" Grid.ColumnSpan="7" Margin="0" Grid.RowSpan="3" Grid.Row="11"/>
-            <!--<Rectangle x:Name="RectangleChosonClassInClassroom" Margin="0" Stroke="#7F1700FF" StrokeThickness="2" Fill="#330000FF"/>-->
-            <Label x:Name="RectangleChosonClassInClassroom" Margin="0" BorderBrush="#7F1700FF" Background="#330000FF" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#97000000" FontWeight="Bold" Padding="0" MouseDown="RectangleChosonClassInClassroom_MouseDown" Visibility="Hidden" />
+            
+            <Label x:Name="RectangleChosonClass2" Margin="0" BorderBrush="#7F1700FF" Background="#330000FF" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#97000000" FontWeight="Bold" Padding="0" MouseDown="RectangleChosonRent2_MouseDown" Visibility="Hidden" />
         </Grid>
         <Grid x:Name="GridScheduleHead2" Height="25" Margin="10,70,10,0" VerticalAlignment="Top" Grid.Column="1">
             <Grid.ColumnDefinitions>
@@ -113,18 +121,11 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!--<Label Content="一" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Content="二" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1"/>
-            <Label Content="三" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="2"/>
-            <Label Content="四" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="3"/>
-            <Label Content="五" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="4"/>
-            <Label Content="六" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="5"/>
-            <Label Content="日" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="6"/>-->
         </Grid>
         <TextBox x:Name="TextBoxCId_Copy" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="14" />
         <TextBox x:Name="TextBoxCId" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="18" TextChanged="TextBoxCId_TextChanged"/>
         <Label Content="当前教室编号：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14"/>
-        <Label x:Name="LabelClassroom" Content="选择一间教室" Height="53" Margin="135,10,8,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1" MouseEnter="LabelClassroom_MouseEnter" MouseLeave="LabelClassroom_MouseLeave" MouseDown="LabelClassroom_MouseDown"/>
+        <Label x:Name="LabelClassroom" Content="选择一间教室" Height="53" Margin="135,10,8,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1" MouseEnter="LabelClassroom_MouseEnter" MouseLeave="LabelClassroom_MouseLeave" MouseDown="LabelClassroom_MouseDown" BorderThickness="2"/>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Margin="-2,0,0,0" Width="4" Focusable="False"/>
         <Grid HorizontalAlignment="Left" Margin="5,100,0,10" Width="35">
             <Grid.RowDefinitions>
