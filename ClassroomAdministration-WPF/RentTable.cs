@@ -150,12 +150,18 @@ namespace ClassroomAdministration_WPF
         }
  
         //Get From classroom and building
-        public List<Rent> GetClassroom(int cId)
+        public List<Rent> GetListClassroom(int cId)
         {
             List<Rent> list = new List<Rent>();
             foreach (Rent r in Rents)
                 if (r.cId == cId) list.Add(r);
             return list;
+        }
+        public Rent GetClassroom(int cId)
+        {
+            foreach (Rent r in Rents)
+                if (r.cId == cId) return r;
+            return null;
         }
         public int CntRentsInBuilding(int bId)
         {

@@ -95,6 +95,12 @@ namespace ClassroomAdministration_WPF
             }
         }
 
+        private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) 
+                this.Close();
+        }
+
 
     }
 }

@@ -61,10 +61,17 @@
     <Compile Include="WindowApplyRent.xaml.cs">
       <DependentUpon>WindowApplyRent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowClassroomList.xaml.cs">
+      <DependentUpon>WindowClassroomList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowRent.xaml.cs">
       <DependentUpon>WindowRent.xaml</DependentUpon>
     </Compile>
     <Page Include="WindowApplyRent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowClassroomList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

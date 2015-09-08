@@ -52,6 +52,7 @@ namespace ClassroomAdministration_WPF
             schedule = DatabaseLinker.GetPersonRentTable(person.pId);
             ScheduleInitialize(GridScheduleSmall, schedule, TextBlockRents, RectangleChosonClass);
 
+            if (chosenRent != null) SetCId(chosenRent.cId);
         }
         private void headInitialize()
         {
@@ -213,8 +214,9 @@ namespace ClassroomAdministration_WPF
                         currDate += new TimeSpan(7, 0, 0, 0);
                         break;
                     case Key.Enter:
-                        if (chosenRent != null)
-                            new WindowRent(chosenRent, this).ShowDialog();
+                        //if (chosenRent != null)
+                        //    new WindowRent(chosenRent, this).ShowDialog();
+                        RectangleChosonClass_MouseDown(null, null);
                         break;
                 }
                 SetDateClass(currDate, currClass);
@@ -275,9 +277,7 @@ namespace ClassroomAdministration_WPF
                         }
                         TextBoxCId.Text = c.ToString();
                         break;
-
                 }
-
                 SetCId(c);
             }
         }
@@ -309,7 +309,7 @@ namespace ClassroomAdministration_WPF
 
             LabelWeek.Content = person.Name + "的第" + weeks + "周";
             if (classroom != null) LabelClassroom.Content = classroom.Name + "的第" + weeks + "周";
-            DateChosen.SelectedDate = date;  TextBlockClassTime.Text = RentTime.StringClassTime[currClass - 1];
+            DateChosen.SelectedDate = date;  //TextBlockClassTime.Text = RentTime.StringClassTime[currClass - 1];
 
             ChosenRentControl();
 
@@ -357,7 +357,6 @@ namespace ClassroomAdministration_WPF
         }
         private TextBlock Hightlight(TextBlock tbh, Rent r, Grid grid)
         {
-
             if (grid.Children.Contains(tbh))
             {
                 tbh.Visibility = Visibility.Collapsed;
@@ -372,8 +371,7 @@ namespace ClassroomAdministration_WPF
             grid.Children.Add(tbh);
             TextBlockInitialize(tbh,r);
             tbh.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 1, 150));
-            tbh.Foreground = new SolidColorBrush(Colors.Black);
-            
+            tbh.Foreground = new SolidColorBrush(Colors.White);
 
             if (GridScheduleSmall == grid) tbh.MouseDown += RectangleChosonClass_MouseDown;
             else if (GridScheduleClass == grid) tbh.MouseDown += RectangleChosonClassInClassroom_MouseDown;
@@ -456,14 +454,19 @@ namespace ClassroomAdministration_WPF
         //单击选定框
         private void RectangleChosonClass_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (chosenRent != null && chosenClassroomRent == null) SetCId(chosenRent.cId);
+
             if (scheduleClassroom != null &&
                 schedule.QuiteFreeTime(currDate, currClass) && scheduleClassroom.QuiteFreeTime(currDate, currClass)
                 && scheduleClassroom != null)
                 new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
             else
-                if (chosenRent != null) // MessageBox.Show(chosenRent.Display());
+                if (chosenRent != null)
                     new WindowRent(chosenRent, this).ShowDialog();
-            e.Handled = true;
+                else if (chosenClassroomRent != null)
+                    new WindowRent(chosenClassroomRent, this).ShowDialog();
+
+            if (e != null) e.Handled = true;
         }
         private void RectangleChosonClassInClassroom_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -494,5 +497,21 @@ namespace ClassroomAdministration_WPF
         }
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule; } }
+
+        private void LabelClassroom_MouseEnter(object sender, MouseEventArgs e)
+        {
+            LabelClassroom.Content = "选择教室";
+            LabelClassroom.Background = new SolidColorBrush(MyColor.NameColor(LabelClassroom.Content.ToString(), 0.1));
+        }
+        private void LabelClassroom_MouseLeave(object sender, MouseEventArgs e)
+        {
+            LabelClassroom.Content = classroom.Name + "的第" + weeks + "周";
+            LabelClassroom.Background = null;
+        }
+        private void LabelClassroom_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RentTable rt = new RentTable( DatabaseLinker.GetDateRentTable(currDate).GetFromDateClass(currDate,currClass));
+            new WindowClassroomList(rt, this).ShowDialog();
+        }
     }
 }
