@@ -66,7 +66,7 @@ namespace ClassroomAdministration_WPF
                     else
                     {
                         tb.Text = classroom.Name + ":" + rent.Info;
-                        tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5)); 
+                        tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text)); 
                     }
 
                     tb.Tag = classroom;
@@ -92,7 +92,7 @@ namespace ClassroomAdministration_WPF
             }
             else
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5));
+                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text));
             }
         }
 
@@ -105,7 +105,7 @@ namespace ClassroomAdministration_WPF
             }
             else
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.8)); 
+                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5)); 
             }
         }
 

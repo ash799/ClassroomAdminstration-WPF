@@ -53,13 +53,11 @@ namespace ClassroomAdministration_WPF
             father.SetClassroom(rent.cId);
             this.Close();
         }
-
         private void TBclassroom_MouseEnter(object sender, MouseEventArgs e)
         {
             TextBlock tb = (TextBlock)sender;
             tb.Background = new SolidColorBrush(MyColor.NameColor(rent.Info));
         }
-
         private void TBclassroom_MouseLeave(object sender, MouseEventArgs e)
         {
             TextBlock tb = (TextBlock)sender;
@@ -89,16 +87,28 @@ namespace ClassroomAdministration_WPF
                 if (rr == null)
                     DatabaseLinker.AddTakepartin(father.Peron.pId, rent.rId);
                 else
-                    MessageBox.Show("添加失败。此课程同您的课程 "+rr.Info+" 存在冲突。");
+                {
+                    MessageBox.Show("添加失败。此课程同您的课程 " + rr.Info + " 存在冲突。");
+                    if (!rent.Time.OnceActivity) father.GotoDateClass(rr.Time.StartDate, rr.Time.StartClass);
+                }
+
                 father.RefreshSchedule();
+
                 this.Close();
             }
         }
 
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) 
-                this.Close();
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    this.Close();
+                    break;
+                case Key.Q:
+                    TBChoose_MouseDown(null, null);
+                    break;
+            }
         }
 
 

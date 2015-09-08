@@ -495,9 +495,14 @@ namespace ClassroomAdministration_WPF
                 ScheduleInitialize(GridScheduleClass, scheduleClassroom, TextBlockRentsClassroom, RectangleChosonClassInClassroom);
             }
         }
+        public void GotoDateClass(DateTime date, int cc)
+        {
+            SetDateClass(date, cc);
+        }
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule; } }
 
+        //Choose Classroom
         private void LabelClassroom_MouseEnter(object sender, MouseEventArgs e)
         {
             LabelClassroom.Content = "选择教室";
@@ -505,7 +510,7 @@ namespace ClassroomAdministration_WPF
         }
         private void LabelClassroom_MouseLeave(object sender, MouseEventArgs e)
         {
-            LabelClassroom.Content = classroom.Name + "的第" + weeks + "周";
+            if (classroom != null) LabelClassroom.Content = classroom.Name + "的第" + weeks + "周";
             LabelClassroom.Background = null;
         }
         private void LabelClassroom_MouseDown(object sender, MouseButtonEventArgs e)

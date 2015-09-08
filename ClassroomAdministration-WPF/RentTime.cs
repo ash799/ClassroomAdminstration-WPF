@@ -11,9 +11,11 @@ namespace ClassroomAdministration_WPF
         private DateTime startDate, endDate;
         private int cycDays, startClass, endClass, weekDay;
 
+        public DateTime StartDate { get { return startDate; } }
         public int StartClass { get { return startClass; } }
         public int KeepClass { get { return endClass - startClass + 1; } }
         public int WeekDay { get { return weekDay; } }
+        public bool OnceActivity { get { return cycDays == 0; } }
 
         public RentTime(string stD, string edD, int cycD, int stC, int edC)
         {
