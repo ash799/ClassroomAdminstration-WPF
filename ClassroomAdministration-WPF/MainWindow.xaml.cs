@@ -140,7 +140,8 @@ namespace ClassroomAdministration_WPF
             lockImage.Margin = new Thickness(42, 5, 0, 5);
 
             timer.Stop();
-            
+            timerRunning = false;
+
             Wait1.SeekAlignedToLastTick(TimeSpan.FromSeconds(7));
 
             if (status == Status.errorId)

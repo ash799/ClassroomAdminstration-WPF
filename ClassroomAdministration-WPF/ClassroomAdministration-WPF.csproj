@@ -150,6 +150,27 @@
   <ItemGroup>
     <Resource Include="Resources\logo-light.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\tableback.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\tableback2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\rentback.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\applyback.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\message.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\table.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
