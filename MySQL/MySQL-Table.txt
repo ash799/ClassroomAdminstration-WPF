@@ -1,6 +1,7 @@
 load data local infile 'D:\\Programming\\C#\\ClassroomAdministration-WPF\\MySQL\\Person.txt' into table person lines terminated by '\r\n';
 load data local infile 'D:\\Programming\\C#\\ClassroomAdministration-WPF\\MySQL\\Rent.txt' into table rent lines terminated by '\r\n';
 load data local infile 'D:\\Programming\\C#\\ClassroomAdministration-WPF\\MySQL\\TakePartIn.txt' into table takepartin lines terminated by '\r\n';
+load data local infile 'D:\\Program Files (x86)\\Git\\ClassroomAdministration-WPF\\MySQL\\Rent.txt' into table rent lines terminated by '\r\n';
 
 create table person
 (

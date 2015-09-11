@@ -141,7 +141,7 @@ namespace ClassroomAdministration_WPF
 
             timer.Stop();
             timerRunning = false;
-            
+
             Wait1.SeekAlignedToLastTick(TimeSpan.FromSeconds(7));
 
             if (status == Status.errorId)

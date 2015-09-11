@@ -36,6 +36,31 @@ namespace ClassroomAdministration_WPF
             father = f;
         }
 
+        public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f,string str)
+        {
+            InitializeComponent();
+
+            person = p;
+            classroom = clsr;
+            date = dt;
+            classChosen = cc;
+            father = f;
+            if (str == "big")
+            {
+                this.Width = 450;
+                this.Height = 450;
+                BorderBackground.Width = 450;
+                BorderBackground.Height = 450;
+
+                TBinfo.FontSize = 40;
+                TBhost.FontSize = 22;
+                TBrentTime.FontSize = 22;
+                TBclassroom.FontSize = 22;
+                TBChoose.FontSize = 22;
+                TBexit.FontSize = 22;
+            }
+        }
+
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
             TBinfo.Text = person.Name+"申请的活动";
@@ -95,6 +120,51 @@ namespace ClassroomAdministration_WPF
             }
             else
                 MessageBox.Show("活动申请发送失败。");
+        }
+
+        private void Border_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        //Close Button
+        private void CloseBorder_MouseEnter_1(object sender, MouseEventArgs e)
+        {
+            CloseBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+        private void CloseBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CloseLabel.Margin = new Thickness(4, 0, 0.333, 0);
+            CloseBorder.Background = null;
+        }
+        private void CloseBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CloseLabel.Margin = new Thickness(6, 0, 0.333, 0);
+        }
+        private void CloseBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
+
+        //Min Button
+        private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+        private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MinLabel.Margin = new Thickness(0, 0, 1, 0);
+        }
+        private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MinLabel.Margin = new Thickness(0, 0, 3, 0);
+            MinBorder.Background = null;
+        }
+        private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            MinLabel.Margin = new Thickness(0, 0, 3, 0);
+            this.WindowState = WindowState.Minimized;
+            this.Owner.WindowState = WindowState.Minimized;
         }
     }
 }

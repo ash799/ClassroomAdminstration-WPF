@@ -59,6 +59,7 @@ namespace ClassroomAdministration_WPF
             for (int i = 0; i < 7; ++i)
             {
                 head1[i] = new Label();
+                head1[i].Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
                 GridScheduleHead.Children.Add(head1[i]);
                 head1[i].Content = weekDayName[i];
                 head1[i].VerticalContentAlignment = VerticalAlignment.Center;
@@ -69,6 +70,7 @@ namespace ClassroomAdministration_WPF
             for (int i = 0; i < 7; ++i)
             {
                 head2[i] = new Label();
+                head2[i].Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
                 GridScheduleHead2.Children.Add(head2[i]);
                 head2[i].Content = weekDayName[i];
                 head2[i].VerticalContentAlignment = VerticalAlignment.Center;
@@ -111,7 +113,7 @@ namespace ClassroomAdministration_WPF
             Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
             tb.FontSize = 16;
 
-            tb.Foreground = new SolidColorBrush(Color.FromArgb(200, 0, 0, 0));
+            tb.Foreground = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255));
             tb.TextWrapping = TextWrapping.Wrap;
             tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
             tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
@@ -338,7 +340,9 @@ namespace ClassroomAdministration_WPF
                 if (schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass))
                 {
                     RectangleChosonClass1.Content = "+申请活动";
+                    RectangleChosonClass1.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
                     RectangleChosonClass2.Content = "+申请活动";
+                    RectangleChosonClass2.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
                 }
                 else
                 {
@@ -456,22 +460,42 @@ namespace ClassroomAdministration_WPF
             if (schedule2 != null &&
                 schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass)
                 && schedule2 != null)
-                new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
+            {
+                if(MaxBorder.IsEnabled==true)
+                    new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
+                else
+                    new WindowApplyRent(person, classroom, currDate, currClass, this,"big").ShowDialog();
+            }
             else
                 if (chosenRent1 != null)
-                    new WindowRent(chosenRent1, this).ShowDialog();
+                {
+                    if (MaxBorder.IsEnabled == true)
+                        new WindowRent(chosenRent1, this).ShowDialog();
+                    else new WindowRent(chosenRent1, this, "big").ShowDialog();
+                }
                 else if (chosenRent2 != null)
-                    new WindowRent(chosenRent2, this).ShowDialog();
+                    if (MaxBorder.IsEnabled == true)
+                        new WindowRent(chosenRent2, this).ShowDialog();
+                    else new WindowRent(chosenRent2, this, "big").ShowDialog();
 
             if (e != null) e.Handled = true;
         }
         private void RectangleChosonRent2_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass) && schedule2 != null)
-                new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
+            {
+                if (MaxBorder.IsEnabled == true)
+                    new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
+                else
+                    new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
+            }
             else
                 if (chosenRent2 != null) //MessageBox.Show(chosenClassroomRent.Display());
-                    new WindowRent(chosenRent2, this).ShowDialog();
+                {
+                    if (MaxBorder.IsEnabled == true)
+                        new WindowRent(chosenRent2, this).ShowDialog();
+                    else new WindowRent(chosenRent2, this, "big").ShowDialog();
+                }
             if (e != null) e.Handled = true;
         }
 
@@ -479,11 +503,13 @@ namespace ClassroomAdministration_WPF
         private void LabelClassroom_MouseEnter(object sender, MouseEventArgs e)
         {
             LabelClassroom.Content = "选择教室";
+            LabelClassroom.Background = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));
             LabelClassroom.BorderBrush = new SolidColorBrush(Color.FromArgb(128, 23, 0, 255));
         }
         private void LabelClassroom_MouseLeave(object sender, MouseEventArgs e)
         {
             if (classroom != null) LabelClassroom.Content = classroom.Name + "的第" + currWeek + "周";
+            LabelClassroom.Background = null;
             LabelClassroom.BorderBrush = null;
         }
         private void LabelClassroom_MouseDown(object sender, MouseButtonEventArgs e)
@@ -517,7 +543,141 @@ namespace ClassroomAdministration_WPF
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule1; } }
 
+        private void Border_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+           this.DragMove();
+        }
 
+        
+
+        private void MaxBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MaxBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+        private void MaxBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MaxLabel.Margin = new Thickness(0, 0, 5, 0);
+            MaxBorder.Background = null;
+        }
+        private void MaxBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MaxLabel.Margin = new Thickness(0, 0, 7, 0);
+        }
+        private void MaxBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.WindowState = WindowState.Normal;
+            
+            MaxLabel.Margin = new Thickness(0, 0, 5, 0);
+            this.WindowState = WindowState.Maximized;
+            MaxBorder.Visibility = Visibility.Hidden;
+            MaxBorder.IsEnabled = false;
+            NormalBorder.Visibility = Visibility.Visible;
+            NormalBorder.IsEnabled = true;
+
+        }
+
+        private void NormalBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NormalBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+
+        private void NormalBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            canvas_normalborder.Margin = new Thickness(0);
+            NormalBorder.Background = null;
+        }
+
+        private void NormalBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            canvas_normalborder.Margin = new Thickness(-2, 0, 0, 0);
+        }
+
+        private void NormalBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.WindowState = WindowState.Normal;
+
+            MaxLabel.Margin = new Thickness(0,0,5,0);
+            MaxBorder.Visibility = Visibility.Visible;
+            MaxBorder.IsEnabled = true;
+            NormalBorder.Visibility = Visibility.Hidden;
+            NormalBorder.IsEnabled = false;
+        }
+
+        private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+
+        private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MinLabel.Margin = new Thickness(0, 0, 3, 0);
+            MinBorder.Background = null;
+
+        }
+
+        private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MinLabel.Margin = new Thickness(0, 0, 5, 0);
+        }
+
+        private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void CloseBorder_MouseEnter_1(object sender, MouseEventArgs e)
+        {
+            CloseBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+
+        private void CloseBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CloseLabel.Margin = new Thickness(0, 0, -3, 0);
+            CloseBorder.Background = null;
+        }
+
+        private void CloseBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CloseLabel.Margin = new Thickness(0, 0, -1, 0);
+            
+        }
+
+        private void CloseBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void BorderInfo_MouseEnter_1(object sender, MouseEventArgs e)
+        {
+            BorderInfo.BorderThickness = new Thickness(3);
+        }
+
+        private void BorderInfo_MouseLeave(object sender, MouseEventArgs e)
+        {
+            BorderInfo.BorderThickness = new Thickness(0);
+        }
+
+        private void BorderMessage_MouseEnter(object sender, MouseEventArgs e)
+        {
+            BorderMessage.BorderThickness = new Thickness(3);
+        }
+
+        private void BorderMessage_MouseLeave(object sender, MouseEventArgs e)
+        {
+            BorderMessage.BorderThickness = new Thickness(0);
+        }
+
+        private void BorderTable_MouseEnter(object sender, MouseEventArgs e)
+        {
+            BorderTable.BorderThickness = new Thickness(3);
+        }
+
+        private void BorderTable_MouseLeave(object sender, MouseEventArgs e)
+        {
+            BorderTable.BorderThickness = new Thickness(0);
+        }
+
+        
 
     }
 }
