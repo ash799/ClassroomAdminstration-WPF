@@ -54,7 +54,7 @@ namespace ClassroomAdministration_WPF
                     return Color.FromArgb((byte)(alpha * i * 0.5), 255, 255, 255);
             }
 
-            return Colors.White;
+            return Color.FromArgb((byte)(alpha * i * 0.5), 255, 255, 255);
         }
 
         static public int NameColorId(string s)

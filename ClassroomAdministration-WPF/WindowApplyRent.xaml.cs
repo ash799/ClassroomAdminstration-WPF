@@ -36,6 +36,22 @@ namespace ClassroomAdministration_WPF
             father = f;
         }
 
+        private void BorderBackground_Loaded(object sender, RoutedEventArgs e)
+        {
+            switch (WindowIndex.currStyle)
+            {
+                case WindowIndex.style.Starry:
+                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.applyback));
+                    break;
+                case WindowIndex.style.ColorBox:
+                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.Color1));
+                    break;
+            }
+
+            TBinfo.Foreground = new SolidColorBrush(WindowIndex.textColor);
+        }
+
+
         public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f, string str = "")
         {
             InitializeComponent();
@@ -67,9 +83,9 @@ namespace ClassroomAdministration_WPF
             TBinfo.Text = person.Name+"申请的活动";
             TBinfo.Focus();
 
-            TBhost.Text = "申请人: " + DatabaseLinker.GetName(person.pId);
+            TBhost.Content = "申请人: " + DatabaseLinker.GetName(person.pId);
 
-            TBclassroom.Text = "教室: " + classroom.Name;
+            TBclassroom.Content = "教室: " + classroom.Name;
 
             for (int i = 0; i < 6; ++i)
                 if (classChosen >= RentTime.typicalClassRent[i, 0] && classChosen <= RentTime.typicalClassRent[i, 1])
@@ -77,18 +93,18 @@ namespace ClassroomAdministration_WPF
                     classStart = RentTime.typicalClassRent[i, 0];
                     classEnd = RentTime.typicalClassRent[i, 1];
                 }
-            TBrentTime.Text = "时间: " + date.Month + "月" + date.Day + "日, 第" + classStart + "节至第" + classEnd + "节";
+            TBrentTime.Content = "时间: " + date.Month + "月" + date.Day + "日, 第" + classStart + "节至第" + classEnd + "节";
         }
 
         private void TBclassroom_MouseEnter(object sender, MouseEventArgs e)
         {
-            TextBlock tb = (TextBlock)sender;
-            tb.Background = new SolidColorBrush(MyColor.NameColor(TBinfo.Text));
+            Label tb = (Label)sender;
+            tb.Background = new SolidColorBrush(MyColor.NameColor(TBinfo.Text, 0.2));
         }
 
         private void TBclassroom_MouseLeave(object sender, MouseEventArgs e)
         {
-            TextBlock tb = (TextBlock)sender;
+            Label tb = (Label)sender;
             tb.Background = null;
         }
 
@@ -146,6 +162,8 @@ namespace ClassroomAdministration_WPF
         {
             this.Close();
         }
+
+
 
         ////Min Button
         //private void MinBorder_MouseEnter(object sender, MouseEventArgs e)

@@ -26,6 +26,7 @@ namespace ClassroomAdministration_WPF
             person = p;
 
             EnsureSkins();
+            ApplySkin(StarrySkin);
         }
 
         enum status { Info, Table, Message }
@@ -35,7 +36,7 @@ namespace ClassroomAdministration_WPF
 
         public enum style { Starry, ColorBox }
         static public style currStyle = style.Starry;
-        Color textColor = Colors.White;
+        static public Color textColor = Colors.White;
 
         static ResourceDictionary ColorBoxSkin = null, StarrySkin = null;
 
@@ -62,8 +63,6 @@ namespace ClassroomAdministration_WPF
             appMergedDictionaries.Add(newSkin);
 
         }
-
-        
 
         void SetStyle(style newStyle)
         {

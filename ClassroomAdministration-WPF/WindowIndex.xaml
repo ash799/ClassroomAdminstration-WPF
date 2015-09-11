@@ -2,7 +2,15 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Height="606" Width="903.776"
-         PreviewKeyDown="Window_PreviewKeyDown_1" MinWidth="700" MinHeight="550" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" Icon="Resources/logo-light.ico" PreviewMouseWheel="Window_PreviewMouseWheel_1"
+         PreviewKeyDown="Window_PreviewKeyDown_1" 
+        MinWidth="700" MinHeight="550" 
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None" 
+        Background="{x:Null}" 
+        AllowsTransparency="True" 
+        ResizeMode="CanResizeWithGrip" 
+        Icon="Resources/logo-light.ico" 
+        PreviewMouseWheel="Window_PreviewMouseWheel_1"
         >
     <Window.Resources>
         
