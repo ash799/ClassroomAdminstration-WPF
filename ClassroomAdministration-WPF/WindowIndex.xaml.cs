@@ -34,8 +34,17 @@ namespace ClassroomAdministration_WPF
         int currWeek = 0, currWeekDay = 0, currClass = 1;
         //星期表头
         Label[] head1, head2;
-        string[] weekDayName = RentTime.weekDayName; 
-        
+        string[] weekDayName = RentTime.weekDayName;
+
+        //左侧: 个人课程表
+        Person person;
+        RentTable schedule1;
+        List<TextBlock> TextBlockRents1 = new List<TextBlock>();
+        //右侧: 教室课程表
+        Classroom classroom = null;
+        RentTable schedule2;
+        List<TextBlock> TextBlockRents2 = new List<TextBlock>();
+
         //选中的格子
         Rent chosenRent1 = null, chosenRent2 = null;
         TextBlock TBHighlight1 = null, TBHighlight2 = null;
@@ -94,14 +103,11 @@ namespace ClassroomAdministration_WPF
 
                 TextBlockInitialize(tb, r);
             }
-
             chosen.Visibility = Visibility.Visible;
-
             if (grid.Children.Contains(chosen)) grid.Children.Remove(chosen);
             grid.Children.Add(chosen);
 
             SetDateClass(currDate, currClass);
-            checkoutWeek();
         }
         //初始化单个课程
         private void TextBlockInitialize(TextBlock tb, Rent r, bool MouseShow = true)
@@ -138,14 +144,42 @@ namespace ClassroomAdministration_WPF
             tb.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 0.8));
         }
 
-        //左侧: 个人课程表
-        Person person;
-        RentTable schedule1;
-        List<TextBlock> TextBlockRents1 = new List<TextBlock>();
-        //右侧: 教室课程表
-        Classroom classroom = null;
-        RentTable schedule2;
-        List<TextBlock> TextBlockRents2 = new List<TextBlock>();
+        //选择日期时间
+        private void SetDateClass(DateTime date, int cc)
+        {
+            Console.WriteLine("date: " + date + ", class: " + cc);
+
+            if (cc < 1 || cc > 14) return;
+
+            if (date < firstDate)
+            {
+                MessageBox.Show("您选择的日期不在本学期内。");
+                return;
+            }
+
+            currDate = date;
+            currClass = cc;
+
+            int days = (currDate - firstDate).Days;
+            SetWeeks(days / 7 + 1);
+            currWeekDay = days % 7;
+
+            DateChosen.SelectedDate = date;
+
+            ChosenRentControl();
+
+            RectangleChosonClass1.SetValue(Grid.ColumnProperty, currWeekDay);
+            RectangleChosonClass1.SetValue(Grid.RowProperty, currClass - 1);
+            RectangleChosonClass2.SetValue(Grid.ColumnProperty, currWeekDay);
+            RectangleChosonClass2.SetValue(Grid.RowProperty, currClass - 1);
+        }
+        private void SetDateClass(int weekDay, int cc)
+        {
+            currWeekDay = weekDay;
+            currDate = firstDate + new TimeSpan(7 * (currWeek - 1) + weekDay, 0, 0, 0);
+
+            SetDateClass(currDate, cc);
+        }
 
         //设置周数
         private void checkoutWeek()
@@ -189,6 +223,86 @@ namespace ClassroomAdministration_WPF
                 DateTime theDate = firstDate + new TimeSpan(7 * (currWeek - 1) + i, 0, 0, 0);
                 head[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
             }
+        }
+  
+        //检查选中的时间点的课程
+        private void ChosenRentControl()
+        {
+            if (schedule1 != null && schedule2 != null)
+            {
+                chosenRent1 = schedule1.GetRentFromDateClass(currDate, currClass);
+                TBHighlight1 = Hightlight(TBHighlight1, chosenRent1, GridSchedule1);
+                chosenRent2 = schedule2.GetRentFromDateClass(currDate, currClass);
+                TBHighlight2 = Hightlight(TBHighlight2, chosenRent2, GridSchedule2);
+
+                if (schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass))
+                {
+                    RectangleChosonClass1.Content = "+申请活动";
+                    RectangleChosonClass1.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
+                    RectangleChosonClass2.Content = "+申请活动";
+                    RectangleChosonClass2.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
+                }
+                else
+                {
+                    RectangleChosonClass1.Content = "";//chosenRent1 == null ? "" : "查看信息";
+                    RectangleChosonClass2.Content = "";//chosenRent2 == null ? "" : "查看信息";
+                }
+            }
+            else if (schedule1 != null)
+            {
+                chosenRent1 = schedule1.GetRentFromDateClass(currDate, currClass);
+                TBHighlight1 = Hightlight(TBHighlight1, chosenRent1, GridSchedule1);
+            }
+        }
+        private TextBlock Hightlight(TextBlock tbh, Rent r, Grid grid)
+        {
+            if (grid.Children.Contains(tbh))
+            {
+                tbh.Visibility = Visibility.Collapsed;
+                grid.Children.Remove(tbh);
+            }
+
+            if (r == null) return null;
+
+            Console.WriteLine("HightLight Rent: " + r.Info);
+
+            tbh = new TextBlock();
+            grid.Children.Add(tbh);
+            TextBlockInitialize(tbh, r, false);
+
+            tbh.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 1));
+            tbh.Foreground = new SolidColorBrush(Colors.White);
+
+            if (GridSchedule1 == grid) tbh.MouseDown += RectangleChosonRent1_MouseDown;
+            else if (GridSchedule2 == grid) tbh.MouseDown += RectangleChosonRent2_MouseDown;
+
+            return tbh;
+        }
+        private TextBlock Rent2Block(Rent r)
+        {
+            foreach (TextBlock tb in TextBlockRents1)
+                if ((Rent)tb.Tag == r) return tb;
+            foreach (TextBlock tb in TextBlockRents2)
+                if ((Rent)tb.Tag == r) return tb;
+            return null;
+        }
+
+        //设置教室。在教室发生变化的时候切换UI
+        private void SetCId(int cId)
+        {
+            Classroom C = Building.GetClassroom(cId);
+            if (null == C) return;
+            if (classroom != null && classroom.cId == C.cId) return;
+
+            TextBoxCId.Text = cId.ToString();
+
+            classroom = C;
+            schedule2 = DatabaseLinker.GetClassroomRentTable(cId);
+            LabelClassroom.Content = classroom.Name + "的第" + currWeek + "周";
+
+            ScheduleInitialize(GridSchedule2, schedule2, TextBlockRents2, RectangleChosonClass2);
+
+            // ChosenRentControl();
         }
 
         //全体键盘托管
@@ -250,7 +364,7 @@ namespace ClassroomAdministration_WPF
                             ++c;
                             if (Building.GetClassroom(c) != null) break;
                         }
-                        TextBoxCId.Text = c.ToString();
+                        //   TextBoxCId.Text = c.ToString();
                         break;
                     case Key.Down:
                         while (c > Classroom.MinCId)
@@ -258,7 +372,7 @@ namespace ClassroomAdministration_WPF
                             --c;
                             if (Building.GetClassroom(c) != null) break;
                         }
-                        TextBoxCId.Text = c.ToString();
+                        //   TextBoxCId.Text = c.ToString();
                         break;
                     case Key.PageUp:
                         while (b < Building.MaxBId)
@@ -270,7 +384,7 @@ namespace ClassroomAdministration_WPF
                                 break;
                             }
                         }
-                        TextBoxCId.Text = c.ToString();
+                        //  TextBoxCId.Text = c.ToString();
                         break;
                     case Key.PageDown:
                         while (b > Building.MinBId)
@@ -282,111 +396,21 @@ namespace ClassroomAdministration_WPF
                                 break;
                             }
                         }
-                        TextBoxCId.Text = c.ToString();
+                        //  TextBoxCId.Text = c.ToString();
                         break;
                 }
                 SetCId(c);
             }
         }
-
-        
-        //选择日期时间
-        private void SetDateClass(DateTime date, int cc)
+        //鼠标滚轮托管
+        private void Window_PreviewMouseWheel_1(object sender, MouseWheelEventArgs e)
         {
-            Console.WriteLine("date: "+date+", class: "+cc);
-
-            if (cc < 1 || cc > 14) return;
-
-            if (date < firstDate)
-            {
-                MessageBox.Show("您选择的日期不在本学期内。");
-                return;
-            }
-
-            currDate = date;
-            currClass = cc;
-            
-            int days = (currDate - firstDate).Days;
-            SetWeeks(days / 7 + 1);
-            currWeekDay = days % 7; 
-            
-            DateChosen.SelectedDate = date;  
-
-            ChosenRentControl();
-
-            RectangleChosonClass1.SetValue(Grid.ColumnProperty, currWeekDay);
-            RectangleChosonClass1.SetValue(Grid.RowProperty, currClass - 1);
-            RectangleChosonClass2.SetValue(Grid.ColumnProperty, currWeekDay);
-            RectangleChosonClass2.SetValue(Grid.RowProperty, currClass - 1);
-        }
-        private void SetDateClass(int weekDay, int cc)
-        {
-            currWeekDay = weekDay;
-            currDate = firstDate + new TimeSpan(7 * (currWeek - 1) + weekDay, 0, 0, 0);
-
-            SetDateClass(currDate, cc);
-        }
-
-        //检查选中的时间点的课程
-        private void ChosenRentControl()
-        {
-            if (schedule1 != null && schedule2 != null)
-            {
-                chosenRent1 = schedule1.GetRentFromDateClass(currDate, currClass);
-                TBHighlight1 = Hightlight(TBHighlight1, chosenRent1, GridSchedule1);
-                chosenRent2 = schedule2.GetRentFromDateClass(currDate, currClass);
-                TBHighlight2 = Hightlight(TBHighlight2, chosenRent2, GridSchedule2);
-
-                if (schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass))
-                {
-                    RectangleChosonClass1.Content = "+申请活动";
-                    RectangleChosonClass1.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-                    RectangleChosonClass2.Content = "+申请活动";
-                    RectangleChosonClass2.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-                }
-                else
-                {
-                    RectangleChosonClass1.Content = "";//chosenRent1 == null ? "" : "查看信息";
-                    RectangleChosonClass2.Content = "";//chosenRent2 == null ? "" : "查看信息";
-                }
-            }
-            else if (schedule1 != null)
-            {
-                chosenRent1 = schedule1.GetRentFromDateClass(currDate, currClass);
-                TBHighlight1 = Hightlight(TBHighlight1, chosenRent1, GridSchedule1);
-            }
-        }
-        private TextBlock Hightlight(TextBlock tbh, Rent r, Grid grid)
-        {
-            if (grid.Children.Contains(tbh))
-            {
-                tbh.Visibility = Visibility.Collapsed;
-                grid.Children.Remove(tbh);
-            }
-
-            if (r == null) return null;
-
-            Console.WriteLine("Rent: " + r.Info);
-
-            tbh = new TextBlock();
-            grid.Children.Add(tbh);
-            TextBlockInitialize(tbh, r, false);
-
-            tbh.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 1));
-            tbh.Foreground = new SolidColorBrush(Colors.White);
-
-            if (GridSchedule1 == grid) tbh.MouseDown += RectangleChosonRent1_MouseDown;
-            else if (GridSchedule2 == grid) tbh.MouseDown += RectangleChosonRent2_MouseDown;
-
-            return tbh;
-        }
-        private TextBlock Rent2Block(Rent r)
-        {
-            foreach (TextBlock tb in TextBlockRents1)
-                if ((Rent)tb.Tag == r) return tb;
-            foreach (TextBlock tb in TextBlockRents2)
-                if ((Rent)tb.Tag == r) return tb;
-            return null;
+            int d = e.Delta / 120;
+            if (d > 0)
+                if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
+            if (d < 0)
+                currDate += new TimeSpan(7, 0, 0, 0);
+            SetDateClass(currDate, currClass);
         }
 
         //通过Calendar选择了date后
@@ -436,22 +460,6 @@ namespace ClassroomAdministration_WPF
             }
         }
         
-        //设置教室。在教室发生变化的时候切换UI
-        private void SetCId(int cId)
-        {
-            Classroom C = Building.GetClassroom(cId);
-            if (null == C) return;            
-            if (classroom != null && classroom.cId == C.cId) return;
-
-            classroom = C;
-            schedule2 = DatabaseLinker.GetClassroomRentTable(cId);
-            LabelClassroom.Content = classroom.Name + "的第" + currWeek + "周";
-
-            ScheduleInitialize(GridSchedule2, schedule2, TextBlockRents2, RectangleChosonClass2);
-
-            ChosenRentControl();
-        }
-
         //单击选定框
         private void RectangleChosonRent1_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -518,11 +526,10 @@ namespace ClassroomAdministration_WPF
             new WindowClassroomList(rt, this).ShowDialog();
         }
 
-
         //子窗口调用函数
         public void SetClassroom(int cId)
         {
-            TextBoxCId.Text = cId.ToString();
+           // TextBoxCId.Text = cId.ToString();
             SetCId(cId);
         }
         public void RefreshSchedule()
@@ -543,13 +550,13 @@ namespace ClassroomAdministration_WPF
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule1; } }
 
+        //窗口拖动
         private void Border_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
            this.DragMove();
         }
-
         
-
+        //最大化
         private void MaxBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             MaxBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
@@ -575,23 +582,20 @@ namespace ClassroomAdministration_WPF
             NormalBorder.IsEnabled = true;
 
         }
-
+        //还原
         private void NormalBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             NormalBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
         }
-
         private void NormalBorder_MouseLeave(object sender, MouseEventArgs e)
         {
             canvas_normalborder.Margin = new Thickness(0);
             NormalBorder.Background = null;
         }
-
         private void NormalBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             canvas_normalborder.Margin = new Thickness(-2, 0, 0, 0);
         }
-
         private void NormalBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
             this.WindowState = WindowState.Normal;
@@ -602,82 +606,55 @@ namespace ClassroomAdministration_WPF
             NormalBorder.Visibility = Visibility.Hidden;
             NormalBorder.IsEnabled = false;
         }
-
+        //最小化
         private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
         }
-
         private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
         {
             MinLabel.Margin = new Thickness(0, 0, 3, 0);
             MinBorder.Background = null;
-
         }
-
         private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             MinLabel.Margin = new Thickness(0, 0, 5, 0);
         }
-
         private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
         }
-
+        //关闭
         private void CloseBorder_MouseEnter_1(object sender, MouseEventArgs e)
         {
             CloseBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
         }
-
         private void CloseBorder_MouseLeave(object sender, MouseEventArgs e)
         {
             CloseLabel.Margin = new Thickness(0, 0, -3, 0);
             CloseBorder.Background = null;
         }
-
         private void CloseBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             CloseLabel.Margin = new Thickness(0, 0, -1, 0);
-            
         }
-
         private void CloseBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
             this.Close();
         }
 
-        private void BorderInfo_MouseEnter_1(object sender, MouseEventArgs e)
-        {
-            BorderInfo.BorderThickness = new Thickness(3);
-        }
-
-        private void BorderInfo_MouseLeave(object sender, MouseEventArgs e)
-        {
-            BorderInfo.BorderThickness = new Thickness(0);
-        }
-
-        private void BorderMessage_MouseEnter(object sender, MouseEventArgs e)
-        {
-            BorderMessage.BorderThickness = new Thickness(3);
-        }
-
-        private void BorderMessage_MouseLeave(object sender, MouseEventArgs e)
-        {
-            BorderMessage.BorderThickness = new Thickness(0);
-        }
-
+        //上侧按钮
         private void BorderTable_MouseEnter(object sender, MouseEventArgs e)
         {
-            BorderTable.BorderThickness = new Thickness(3);
+            Border b = sender as Border;
+            b.BorderThickness = new Thickness(3);
         }
-
         private void BorderTable_MouseLeave(object sender, MouseEventArgs e)
         {
-            BorderTable.BorderThickness = new Thickness(0);
+            Border b = sender as Border;
+            b.BorderThickness = new Thickness(0);
         }
 
-        
 
     }
 }
