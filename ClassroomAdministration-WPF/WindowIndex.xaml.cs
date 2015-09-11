@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace ClassroomAdministration_WPF
 {
@@ -23,10 +24,91 @@ namespace ClassroomAdministration_WPF
         {
             InitializeComponent();
             person = p;
+
+            EnsureSkins();
         }
 
         enum status { Info, Table, Message }
         status currStatus = status.Table;
+
+        #region 换肤
+
+        public enum style { Starry, ColorBox }
+        static public style currStyle = style.Starry;
+        Color textColor = Colors.White;
+
+        static ResourceDictionary ColorBoxSkin = null, StarrySkin = null;
+
+        void EnsureSkins()
+        {
+            if (ColorBoxSkin == null)
+            {
+                ColorBoxSkin = new ResourceDictionary();
+                ColorBoxSkin.Source = new Uri("StyleColorBox.xaml", UriKind.Relative);
+
+                StarrySkin = new ResourceDictionary();
+                StarrySkin.Source = new Uri("StyleStarry.xaml", UriKind.Relative);
+            }
+        }
+        void ApplySkin(ResourceDictionary newSkin)
+        {
+         //   if (newSkin == null) return;
+
+            Collection<ResourceDictionary> appMergedDictionaries = Application.Current.Resources.MergedDictionaries;
+
+            if (appMergedDictionaries.Count != 0)
+                appMergedDictionaries.Remove(appMergedDictionaries[0]);
+
+            appMergedDictionaries.Add(newSkin);
+
+        }
+
+        
+
+        void SetStyle(style newStyle)
+        {
+            if (currStyle == newStyle) return;
+
+            currStyle = newStyle;
+
+            switch (currStyle)
+            {
+                case style.Starry:
+                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.tableback2));
+                    ApplySkin(StarrySkin);
+                    textColor = Colors.White;
+                    break;
+                case style.ColorBox:
+                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.Color3));
+                    ApplySkin(ColorBoxSkin);
+                    textColor = Colors.Black;
+                    break;
+            }
+
+            TextBlockChosenDate.Foreground = new SolidColorBrush(textColor);
+            TextBoxCId.Foreground = new SolidColorBrush(textColor);
+
+            RefreshSchedule();
+
+        }
+
+        public static ImageSource ChangeBitmapToImageSource(System.Drawing.Bitmap bitmap)
+        {
+
+            IntPtr hBitmap = bitmap.GetHbitmap();
+            ImageSource wpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                hBitmap,
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+
+            return wpfBitmap;
+
+        }
+
+
+
+        #endregion
 
         #region 个人信息逻辑
         private void GridInfo_Loaded(object sender, RoutedEventArgs e)
@@ -138,7 +220,7 @@ namespace ClassroomAdministration_WPF
             Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
             tb.FontSize = 16;
 
-            tb.Foreground = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255));
+            tb.Foreground = new SolidColorBrush(textColor);
             tb.TextWrapping = TextWrapping.Wrap;
             tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
             tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
@@ -445,56 +527,39 @@ namespace ClassroomAdministration_WPF
         //全体键盘托管
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
+            //换肤
+            switch (e.Key)
+            {
+                case Key.F1: SetStyle(style.Starry); break;
+                case Key.F2: SetStyle(style.ColorBox); break;
+            }
+
             switch (currStatus)
             {
                 case status.Table:
+                    //课程表控制
                     if (!TextBoxCId.IsKeyboardFocused)
                     {
                         switch (e.Key)
                         {
-                            case Key.Up:
-                                if (currClass > 1) --currClass;
-                                break;
-                            case Key.Down:
-                                if (currClass < cntRow) ++currClass;
-                                break;
-                            case Key.Left:
-                                if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0);
-                                break;
-                            case Key.Right:
-                                currDate += new TimeSpan(1, 0, 0, 0);
-                                break;
-                            case Key.Home:
-                                currClass = 1;
-                                break;
-                            case Key.End:
-                                currClass = cntRow;
-                                break;
-                            case Key.PageUp:
-                                if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
-                                break;
-                            case Key.PageDown:
-                                currDate += new TimeSpan(7, 0, 0, 0);
-                                break;
-                            case Key.Enter:
-                                RectangleChosonRent1_MouseDown(null, null);
-                                break;
+                            case Key.Up:        if (currClass > 1) --currClass; break;
+                            case Key.Down:      if (currClass < cntRow) ++currClass; break;
+                            case Key.Left:      if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Right:     currDate += new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Home:      currClass = 1; break;
+                            case Key.End:       currClass = cntRow; break;
+                            case Key.PageUp:    if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0); break;
+                            case Key.PageDown:  currDate += new TimeSpan(7, 0, 0, 0); break;
+                            case Key.Enter:     RectangleChosonRent1_MouseDown(null, null);  break;
                         }
                         SetDateClass(currDate, currClass);
                     }
                     else
+                    //教室控制
                     {
                         int b, c;
-                        if (classroom == null)
-                        {
-                            b = 0;
-                            c = 0;
-                        }
-                        else
-                        {
-                            b = classroom.Building.bId;
-                            c = classroom.cId;
-                        }
+                        if (classroom == null) { b = 0; c = 0; }
+                        else { b = classroom.Building.bId; c = classroom.cId; }
 
                         switch (e.Key)
                         {
@@ -504,7 +569,6 @@ namespace ClassroomAdministration_WPF
                                     ++c;
                                     if (Building.GetClassroom(c) != null) break;
                                 }
-                                //   TextBoxCId.Text = c.ToString();
                                 break;
                             case Key.Down:
                                 while (c > Classroom.MinCId)
@@ -512,7 +576,6 @@ namespace ClassroomAdministration_WPF
                                     --c;
                                     if (Building.GetClassroom(c) != null) break;
                                 }
-                                //   TextBoxCId.Text = c.ToString();
                                 break;
                             case Key.PageUp:
                                 while (b < Building.MaxBId)
@@ -524,7 +587,6 @@ namespace ClassroomAdministration_WPF
                                         break;
                                     }
                                 }
-                                //  TextBoxCId.Text = c.ToString();
                                 break;
                             case Key.PageDown:
                                 while (b > Building.MinBId)
@@ -536,7 +598,6 @@ namespace ClassroomAdministration_WPF
                                         break;
                                     }
                                 }
-                                //  TextBoxCId.Text = c.ToString();
                                 break;
                         }
                         SetCId(c);
