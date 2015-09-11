@@ -36,7 +36,7 @@ namespace ClassroomAdministration_WPF
             father = f;
         }
 
-        public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f,string str)
+        public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f, string str = "")
         {
             InitializeComponent();
 
@@ -53,6 +53,7 @@ namespace ClassroomAdministration_WPF
                 BorderBackground.Height = 450;
 
                 TBinfo.FontSize = 40;
+
                 TBhost.FontSize = 22;
                 TBrentTime.FontSize = 22;
                 TBclassroom.FontSize = 22;
@@ -146,25 +147,25 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
-        //Min Button
-        private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
-        }
-        private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MinLabel.Margin = new Thickness(0, 0, 1, 0);
-        }
-        private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MinLabel.Margin = new Thickness(0, 0, 3, 0);
-            MinBorder.Background = null;
-        }
-        private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MinLabel.Margin = new Thickness(0, 0, 3, 0);
-            this.WindowState = WindowState.Minimized;
-            this.Owner.WindowState = WindowState.Minimized;
-        }
+        ////Min Button
+        //private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
+        //{
+        //    MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        //}
+        //private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    MinLabel.Margin = new Thickness(0, 0, 1, 0);
+        //}
+        //private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
+        //{
+        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
+        //    MinBorder.Background = null;
+        //}
+        //private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
+        //    this.WindowState = WindowState.Minimized;
+        //    this.Owner.WindowState = WindowState.Minimized;
+        //}
     }
 }

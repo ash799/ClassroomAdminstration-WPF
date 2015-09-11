@@ -43,9 +43,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="472*" MinWidth="350"/>
             <ColumnDefinition Width="429*" MinWidth="350"/>
-                <ColumnDefinition Width="44*"/>
-            </Grid.ColumnDefinitions>
-        <DatePicker x:Name="DateChosen" Margin="98,36,0,0" VerticalAlignment="Top" Height="25" Width="30" HorizontalAlignment="Left" CalendarClosed="DateChosen_CalendarClosed" SelectedDateFormat="Short" FontSize="14" Focusable="False" Background="#4CFFFFFF" BorderThickness="0"/>
+        </Grid.ColumnDefinitions>
+<TextBlock x:Name="TextBlockChosenDate" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" FontSize="16"  Background="#33FFFFFF"  Foreground="White" Margin="13,38,0,0"/>
+            <DatePicker x:Name="DateChosen" Margin="105,38,0,0" VerticalAlignment="Top" Height="22" Width="28" HorizontalAlignment="Left" CalendarClosed="DateChosen_CalendarClosed" SelectedDateFormat="Short" FontSize="14" Focusable="False" Background="#33FFFFFF" BorderThickness="0"/>
             <Grid x:Name="GridSchedule1" Margin="40,95,10,9.334"
                 MouseDown="GridSchedule1_MouseDown" Background="#00000000">
                 <Grid.RowDefinitions>
@@ -152,12 +152,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
         </Grid>
-            <TextBox x:Name="TextBoxCId_Copy" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="14" BorderBrush="#33FFFFFF" Background="#33FFFFFF" SelectionBrush="#333A9CFF" Foreground="White"/>
-        <TextBox x:Name="TextBoxCId" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="18" TextChanged="TextBoxCId_TextChanged" BorderBrush="#33FFFFFF" Background="#33FFFFFF" SelectionBrush="#333A9CFF" Foreground="White"/>
+        <TextBox x:Name="TextBoxCId_Copy" HorizontalAlignment="Left" Height="22" Margin="-209,428,0,58" Width="160" Text="用来抢键盘焦点的TextBox"/>
+        <TextBox x:Name="TextBoxCId" Grid.Column="1" HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" TextChanged="TextBoxCId_TextChanged" BorderBrush="#33FFFFFF" Background="#33FFFFFF" SelectionBrush="#333A9CFF" Foreground="White" Height="22"/>
         <Label Content="当前教室编号：" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14" Foreground="White"/>
-        <Label x:Name="LabelClassroom" Content="选择一间教室" Height="53" Margin="135,10,7.667,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1" MouseEnter="LabelClassroom_MouseEnter" MouseLeave="LabelClassroom_MouseLeave" MouseDown="LabelClassroom_MouseDown" BorderThickness="2" Grid.ColumnSpan="2" MinHeight="3" Foreground="White" BorderBrush="#00000000"/>
-        <GridSplitter HorizontalAlignment="Left" Margin="470,0,0,-0.666" Width="4" Focusable="False" Background="{x:Null}" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <Grid HorizontalAlignment="Left" Margin="5,100,0,9.334" Width="35">
+        <Label x:Name="LabelClassroom" Content="选择一间教室" Height="53" Margin="135,10,7.667,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Padding="0" VerticalContentAlignment="Center" Grid.Column="1" MouseEnter="LabelClassroom_MouseEnter" MouseLeave="LabelClassroom_MouseLeave" MouseDown="LabelClassroom_MouseDown" BorderThickness="1" Grid.ColumnSpan="2" MinHeight="3" Foreground="White" BorderBrush="#00000000"/>
+            <Grid HorizontalAlignment="Left" Margin="5,100,0,9.334" Width="35">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -179,15 +178,15 @@
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="09:50" VerticalAlignment="Top" Grid.Row="2" Foreground="#DFFFFFFF"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="10:40" VerticalAlignment="Top" Grid.Row="3" Foreground="#DFFFFFFF"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="11:30" VerticalAlignment="Top" Grid.Row="4" Foreground="#DFFFFFFF"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="13:30" Grid.Row="5" Foreground="#DFFFFFFF" Margin="0,0,0,17"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="14:20" Grid.Row="6" Foreground="#DFFFFFFF" Margin="0,0,0,17"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="15:20" Grid.Row="7" Foreground="#DFFFFFFF" Margin="0,0,0,17"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="13:30" VerticalAlignment="Top" Grid.Row="5" Foreground="#DFFFFFFF"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="14:20" VerticalAlignment="Top" Grid.Row="6" Foreground="#DFFFFFFF"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="15:20" VerticalAlignment="Top" Grid.Row="7" Foreground="#DFFFFFFF"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="16:10" VerticalAlignment="Top" Grid.Row="8" Foreground="#DFFFFFFF"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="17:05" VerticalAlignment="Top" Grid.Row="9" Foreground="#DFFFFFFF"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="17:55" VerticalAlignment="Top" Grid.Row="10" Foreground="#DFFFFFFF"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="17:05" VerticalAlignment="Top" Grid.Row="9" Foreground="#DFFFFFFF"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="17:55" VerticalAlignment="Top" Grid.Row="10" Foreground="#DFFFFFFF"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="19:20" VerticalAlignment="Top" Grid.Row="11" Foreground="#DFFFFFFF"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="20:10" VerticalAlignment="Top" Grid.Row="12" Foreground="#DFFFFFFF"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="21:00" VerticalAlignment="Top" Grid.Row="13" Foreground="#DFFFFFFF"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="20:10" VerticalAlignment="Top" Grid.Row="12" Foreground="#DFFFFFFF"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="21:00" VerticalAlignment="Top" Grid.Row="13" Foreground="#DFFFFFFF"/>
             
         </Grid>
         <Label Content="当前选定日期：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14" Foreground="White"/>
