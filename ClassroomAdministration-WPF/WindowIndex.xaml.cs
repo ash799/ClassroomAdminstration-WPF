@@ -305,7 +305,9 @@ namespace ClassroomAdministration_WPF
 
             currDate = date;
             currClass = cc;
-            
+
+            DateLabel.Content = currDate.ToString("yyyy/MM/dd");
+
             int days = (currDate - firstDate).Days;
             SetWeeks(days / 7 + 1);
             currWeekDay = days % 7; 
@@ -503,7 +505,6 @@ namespace ClassroomAdministration_WPF
         private void LabelClassroom_MouseEnter(object sender, MouseEventArgs e)
         {
             LabelClassroom.Content = "选择教室";
-            LabelClassroom.Background = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));
             LabelClassroom.BorderBrush = new SolidColorBrush(Color.FromArgb(128, 23, 0, 255));
         }
         private void LabelClassroom_MouseLeave(object sender, MouseEventArgs e)
@@ -641,7 +642,6 @@ namespace ClassroomAdministration_WPF
             CloseLabel.Margin = new Thickness(0, 0, -1, 0);
             
         }
-
         private void CloseBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
             this.Close();
@@ -649,9 +649,8 @@ namespace ClassroomAdministration_WPF
 
         private void BorderInfo_MouseEnter_1(object sender, MouseEventArgs e)
         {
-            BorderInfo.BorderThickness = new Thickness(3);
+            BorderInfo.BorderThickness = new Thickness(2);
         }
-
         private void BorderInfo_MouseLeave(object sender, MouseEventArgs e)
         {
             BorderInfo.BorderThickness = new Thickness(0);
@@ -659,23 +658,56 @@ namespace ClassroomAdministration_WPF
 
         private void BorderMessage_MouseEnter(object sender, MouseEventArgs e)
         {
-            BorderMessage.BorderThickness = new Thickness(3);
+            BorderMessage.BorderThickness = new Thickness(2);
         }
-
         private void BorderMessage_MouseLeave(object sender, MouseEventArgs e)
         {
             BorderMessage.BorderThickness = new Thickness(0);
         }
-
         private void BorderTable_MouseEnter(object sender, MouseEventArgs e)
         {
-            BorderTable.BorderThickness = new Thickness(3);
+            BorderTable.BorderThickness = new Thickness(2);
         }
-
         private void BorderTable_MouseLeave(object sender, MouseEventArgs e)
         {
             BorderTable.BorderThickness = new Thickness(0);
         }
+
+        private void BorderClassroom_MouseEnter(object sender, MouseEventArgs e)
+        {
+            BorderClassroom.BorderThickness = new Thickness(2);
+        }
+
+        private void BorderClassroom_MouseLeave(object sender, MouseEventArgs e)
+        {
+            BorderClassroom.BorderThickness = new Thickness(0);
+        }
+
+        private void SkinBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SkinBorder.Background = new SolidColorBrush(Color.FromArgb(100,255,255,255));
+        }
+
+        private void SkinBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SkinBorder.Background = null;
+        }  
+
+        private void SkinBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Canvas.SetLeft(imageSkin, 3);
+        }
+
+        private void SkinBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Canvas.SetLeft(imageSkin, 5);
+
+            //////////////////////////////////////change skin mode
+        }
+
+        
+
+        
 
         
 

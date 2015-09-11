@@ -302,6 +302,8 @@ namespace ClassroomAdministration_WPF
                 + r.Time.ToString()
                 + ");";
 
+         
+
             mCommand.Prepare();
             int i = mCommand.ExecuteNonQuery();
 

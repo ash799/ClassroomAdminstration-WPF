@@ -13,10 +13,7 @@
         <Border x:Name="CloseBorder" BorderBrush="White" BorderThickness="0" HorizontalAlignment="Right" Height="30" Margin="270,-2,0,0" VerticalAlignment="Top" Width="30" MouseEnter="CloseBorder_MouseEnter_1" Background="#00000000" MouseLeave="CloseBorder_MouseLeave" MouseDown="CloseBorder_MouseDown" MouseUp="CloseBorder_MouseUp" CornerRadius="0,6,0,0">
             <Label x:Name="CloseLabel" Content="x" Foreground="#FFFFFFFF" RenderTransformOrigin="1.026,0.284" Margin="4,0,0.333,0" FontSize="16"/>
         </Border>
-        <Border x:Name="MinBorder" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Right" Height="30" Margin="0,-2,30,0" VerticalAlignment="Top" Width="30" Background="#00000000" MouseEnter="MinBorder_MouseEnter" MouseDown="MinBorder_MouseDown" MouseLeave="MinBorder_MouseLeave" MouseUp="MinBorder_MouseUp">
-            <Label x:Name="MinLabel" Content="-" Foreground="#FFFFFFFF" RenderTransformOrigin="1.026,0.284" FontSize="16" HorizontalAlignment="Right" Width="21" Background="{x:Null}"/>
-        </Border>
-    <StackPanel Margin="0,28,0,0">
+        <StackPanel Margin="0,28,0,0">
         <TextBlock x:Name="TBinfo" Margin="0" TextWrapping="Wrap" Text="数学" VerticalAlignment="Top" FontSize="24" Padding="24,16,24,10" Foreground="White"/>
         <TextBlock x:Name="TBhost" TextWrapping="Wrap" Text="申请人: Admin" Margin="0" FontSize="14" Padding="36,5,24,5" Foreground="White"/>
         <TextBlock x:Name="TBrentTime" TextWrapping="Wrap" Text="上课时间" Margin="0" FontSize="14" Padding="36,5,24,5" Foreground="White"/>
