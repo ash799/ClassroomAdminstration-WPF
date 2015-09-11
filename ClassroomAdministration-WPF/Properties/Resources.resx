@@ -130,9 +130,6 @@
   <data name="logo_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo-light.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="tableback" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tableback.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="tableback2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tableback2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -150,5 +147,11 @@
   </data>
   <data name="table" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\table.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Color3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Color3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Color1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Color1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

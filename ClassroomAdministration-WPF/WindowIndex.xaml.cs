@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace ClassroomAdministration_WPF
 {
@@ -23,7 +24,106 @@ namespace ClassroomAdministration_WPF
         {
             InitializeComponent();
             person = p;
+
+            EnsureSkins();
+            ApplySkin(StarrySkin);
         }
+
+        enum status { Info, Table, Message }
+        status currStatus = status.Table;
+
+        #region 换肤
+
+        public enum style { Starry, ColorBox }
+        static public style currStyle = style.Starry;
+        static public Color textColor = Colors.White;
+
+        static ResourceDictionary ColorBoxSkin = null, StarrySkin = null;
+
+        void EnsureSkins()
+        {
+            if (ColorBoxSkin == null)
+            {
+                ColorBoxSkin = new ResourceDictionary();
+                ColorBoxSkin.Source = new Uri("StyleColorBox.xaml", UriKind.Relative);
+
+                StarrySkin = new ResourceDictionary();
+                StarrySkin.Source = new Uri("StyleStarry.xaml", UriKind.Relative);
+            }
+        }
+        void ApplySkin(ResourceDictionary newSkin)
+        {
+         //   if (newSkin == null) return;
+
+            Collection<ResourceDictionary> appMergedDictionaries = Application.Current.Resources.MergedDictionaries;
+
+            if (appMergedDictionaries.Count != 0)
+                appMergedDictionaries.Remove(appMergedDictionaries[0]);
+
+            appMergedDictionaries.Add(newSkin);
+
+        }
+
+        void SetStyle(style newStyle)
+        {
+            if (currStyle == newStyle) return;
+
+            currStyle = newStyle;
+
+            switch (currStyle)
+            {
+                case style.Starry:
+                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.tableback2));
+                    ApplySkin(StarrySkin);
+                    textColor = Colors.White;
+                    break;
+                case style.ColorBox:
+                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.Color3));
+                    ApplySkin(ColorBoxSkin);
+                    textColor = Colors.Black;
+                    break;
+            }
+
+            TextBlockChosenDate.Foreground = new SolidColorBrush(textColor);
+            TextBoxCId.Foreground = new SolidColorBrush(textColor);
+
+            RefreshSchedule();
+
+        }
+
+        public static ImageSource ChangeBitmapToImageSource(System.Drawing.Bitmap bitmap)
+        {
+
+            IntPtr hBitmap = bitmap.GetHbitmap();
+            ImageSource wpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                hBitmap,
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+
+            return wpfBitmap;
+
+        }
+
+
+
+        #endregion
+
+        #region 个人信息逻辑
+        private void GridInfo_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region 系统消息逻辑
+        private void GridMessage_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region 课程表逻辑
 
         //课表尺寸
         const int cntCol = 7, cntRow = 14;
@@ -50,7 +150,7 @@ namespace ClassroomAdministration_WPF
         TextBlock TBHighlight1 = null, TBHighlight2 = null;
 
         //页面加载
-        private void Grid_Loaded_1(object sender, RoutedEventArgs e)
+        private void GridTable_Loaded(object sender, RoutedEventArgs e)
         {
             Building.Initialize();
 
@@ -119,7 +219,7 @@ namespace ClassroomAdministration_WPF
             Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
             tb.FontSize = 16;
 
-            tb.Foreground = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255));
+            tb.Foreground = new SolidColorBrush(textColor);
             tb.TextWrapping = TextWrapping.Wrap;
             tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
             tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
@@ -165,6 +265,7 @@ namespace ClassroomAdministration_WPF
             currWeekDay = days % 7;
 
             DateChosen.SelectedDate = date;
+            TextBlockChosenDate.Text = date.ToString("yyyy/MM/dd");
 
             ChosenRentControl();
 
@@ -305,114 +406,8 @@ namespace ClassroomAdministration_WPF
             // ChosenRentControl();
         }
 
-        //全体键盘托管
-        private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
-        {
-            if (!TextBoxCId.IsKeyboardFocused)
-            {
-                switch (e.Key)
-                {
-                    case Key.Up:
-                        if (currClass > 1) --currClass;
-                        break;
-                    case Key.Down:
-                        if (currClass < cntRow) ++currClass;
-                        break;
-                    case Key.Left:
-                        if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0);
-                        break;
-                    case Key.Right:
-                        currDate += new TimeSpan(1, 0, 0, 0);
-                        break;
-                    case Key.Home:
-                        currClass = 1;
-                        break;
-                    case Key.End:
-                        currClass = cntRow;
-                        break;
-                    case Key.PageUp:
-                        if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
-                        break;
-                    case Key.PageDown:
-                        currDate += new TimeSpan(7, 0, 0, 0);
-                        break;
-                    case Key.Enter:
-                        RectangleChosonRent1_MouseDown(null, null);
-                        break;
-                }
-                SetDateClass(currDate, currClass);
-            }
-            else
-            {
-                int b, c;
-                if (classroom == null)
-                {
-                    b = 0;
-                    c = 0;
-                }
-                else
-                {
-                    b = classroom.Building.bId;
-                    c = classroom.cId;
-                }
-
-                switch (e.Key)
-                {
-                    case Key.Up:
-                        while (c < Classroom.MaxCId)
-                        {
-                            ++c;
-                            if (Building.GetClassroom(c) != null) break;
-                        }
-                        //   TextBoxCId.Text = c.ToString();
-                        break;
-                    case Key.Down:
-                        while (c > Classroom.MinCId)
-                        {
-                            --c;
-                            if (Building.GetClassroom(c) != null) break;
-                        }
-                        //   TextBoxCId.Text = c.ToString();
-                        break;
-                    case Key.PageUp:
-                        while (b < Building.MaxBId)
-                        {
-                            ++b;
-                            if (Building.GetBuilding(b) != null)
-                            {
-                                c = Building.GetBuilding(b).Classrooms[0].cId;
-                                break;
-                            }
-                        }
-                        //  TextBoxCId.Text = c.ToString();
-                        break;
-                    case Key.PageDown:
-                        while (b > Building.MinBId)
-                        {
-                            --b;
-                            if (Building.GetBuilding(b) != null)
-                            {
-                                c = Building.GetBuilding(b).Classrooms[0].cId;
-                                break;
-                            }
-                        }
-                        //  TextBoxCId.Text = c.ToString();
-                        break;
-                }
-                SetCId(c);
-            }
-        }
-        //鼠标滚轮托管
-        private void Window_PreviewMouseWheel_1(object sender, MouseWheelEventArgs e)
-        {
-            int d = e.Delta / 120;
-            if (d > 0)
-                if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
-            if (d < 0)
-                currDate += new TimeSpan(7, 0, 0, 0);
-            SetDateClass(currDate, currClass);
-        }
-
+        #endregion      
+        #region 课程表交互
         //通过Calendar选择了date后
         private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
         {
@@ -459,7 +454,7 @@ namespace ClassroomAdministration_WPF
                 SetCId(cId);
             }
         }
-        
+
         //单击选定框
         private void RectangleChosonRent1_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -469,10 +464,10 @@ namespace ClassroomAdministration_WPF
                 schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass)
                 && schedule2 != null)
             {
-                if(MaxBorder.IsEnabled==true)
+                if (MaxBorder.IsEnabled == true)
                     new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
                 else
-                    new WindowApplyRent(person, classroom, currDate, currClass, this,"big").ShowDialog();
+                    new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
             }
             else
                 if (chosenRent1 != null)
@@ -511,8 +506,8 @@ namespace ClassroomAdministration_WPF
         private void LabelClassroom_MouseEnter(object sender, MouseEventArgs e)
         {
             LabelClassroom.Content = "选择教室";
-            LabelClassroom.Background = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));
-            LabelClassroom.BorderBrush = new SolidColorBrush(Color.FromArgb(128, 23, 0, 255));
+            LabelClassroom.Background = new SolidColorBrush(Color.FromArgb(51, 255, 255, 255));
+            LabelClassroom.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 86, 157, 229));
         }
         private void LabelClassroom_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -525,8 +520,108 @@ namespace ClassroomAdministration_WPF
             RentTable rt = new RentTable(DatabaseLinker.GetDateRentTable(currDate).GetFromDateClass(currDate, currClass));
             new WindowClassroomList(rt, this).ShowDialog();
         }
+        #endregion
 
-        //子窗口调用函数
+        #region 窗口托管
+        //全体键盘托管
+        private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
+        {
+            //换肤
+            switch (e.Key)
+            {
+                case Key.F1: SetStyle(style.Starry); break;
+                case Key.F2: SetStyle(style.ColorBox); break;
+            }
+
+            switch (currStatus)
+            {
+                case status.Table:
+                    //课程表控制
+                    if (!TextBoxCId.IsKeyboardFocused)
+                    {
+                        switch (e.Key)
+                        {
+                            case Key.Up:        if (currClass > 1) --currClass; break;
+                            case Key.Down:      if (currClass < cntRow) ++currClass; break;
+                            case Key.Left:      if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Right:     currDate += new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Home:      currClass = 1; break;
+                            case Key.End:       currClass = cntRow; break;
+                            case Key.PageUp:    if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0); break;
+                            case Key.PageDown:  currDate += new TimeSpan(7, 0, 0, 0); break;
+                            case Key.Enter:     RectangleChosonRent1_MouseDown(null, null);  break;
+                        }
+                        SetDateClass(currDate, currClass);
+                    }
+                    else
+                    //教室控制
+                    {
+                        int b, c;
+                        if (classroom == null) { b = 0; c = 0; }
+                        else { b = classroom.Building.bId; c = classroom.cId; }
+
+                        switch (e.Key)
+                        {
+                            case Key.Up:
+                                while (c < Classroom.MaxCId)
+                                {
+                                    ++c;
+                                    if (Building.GetClassroom(c) != null) break;
+                                }
+                                break;
+                            case Key.Down:
+                                while (c > Classroom.MinCId)
+                                {
+                                    --c;
+                                    if (Building.GetClassroom(c) != null) break;
+                                }
+                                break;
+                            case Key.PageUp:
+                                while (b < Building.MaxBId)
+                                {
+                                    ++b;
+                                    if (Building.GetBuilding(b) != null)
+                                    {
+                                        c = Building.GetBuilding(b).Classrooms[0].cId;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case Key.PageDown:
+                                while (b > Building.MinBId)
+                                {
+                                    --b;
+                                    if (Building.GetBuilding(b) != null)
+                                    {
+                                        c = Building.GetBuilding(b).Classrooms[0].cId;
+                                        break;
+                                    }
+                                }
+                                break;
+                        }
+                        SetCId(c);
+                    }
+                    break;
+            }
+        }
+        //鼠标滚轮托管
+        private void Window_PreviewMouseWheel_1(object sender, MouseWheelEventArgs e)
+        {
+            switch (currStatus)
+            {
+                case status.Table:
+                    int d = e.Delta / 120;
+                    if (d > 0)
+                        if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
+                    if (d < 0)
+                        currDate += new TimeSpan(7, 0, 0, 0);
+                    SetDateClass(currDate, currClass);
+                    break;
+            }
+        }
+        #endregion
+
+        #region 子窗口调用函数
         public void SetClassroom(int cId)
         {
            // TextBoxCId.Text = cId.ToString();
@@ -542,6 +637,8 @@ namespace ClassroomAdministration_WPF
                 schedule2 = DatabaseLinker.GetClassroomRentTable(classroom.cId);
                 ScheduleInitialize(GridSchedule2, schedule2, TextBlockRents2, RectangleChosonClass2);
             }
+
+            checkoutWeek();
         }
         public void GotoDateClass(DateTime date, int cc)
         {
@@ -549,6 +646,9 @@ namespace ClassroomAdministration_WPF
         }
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule1; } }
+        #endregion
+
+        #region 窗口的必备控件
 
         //窗口拖动
         private void Border_MouseDown_1(object sender, MouseButtonEventArgs e)
@@ -643,18 +743,45 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
-        //上侧按钮
-        private void BorderTable_MouseEnter(object sender, MouseEventArgs e)
+        #endregion
+
+        #region 上侧按钮
+        private void BorderButton_MouseEnter(object sender, MouseEventArgs e)
         {
             Border b = sender as Border;
             b.BorderThickness = new Thickness(3);
         }
-        private void BorderTable_MouseLeave(object sender, MouseEventArgs e)
+        private void BorderButton_MouseLeave(object sender, MouseEventArgs e)
         {
             Border b = sender as Border;
             b.BorderThickness = new Thickness(0);
         }
 
+        private void BorderInfo_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currStatus = status.Info;
+            GridInfo.Visibility = Visibility.Visible;
+            GridTable.Visibility = Visibility.Collapsed;
+            GridMessage.Visibility = Visibility.Collapsed;
+        }
+
+        private void BorderTable_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currStatus = status.Table;
+            GridInfo.Visibility = Visibility.Collapsed;
+            GridTable.Visibility = Visibility.Visible;
+            GridMessage.Visibility = Visibility.Collapsed;
+        }
+
+        private void BorderMessage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currStatus = status.Message;
+            GridInfo.Visibility = Visibility.Collapsed;
+            GridTable.Visibility = Visibility.Collapsed;
+            GridMessage.Visibility = Visibility.Visible;
+        }
+
+        #endregion
 
     }
 }

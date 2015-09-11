@@ -67,6 +67,14 @@
     <Compile Include="WindowRent.xaml.cs">
       <DependentUpon>WindowRent.xaml</DependentUpon>
     </Compile>
+    <Page Include="StyleColorBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StyleStarry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowApplyRent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -151,9 +159,6 @@
     <Resource Include="Resources\logo-light.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\tableback.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\tableback2.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +175,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Color3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Color1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

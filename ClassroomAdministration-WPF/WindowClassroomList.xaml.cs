@@ -32,6 +32,17 @@ namespace ClassroomAdministration_WPF
 
         private void stackPanel_Loaded(object sender, RoutedEventArgs e)
         {
+
+            switch (WindowIndex.currStyle)
+            {
+                case WindowIndex.style.Starry:
+                    windowClassroomList.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.tableback2));
+                    break;
+                case WindowIndex.style.ColorBox:
+                    windowClassroomList.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.Color1));
+                    break;
+            }
+
             foreach (Building building in Building.AllBuildings)
             {
                 TextBlock tbTitle = new TextBlock();
@@ -39,7 +50,7 @@ namespace ClassroomAdministration_WPF
                 tbTitle.TextWrapping = TextWrapping.Wrap;
                 tbTitle.Text = building.Name;
                 tbTitle.FontSize = 24;
-             //   tbTitle.Background = new SolidColorBrush(MyColor.NameColor(building.Name, 0.05));
+                //   tbTitle.Background = new SolidColorBrush(MyColor.NameColor(building.Name, 0.05));
 
                 WrapPanel subPanel = new WrapPanel();
                 subPanel.Orientation = Orientation.Horizontal;
@@ -66,7 +77,7 @@ namespace ClassroomAdministration_WPF
                     else
                     {
                         tb.Text = classroom.Name + ":" + rent.Info;
-                        tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text)); 
+                        tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text));
                     }
 
                     tb.Tag = classroom;

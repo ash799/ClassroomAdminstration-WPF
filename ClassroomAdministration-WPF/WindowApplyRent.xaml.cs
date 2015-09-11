@@ -36,7 +36,23 @@ namespace ClassroomAdministration_WPF
             father = f;
         }
 
-        public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f,string str)
+        private void BorderBackground_Loaded(object sender, RoutedEventArgs e)
+        {
+            switch (WindowIndex.currStyle)
+            {
+                case WindowIndex.style.Starry:
+                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.applyback));
+                    break;
+                case WindowIndex.style.ColorBox:
+                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.Color1));
+                    break;
+            }
+
+            TBinfo.Foreground = new SolidColorBrush(WindowIndex.textColor);
+        }
+
+
+        public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f, string str = "")
         {
             InitializeComponent();
 
@@ -53,6 +69,7 @@ namespace ClassroomAdministration_WPF
                 BorderBackground.Height = 450;
 
                 TBinfo.FontSize = 40;
+
                 TBhost.FontSize = 22;
                 TBrentTime.FontSize = 22;
                 TBclassroom.FontSize = 22;
@@ -66,9 +83,9 @@ namespace ClassroomAdministration_WPF
             TBinfo.Text = person.Name+"申请的活动";
             TBinfo.Focus();
 
-            TBhost.Text = "申请人: " + DatabaseLinker.GetName(person.pId);
+            TBhost.Content = "申请人: " + DatabaseLinker.GetName(person.pId);
 
-            TBclassroom.Text = "教室: " + classroom.Name;
+            TBclassroom.Content = "教室: " + classroom.Name;
 
             for (int i = 0; i < 6; ++i)
                 if (classChosen >= RentTime.typicalClassRent[i, 0] && classChosen <= RentTime.typicalClassRent[i, 1])
@@ -76,18 +93,18 @@ namespace ClassroomAdministration_WPF
                     classStart = RentTime.typicalClassRent[i, 0];
                     classEnd = RentTime.typicalClassRent[i, 1];
                 }
-            TBrentTime.Text = "时间: " + date.Month + "月" + date.Day + "日, 第" + classStart + "节至第" + classEnd + "节";
+            TBrentTime.Content = "时间: " + date.Month + "月" + date.Day + "日, 第" + classStart + "节至第" + classEnd + "节";
         }
 
         private void TBclassroom_MouseEnter(object sender, MouseEventArgs e)
         {
-            TextBlock tb = (TextBlock)sender;
-            tb.Background = new SolidColorBrush(MyColor.NameColor(TBinfo.Text));
+            Label tb = (Label)sender;
+            tb.Background = new SolidColorBrush(MyColor.NameColor(TBinfo.Text, 0.2));
         }
 
         private void TBclassroom_MouseLeave(object sender, MouseEventArgs e)
         {
-            TextBlock tb = (TextBlock)sender;
+            Label tb = (Label)sender;
             tb.Background = null;
         }
 
@@ -146,25 +163,27 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
-        //Min Button
-        private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
-        }
-        private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MinLabel.Margin = new Thickness(0, 0, 1, 0);
-        }
-        private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MinLabel.Margin = new Thickness(0, 0, 3, 0);
-            MinBorder.Background = null;
-        }
-        private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MinLabel.Margin = new Thickness(0, 0, 3, 0);
-            this.WindowState = WindowState.Minimized;
-            this.Owner.WindowState = WindowState.Minimized;
-        }
+
+
+        ////Min Button
+        //private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
+        //{
+        //    MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        //}
+        //private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    MinLabel.Margin = new Thickness(0, 0, 1, 0);
+        //}
+        //private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
+        //{
+        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
+        //    MinBorder.Background = null;
+        //}
+        //private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
+        //    this.WindowState = WindowState.Minimized;
+        //    this.Owner.WindowState = WindowState.Minimized;
+        //}
     }
 }
