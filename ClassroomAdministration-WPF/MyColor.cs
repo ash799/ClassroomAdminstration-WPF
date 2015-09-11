@@ -44,7 +44,7 @@ namespace ClassroomAdministration_WPF
             //if (G > 255) G = 255;
             //if (B > 255) B = 255;
 
-            //return Color.FromArgb((byte)(alpha * 255), (byte)R, (byte)G, (byte)B);
+            //return Color.FromArgb((byte)(alpha * 200), (byte)R, (byte)G, (byte)B);
 
             return Color.FromArgb((byte)(alpha * i * 0.5), 255, 255, 255);
         }

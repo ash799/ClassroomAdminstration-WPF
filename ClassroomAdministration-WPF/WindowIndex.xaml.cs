@@ -25,6 +25,23 @@ namespace ClassroomAdministration_WPF
             person = p;
         }
 
+        enum status { Info, Table, Message }
+        status currStatus = status.Table;
+
+        #region 个人信息逻辑
+        private void GridInfo_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region 系统消息逻辑
+        private void GridMessage_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
         #region 课程表逻辑
 
         //课表尺寸
@@ -52,7 +69,7 @@ namespace ClassroomAdministration_WPF
         TextBlock TBHighlight1 = null, TBHighlight2 = null;
 
         //页面加载
-        private void Grid_Loaded_1(object sender, RoutedEventArgs e)
+        private void GridTable_Loaded(object sender, RoutedEventArgs e)
         {
             Building.Initialize();
 
@@ -308,8 +325,7 @@ namespace ClassroomAdministration_WPF
             // ChosenRentControl();
         }
 
-        #endregion
-        
+        #endregion      
         #region 课程表交互
         //通过Calendar选择了date后
         private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
@@ -425,115 +441,127 @@ namespace ClassroomAdministration_WPF
         }
         #endregion
 
+        #region 窗口托管
         //全体键盘托管
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
-            if (!TextBoxCId.IsKeyboardFocused)
+            switch (currStatus)
             {
-                switch (e.Key)
-                {
-                    case Key.Up:
-                        if (currClass > 1) --currClass;
-                        break;
-                    case Key.Down:
-                        if (currClass < cntRow) ++currClass;
-                        break;
-                    case Key.Left:
-                        if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0);
-                        break;
-                    case Key.Right:
-                        currDate += new TimeSpan(1, 0, 0, 0);
-                        break;
-                    case Key.Home:
-                        currClass = 1;
-                        break;
-                    case Key.End:
-                        currClass = cntRow;
-                        break;
-                    case Key.PageUp:
-                        if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
-                        break;
-                    case Key.PageDown:
-                        currDate += new TimeSpan(7, 0, 0, 0);
-                        break;
-                    case Key.Enter:
-                        RectangleChosonRent1_MouseDown(null, null);
-                        break;
-                }
-                SetDateClass(currDate, currClass);
-            }
-            else
-            {
-                int b, c;
-                if (classroom == null)
-                {
-                    b = 0;
-                    c = 0;
-                }
-                else
-                {
-                    b = classroom.Building.bId;
-                    c = classroom.cId;
-                }
+                case status.Table:
+                    if (!TextBoxCId.IsKeyboardFocused)
+                    {
+                        switch (e.Key)
+                        {
+                            case Key.Up:
+                                if (currClass > 1) --currClass;
+                                break;
+                            case Key.Down:
+                                if (currClass < cntRow) ++currClass;
+                                break;
+                            case Key.Left:
+                                if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0);
+                                break;
+                            case Key.Right:
+                                currDate += new TimeSpan(1, 0, 0, 0);
+                                break;
+                            case Key.Home:
+                                currClass = 1;
+                                break;
+                            case Key.End:
+                                currClass = cntRow;
+                                break;
+                            case Key.PageUp:
+                                if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
+                                break;
+                            case Key.PageDown:
+                                currDate += new TimeSpan(7, 0, 0, 0);
+                                break;
+                            case Key.Enter:
+                                RectangleChosonRent1_MouseDown(null, null);
+                                break;
+                        }
+                        SetDateClass(currDate, currClass);
+                    }
+                    else
+                    {
+                        int b, c;
+                        if (classroom == null)
+                        {
+                            b = 0;
+                            c = 0;
+                        }
+                        else
+                        {
+                            b = classroom.Building.bId;
+                            c = classroom.cId;
+                        }
 
-                switch (e.Key)
-                {
-                    case Key.Up:
-                        while (c < Classroom.MaxCId)
+                        switch (e.Key)
                         {
-                            ++c;
-                            if (Building.GetClassroom(c) != null) break;
-                        }
-                        //   TextBoxCId.Text = c.ToString();
-                        break;
-                    case Key.Down:
-                        while (c > Classroom.MinCId)
-                        {
-                            --c;
-                            if (Building.GetClassroom(c) != null) break;
-                        }
-                        //   TextBoxCId.Text = c.ToString();
-                        break;
-                    case Key.PageUp:
-                        while (b < Building.MaxBId)
-                        {
-                            ++b;
-                            if (Building.GetBuilding(b) != null)
-                            {
-                                c = Building.GetBuilding(b).Classrooms[0].cId;
+                            case Key.Up:
+                                while (c < Classroom.MaxCId)
+                                {
+                                    ++c;
+                                    if (Building.GetClassroom(c) != null) break;
+                                }
+                                //   TextBoxCId.Text = c.ToString();
                                 break;
-                            }
-                        }
-                        //  TextBoxCId.Text = c.ToString();
-                        break;
-                    case Key.PageDown:
-                        while (b > Building.MinBId)
-                        {
-                            --b;
-                            if (Building.GetBuilding(b) != null)
-                            {
-                                c = Building.GetBuilding(b).Classrooms[0].cId;
+                            case Key.Down:
+                                while (c > Classroom.MinCId)
+                                {
+                                    --c;
+                                    if (Building.GetClassroom(c) != null) break;
+                                }
+                                //   TextBoxCId.Text = c.ToString();
                                 break;
-                            }
+                            case Key.PageUp:
+                                while (b < Building.MaxBId)
+                                {
+                                    ++b;
+                                    if (Building.GetBuilding(b) != null)
+                                    {
+                                        c = Building.GetBuilding(b).Classrooms[0].cId;
+                                        break;
+                                    }
+                                }
+                                //  TextBoxCId.Text = c.ToString();
+                                break;
+                            case Key.PageDown:
+                                while (b > Building.MinBId)
+                                {
+                                    --b;
+                                    if (Building.GetBuilding(b) != null)
+                                    {
+                                        c = Building.GetBuilding(b).Classrooms[0].cId;
+                                        break;
+                                    }
+                                }
+                                //  TextBoxCId.Text = c.ToString();
+                                break;
                         }
-                        //  TextBoxCId.Text = c.ToString();
-                        break;
-                }
-                SetCId(c);
+                        SetCId(c);
+                    }
+                    break;
             }
         }
         //鼠标滚轮托管
         private void Window_PreviewMouseWheel_1(object sender, MouseWheelEventArgs e)
         {
-            int d = e.Delta / 120;
-            if (d > 0)
-                if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
-            if (d < 0)
-                currDate += new TimeSpan(7, 0, 0, 0);
-            SetDateClass(currDate, currClass);
+            switch (currStatus)
+            {
+                case status.Table:
+                    int d = e.Delta / 120;
+                    if (d > 0)
+                        if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
+                    if (d < 0)
+                        currDate += new TimeSpan(7, 0, 0, 0);
+                    SetDateClass(currDate, currClass);
+                    break;
+            }
         }
+        #endregion
 
-        //子窗口调用函数
+        #region 子窗口调用函数
         public void SetClassroom(int cId)
         {
            // TextBoxCId.Text = cId.ToString();
@@ -558,6 +586,7 @@ namespace ClassroomAdministration_WPF
         }
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule1; } }
+        #endregion
 
         #region 窗口的必备控件
 
@@ -654,18 +683,45 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
-        //上侧按钮
-        private void BorderTable_MouseEnter(object sender, MouseEventArgs e)
+        #endregion
+
+        #region 上侧按钮
+        private void BorderButton_MouseEnter(object sender, MouseEventArgs e)
         {
             Border b = sender as Border;
             b.BorderThickness = new Thickness(3);
         }
-        private void BorderTable_MouseLeave(object sender, MouseEventArgs e)
+        private void BorderButton_MouseLeave(object sender, MouseEventArgs e)
         {
             Border b = sender as Border;
             b.BorderThickness = new Thickness(0);
         }
 
+        private void BorderInfo_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currStatus = status.Info;
+            GridInfo.Visibility = Visibility.Visible;
+            GridTable.Visibility = Visibility.Collapsed;
+            GridMessage.Visibility = Visibility.Collapsed;
+        }
+
+        private void BorderTable_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currStatus = status.Table;
+            GridInfo.Visibility = Visibility.Collapsed;
+            GridTable.Visibility = Visibility.Visible;
+            GridMessage.Visibility = Visibility.Collapsed;
+        }
+
+        private void BorderMessage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            currStatus = status.Message;
+            GridInfo.Visibility = Visibility.Collapsed;
+            GridTable.Visibility = Visibility.Collapsed;
+            GridMessage.Visibility = Visibility.Visible;
+        }
+
         #endregion
+
     }
 }

@@ -39,12 +39,13 @@
             </Border>
             <Canvas Height="100" Width="100"/>
         </Canvas>
-        <Grid Loaded="Grid_Loaded_1" Margin="10,95,10,3" >
+        <Grid x:Name="GridTable" Loaded="GridTable_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="472*" MinWidth="350"/>
             <ColumnDefinition Width="429*" MinWidth="350"/>
         </Grid.ColumnDefinitions>
-<TextBlock x:Name="TextBlockChosenDate" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" FontSize="16"  Background="#33FFFFFF"  Foreground="White" Margin="13,38,0,0"/>
+            <Label Content="当前选定日期：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14" Foreground="White"/>
+            <TextBlock x:Name="TextBlockChosenDate" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" FontSize="16"  Background="#33FFFFFF"  Foreground="White" Margin="13,38,0,0"/>
             <DatePicker x:Name="DateChosen" Margin="105,38,0,0" VerticalAlignment="Top" Height="22" Width="28" HorizontalAlignment="Left" CalendarClosed="DateChosen_CalendarClosed" SelectedDateFormat="Short" FontSize="14" Focusable="False" Background="#33FFFFFF" BorderThickness="0"/>
             <Grid x:Name="GridSchedule1" Margin="40,95,10,9.334"
                 MouseDown="GridSchedule1_MouseDown" Background="#00000000">
@@ -186,34 +187,36 @@
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="17:55" VerticalAlignment="Top" Grid.Row="10" Foreground="#DFFFFFFF"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="19:20" VerticalAlignment="Top" Grid.Row="11" Foreground="#DFFFFFFF"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="20:10" VerticalAlignment="Top" Grid.Row="12" Foreground="#DFFFFFFF"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="21:00" VerticalAlignment="Top" Grid.Row="13" Foreground="#DFFFFFFF"/>
-            
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="21:00" VerticalAlignment="Top" Grid.Row="13" Foreground="#DFFFFFFF"/>            
         </Grid>
-        <Label Content="当前选定日期：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" FontSize="14" Foreground="White"/>
         
     </Grid>
-        <Border x:Name="BorderInfo" Width="60" Height="80" Margin="56,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderTable_MouseEnter" MouseLeave="BorderTable_MouseLeave">
+
+        <Grid x:Name="GridInfo" Loaded="GridInfo_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
+        </Grid>
+
+        <Grid x:Name="GridMessage" Loaded="GridMessage_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
+        </Grid>
+
+        <Border x:Name="BorderInfo" Width="60" Height="80" Margin="56,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderButton_MouseEnter" MouseLeave="BorderButton_MouseLeave" MouseDown="BorderInfo_MouseDown">
             <StackPanel>
                 <Image Source="Resources/info.png"  />
                 <Label Content="个人信息" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0" />
             </StackPanel>
 
         </Border>
-        <Border x:Name="BorderMessage" Width="60" Height="80" Margin="401,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderTable_MouseEnter" MouseLeave="BorderTable_MouseLeave">
+        <Border x:Name="BorderMessage" Width="60" Height="80" Margin="401,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderButton_MouseEnter" MouseLeave="BorderButton_MouseLeave" MouseDown="BorderMessage_MouseDown">
             <StackPanel>
                 <Image Source="Resources/message.png"  />
                 <Label Content="新消息" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0" />
             </StackPanel>
 
         </Border>
-        <Border x:Name="BorderTable" Width="60" Height="80" Margin="235,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderTable_MouseEnter" MouseLeave="BorderTable_MouseLeave">
+        <Border x:Name="BorderTable" Width="60" Height="80" Margin="235,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderButton_MouseEnter" MouseLeave="BorderButton_MouseLeave" MouseDown="BorderTable_MouseDown">
             <StackPanel>
                 <Image Source="Resources/table.png"   />
                 <Label Content="回到课表" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0" />
             </StackPanel>
-
         </Border>
-
-
     </Grid>
 </Window>
