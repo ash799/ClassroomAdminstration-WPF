@@ -24,7 +24,6 @@ namespace ClassroomAdministration_WPF
 
         public WindowRent(Rent r, WindowIndex fatherWindow)
         {
-            if (r == null) return;
 
             InitializeComponent();
             rent = r;
@@ -32,7 +31,6 @@ namespace ClassroomAdministration_WPF
         }
         public WindowRent(Rent r, WindowIndex fatherWindow,string str)
         {
-            if (r == null) return;
 
             InitializeComponent();
             if (str == "big")
@@ -71,6 +69,8 @@ namespace ClassroomAdministration_WPF
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
+            if (rent == null) return;
+
             TBinfo.Text = rent.Info;
             if (!rent.Approved) TBinfo.Text += " (未审核)";
             TBinfo.Background = new SolidColorBrush(MyColor.NameColor(rent.Info, 0.2));

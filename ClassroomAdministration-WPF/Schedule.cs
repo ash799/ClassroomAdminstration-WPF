@@ -35,12 +35,28 @@ namespace ClassroomAdministration_WPF
             Father = father;
 
             headInitialize();
+            checkoutWeek();
 
             if (owner != null)
             {
                 Reset();
             }
+
+            GridSchedule.PreviewMouseDown += GridSchedule_PreviewMouseDown;
         }
+
+        void GridSchedule_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Father.GridFocus();
+
+            Point pos = e.GetPosition(GridSchedule);
+            double aCol = GridSchedule.ActualWidth, aRow = GridSchedule.ActualHeight;
+
+            int col = (int)(pos.X / aCol * cntCol), row = (int)(pos.Y / aRow * cntRow);
+
+            Father.GoToDateClass(col, row + 1);
+        }
+
         public void ChangeOwner(RentTableOwner owner)
         {
             Owner = owner;
@@ -49,6 +65,8 @@ namespace ClassroomAdministration_WPF
         }
         public void Reset()
         {
+            if (Owner == null) return;
+
             Owner.GetMyRentTable();
 
             ScheduleInitialize(GridSchedule, Owner.RentTable, TextBlockRents, RectangleChosonClass);
@@ -60,8 +78,6 @@ namespace ClassroomAdministration_WPF
 
         //初始日期
         DateTime firstDate = RentTime.FirstDate;
-        DateTime currDate = RentTime.FirstDate;
-        int currWeek = 0, currWeekDay = 0, currClass = 1;
         //星期表头
         Label[] head;
         string[] weekDayName = RentTime.weekDayName;
@@ -70,8 +86,8 @@ namespace ClassroomAdministration_WPF
         public List<TextBlock> TextBlockRents = new List<TextBlock>();
 
         //选中的格子
-        public Rent chosenRent = null;
-        public TextBlock TBHighlight = null;
+        Rent chosenRent = null;
+        TextBlock TBHighlight = null;
 
         //初始化星期表头
         private void headInitialize()
@@ -80,7 +96,6 @@ namespace ClassroomAdministration_WPF
             for (int i = 0; i < 7; ++i)
             {
                 head[i] = new Label();
-                //head[i].Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
                 GridScheduleHead.Children.Add(head[i]);
                 head[i].Content = weekDayName[i];
                 head[i].VerticalContentAlignment = VerticalAlignment.Center;
@@ -108,7 +123,7 @@ namespace ClassroomAdministration_WPF
             if (grid.Children.Contains(chosen)) grid.Children.Remove(chosen);
             grid.Children.Add(chosen);
 
-            SetDateClass(currDate, currClass);
+            SetDateClass(Father.CurrDate, Father.CurrClass);
         }
         //初始化单个课程
         private void TextBlockInitialize(TextBlock tb, Rent r, bool MouseShow = true)
@@ -139,9 +154,13 @@ namespace ClassroomAdministration_WPF
 
         void tb_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            Rent r = (sender as TextBlock).Tag as Rent;
+
             if (Father.MaxBorder.IsEnabled)
-                new WindowRent(chosenRent, Father).ShowDialog();
-            else new WindowRent(chosenRent, Father, "big").ShowDialog();
+                new WindowRent(r, Father).ShowDialog();
+            else new WindowRent(r, Father, "big").ShowDialog();
+
+            e.Handled = false;
         }
         void tb_MouseLeave(object sender, MouseEventArgs e)
         {
@@ -161,40 +180,22 @@ namespace ClassroomAdministration_WPF
         {
             if (Owner == null) return;
 
-            Console.WriteLine("date: " + date + ", class: " + cc);
 
             if (cc < 1 || cc > 14) return;
 
             if (date < firstDate)
             {
-                MessageBox.Show("您选择的日期不在本学期内。");
                 return;
             }
 
-            currDate = date;
-            currClass = cc;
-
-            int days = (currDate - firstDate).Days;
+            int days = (Father.CurrDate - firstDate).Days;
             SetWeeks(days / 7 + 1);
-            currWeekDay = days % 7;
-
-            //DateChosen.SelectedDate = date;
-            //TextBlockChosenDate.Text = date.ToString("yyyy/MM/dd");
 
             ChosenRentControl();
 
-            RectangleChosonClass.SetValue(Grid.ColumnProperty, currWeekDay);
-            RectangleChosonClass.SetValue(Grid.RowProperty, currClass - 1);
+            RectangleChosonClass.SetValue(Grid.ColumnProperty, Father.CurrWeekDay);
+            RectangleChosonClass.SetValue(Grid.RowProperty, Father.CurrClass - 1);
 
-        }
-        public void SetDateClass(int weekDay, int cc)
-        {
-            if (Owner == null) return;
-
-            currWeekDay = weekDay;
-            currDate = firstDate + new TimeSpan(7 * (currWeek - 1) + weekDay, 0, 0, 0);
-
-            SetDateClass(currDate, cc);
         }
 
         //设置周数
@@ -208,18 +209,17 @@ namespace ClassroomAdministration_WPF
         }
         public void SetWeeks(int w)
         {
-            if (w != currWeek)
+            if (Owner == null) return;
+
+            if (w != Father.CurrWeek)
             {
-                currWeek = w;
                 checkoutWeek();
             }
-
-            currWeek = w;
         }
         //按照周数更新课程表
         private void ScheduleCheckoutWeek(RentTable rentTable, List<TextBlock> TBList)
         {
-            DateTime date = firstDate + new TimeSpan(7 * (currWeek - 1), 0, 0, 0);
+            DateTime date = firstDate + new TimeSpan(7 * (Father.CurrWeek - 1), 0, 0, 0);
 
             if (rentTable == null) return;
 
@@ -233,7 +233,7 @@ namespace ClassroomAdministration_WPF
         {
             for (int i = 0; i < 7; ++i)
             {
-                DateTime theDate = firstDate + new TimeSpan(7 * (currWeek - 1) + i, 0, 0, 0);
+                DateTime theDate = firstDate + new TimeSpan(7 * (Father.CurrWeek - 1) + i, 0, 0, 0);
                 head[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
             }
         }
@@ -243,7 +243,7 @@ namespace ClassroomAdministration_WPF
         {
             if (Owner == null) return;
 
-            chosenRent = Owner.RentTable.GetRentFromDateClass(currDate, currClass);
+            chosenRent = Owner.RentTable.GetRentFromDateClass(Father.CurrDate, Father.CurrClass);
             TBHighlight = Hightlight(TBHighlight, chosenRent, GridSchedule);
 
         }
@@ -257,7 +257,7 @@ namespace ClassroomAdministration_WPF
 
             if (r == null) return null;
 
-            Console.WriteLine("HightLight Rent: " + r.Info);
+        //    Console.WriteLine("HightLight Rent: " + r.Info);
 
             tbh = new TextBlock();
             grid.Children.Add(tbh);

@@ -76,6 +76,7 @@ namespace ClassroomAdministration_WPF
 
         //static items of time
         static public DateTime FirstDate = new DateTime(2015, 9, 14);
+        static public DateTime LastDate = new DateTime(2016, 2, 21);
         static public int[,] typicalClassRent =
         {
             {1,2},

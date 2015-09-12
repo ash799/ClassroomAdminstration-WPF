@@ -77,17 +77,23 @@ namespace ClassroomAdministration_WPF
             switch (currSkin)
             {
                 case skin.Starry:
-                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.tableback2));
+                    
                     ApplySkin(StarrySkin);
+                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.tableback2));
                     textColor = Colors.White;
+                    
                     break;
                 case skin.ColorBox:
-                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.Color3));
+                    
                     ApplySkin(ColorBoxSkin);
+                    BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.Color3));
                     textColor = Colors.Black;
                     break;
             }
-
+             
+            //一个 BUG...
+            //DateChosen.Visibility = currSkin == skin.ColorBox ? Visibility.Visible : Visibility.Collapsed;
+            
             TextBlockChosenDate.Foreground = new SolidColorBrush(textColor);
             TextBoxCId.Foreground = new SolidColorBrush(textColor);
 
@@ -214,27 +220,18 @@ namespace ClassroomAdministration_WPF
         const int cntCol = 7, cntRow = 14;
 
         //初始日期
-        DateTime firstDate = RentTime.FirstDate;
+        DateTime firstDate = RentTime.FirstDate, lastDate = RentTime.LastDate;
         DateTime currDate = RentTime.FirstDate;
-        int currWeek = 0, currWeekDay = 0, currClass = 1;
-        ////星期表头
-        //Label[] head1, head2;
-        //string[] weekDayName = RentTime.weekDayName;
+        int currWeek = 1, currWeekDay = 0, currClass = 1;
+
+        public DateTime CurrDate { get { return currDate; } }
+        public int CurrWeek { get { return currWeek; } }
+        public int CurrWeekDay { get { return currWeekDay; } }
+        public int CurrClass { get { return currClass; } }
 
         //左侧: 个人课程表
         Person person;
-        //RentTable sch1.RentTable;
-        //List<TextBlock> TextBlockRents1 = new List<TextBlock>();
-        //右侧: 教室课程表
         Classroom classroom = null;
-        //RentTable sch2.RentTable;
-        //List<TextBlock> TextBlockRents2 = new List<TextBlock>();
-
-        ////选中的格子
-        //Rent sch1.ChosenRent = null, sch2.ChosenRent = null;
-        //TextBlock TBHighlight1 = null, TBHighlight2 = null;
-
-        //课程表页面加载
 
         Schedule sch1, sch2;
 
@@ -246,13 +243,16 @@ namespace ClassroomAdministration_WPF
             sch1 = new Schedule(person, GridSchedule1, RectangleChosonClass1, GridScheduleHead, this);
             sch2 = new Schedule(null, GridSchedule2, RectangleChosonClass2, GridScheduleHead2, this);
 
-            if (sch1.chosenRent != null)
+            if (sch1.ChosenRent != null)
             {
-                SetCId(sch1.chosenRent.cId);
+                SetCId(sch1.ChosenRent.cId);
             }
-        }
 
- 
+            if (DateTime.Now > firstDate) currDate = DateTime.Now;
+            SetDateClass(currDate, 1);
+
+            checkoutWeek();
+        }
 
         //选择日期时间
         private void SetDateClass(DateTime date, int cc)
@@ -265,7 +265,7 @@ namespace ClassroomAdministration_WPF
             if (date < firstDate)
             {
                 MessageBox.Show("您选择的日期不在本学期内。");
-                return;
+                if (currDate < firstDate) date = firstDate; else return;
             }
 
             currDate = date;
@@ -280,6 +280,8 @@ namespace ClassroomAdministration_WPF
 
             sch1.SetDateClass(date, cc);
             sch2.SetDateClass(date, cc);
+
+            ChosenRentControl();
         }
         private void SetDateClass(int weekDay, int cc)
         {
@@ -287,8 +289,7 @@ namespace ClassroomAdministration_WPF
             currWeekDay = weekDay;
             currDate = firstDate + new TimeSpan(7 * (currWeek - 1) + weekDay, 0, 0, 0);
 
-            sch1.SetDateClass(weekDay, cc);
-            sch2.SetDateClass(weekDay, cc);
+            SetDateClass(currDate, cc);
         }
 
         //设置周数
@@ -302,44 +303,40 @@ namespace ClassroomAdministration_WPF
         }
         private void SetWeeks(int w)
         {
-            sch1.SetWeeks(w);
-            sch2.SetWeeks(w);
+            if (w != currWeek)
+            {
+                currWeek = w;
+                checkoutWeek();
+            }
+            
         }
  
   
         //检查选中的时间点的课程
         private void ChosenRentControl()
         {
-            //if (sch1.RentTable != null && sch2.RentTable != null)
-            //{
-            //    sch1.ChosenRent = sch1.RentTable.GetRentFromDateClass(currDate, currClass);
-            //    TBHighlight1 = Hightlight(TBHighlight1, sch1.ChosenRent, GridSchedule1);
-            //    sch2.ChosenRent = sch2.RentTable.GetRentFromDateClass(currDate, currClass);
-            //    TBHighlight2 = Hightlight(TBHighlight2, sch2.ChosenRent, GridSchedule2);
-
-            //    if (sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass))
-            //    {
-            //        RectangleChosonClass1.Content = "+申请活动";
-            //        RectangleChosonClass1.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-            //        RectangleChosonClass2.Content = "+申请活动";
-            //        RectangleChosonClass2.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-            //    }
-            //    else
-            //    {
-            //        RectangleChosonClass1.Content = "";//sch1.ChosenRent == null ? "" : "查看信息";
-            //        RectangleChosonClass2.Content = "";//sch2.ChosenRent == null ? "" : "查看信息";
-            //    }
-            //}
-            //else if (sch1.RentTable != null)
-            //{
-            //    sch1.ChosenRent = sch1.RentTable.GetRentFromDateClass(currDate, currClass);
-            //    TBHighlight1 = Hightlight(TBHighlight1, sch1.ChosenRent, GridSchedule1);
-            //}
-
-            sch1.ChosenRentControl();
-            sch2.ChosenRentControl();
+            if (CouldApply())
+            {
+                RectangleChosonClass1.Content = "+申请课程";
+                RectangleChosonClass2.Content = "+申请课程";
+            }
+            else
+            {
+                RectangleChosonClass1.Content = "";
+                RectangleChosonClass2.Content = "";
+            }
         }
- 
+        private bool CouldApply()
+        {
+            Console.WriteLine("Checking...");
+
+            if (classroom == null) return false;
+
+            if (sch1.ChosenRent != null || sch2.ChosenRent != null) return false;
+
+            return sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass);
+
+        }
 
 
         //设置教室。在教室发生变化的时候切换UI
@@ -363,41 +360,11 @@ namespace ClassroomAdministration_WPF
 
         #endregion      
         #region 课程表交互
-        //通过Calendar选择了date后
+        //通过Calendar选择date
         private void DateChosen_CalendarClosed(object sender, RoutedEventArgs e)
         {
             DateTime date = (DateTime)DateChosen.SelectedDate;
             SetDateClass(date, currClass);
-        }
-        //鼠标单击Grid
-        private void GridSchedule1_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            TextBoxCId_Copy.Focus();
-
-            Point pos = e.GetPosition(GridSchedule1);
-            double aCol = GridSchedule1.ActualWidth, aRow = GridSchedule1.ActualHeight;
-
-            int col = (int)(pos.X / aCol * cntCol), row = (int)(pos.Y / aRow * cntRow);
-
-            SetDateClass(col, row + 1);
-
-            if (sch1.ChosenRent != null) RectangleChosonRent1_MouseDown(null, null);
-        }
-        private void GridSchedule2_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            TextBoxCId_Copy.Focus();
-
-            if (classroom == null) return;
-
-            Point pos = e.GetPosition(GridSchedule2);
-            double aCol = GridSchedule2.ActualWidth, aRow = GridSchedule2.ActualHeight;
-
-            int col = (int)(pos.X / aCol * cntCol), row = (int)(pos.Y / aRow * cntRow);
-
-            SetDateClass(col, row + 1);
-
-            if (sch2.ChosenRent != null) RectangleChosonRent2_MouseDown(null, null);
-
         }
 
         //通过textBox选择教室
@@ -413,48 +380,13 @@ namespace ClassroomAdministration_WPF
         //单击选定框
         private void RectangleChosonRent1_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sch1.ChosenRent != null && sch2.ChosenRent == null) SetCId(sch1.ChosenRent.cId);
-
-            if (sch2.RentTable != null &&
-                sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass)
-                && sch2.RentTable != null)
+            if (CouldApply())
             {
                 if (MaxBorder.IsEnabled == true)
                     new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
                 else
                     new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
             }
-            else
-                if (sch1.ChosenRent != null)
-                {
-                    if (MaxBorder.IsEnabled == true)
-                        new WindowRent(sch1.ChosenRent, this).ShowDialog();
-                    else new WindowRent(sch1.ChosenRent, this, "big").ShowDialog();
-                }
-                else if (sch2.ChosenRent != null)
-                    if (MaxBorder.IsEnabled == true)
-                        new WindowRent(sch2.ChosenRent, this).ShowDialog();
-                    else new WindowRent(sch2.ChosenRent, this, "big").ShowDialog();
-
-            if (e != null) e.Handled = true;
-        }
-        private void RectangleChosonRent2_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable != null)
-            {
-                if (MaxBorder.IsEnabled == true)
-                    new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
-                else
-                    new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
-            }
-            else
-                if (sch2.ChosenRent != null) //MessageBox.Show(chosenClassroomRent.Display());
-                {
-                    if (MaxBorder.IsEnabled == true)
-                        new WindowRent(sch2.ChosenRent, this).ShowDialog();
-                    else new WindowRent(sch2.ChosenRent, this, "big").ShowDialog();
-                }
-            if (e != null) e.Handled = true;
         }
 
         //进入教室列表
@@ -482,7 +414,6 @@ namespace ClassroomAdministration_WPF
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
 
-            Console.WriteLine(currDate.ToString("yyyy/MM/dd"));
 
             //换肤
             switch (e.Key)
@@ -502,12 +433,18 @@ namespace ClassroomAdministration_WPF
                             case Key.Up:        if (currClass > 1) --currClass; break;
                             case Key.Down:      if (currClass < cntRow) ++currClass; break;
                             case Key.Left:      if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0); break;
-                            case Key.Right:     currDate += new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Right:     if (currDate < lastDate) currDate += new TimeSpan(1, 0, 0, 0); break;
                             case Key.Home:      currClass = 1; break;
                             case Key.End:       currClass = cntRow; break;
                             case Key.PageUp:    if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0); break;
-                            case Key.PageDown:  currDate += new TimeSpan(7, 0, 0, 0); break;
-                            case Key.Enter:     RectangleChosonRent1_MouseDown(null, null);  break;
+                            case Key.PageDown:  if (currWeek < 23) currDate += new TimeSpan(7, 0, 0, 0); break;
+                            case Key.Enter:
+                                Rent r = sch1.ChosenRent;
+                                if (r == null) break;
+                                if (MaxBorder.IsEnabled == true)
+                                    new WindowRent(r, this).ShowDialog();
+                                else new WindowRent(r, this, "big").ShowDialog();
+                                break;
                         }
                         SetDateClass(currDate, currClass);
                     }
@@ -572,7 +509,7 @@ namespace ClassroomAdministration_WPF
                     if (d > 0)
                         if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0);
                     if (d < 0)
-                        currDate += new TimeSpan(7, 0, 0, 0);
+                        if (currWeek < 23) currDate += new TimeSpan(7, 0, 0, 0);
                     SetDateClass(currDate, currClass);
                     break;
             }
@@ -582,23 +519,12 @@ namespace ClassroomAdministration_WPF
         #region 各个public函数
         public void SetClassroom(int cId)
         {
-           // TextBoxCId.Text = cId.ToString();
             SetStatus(status.Table);
             SetCId(cId);
             checkoutWeek();
         }
         public void RefreshSchedule()
         {
-          //  SetStatus(status.Table);
-
-            //sch1.RentTable = DatabaseLinker.GetPersonRentTable(person.pId);
-            //ScheduleInitialize(GridSchedule1, sch1.RentTable, TextBlockRents1, RectangleChosonClass1);
-
-            //if (classroom != null)
-            //{
-            //    sch2.RentTable = DatabaseLinker.GetClassroomRentTable(classroom.cId);
-            //    ScheduleInitialize(GridSchedule2, sch2.RentTable, TextBlockRents2, RectangleChosonClass2);
-            //}
 
             sch1.Reset();
             sch2.Reset();
@@ -611,6 +537,17 @@ namespace ClassroomAdministration_WPF
 
             SetDateClass(date, cc);
             checkoutWeek();
+        }
+        public void GoToDateClass(int weekDay, int cc)
+        {
+            SetStatus(status.Table);
+
+            SetDateClass(weekDay, cc);
+            checkoutWeek();
+        }
+        public void GridFocus()
+        {
+            TextBoxCId_Copy.Focus();
         }
         public Person Peron { get { return person; } }
         public RentTable personRentTable { get { return person.RentTable; } }
@@ -640,10 +577,9 @@ namespace ClassroomAdministration_WPF
         }
         private void MaxBorder_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            this.WindowState = WindowState.Normal;
+            this.WindowState = WindowState.Maximized;
             
             MaxLabel.Margin = new Thickness(0, 0, 5, 0);
-            this.WindowState = WindowState.Maximized;
             MaxBorder.Visibility = Visibility.Hidden;
             MaxBorder.IsEnabled = false;
             NormalBorder.Visibility = Visibility.Visible;
