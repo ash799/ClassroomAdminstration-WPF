@@ -37,12 +37,13 @@ namespace ClassroomAdministration_WPF
 
         #region 换肤
 
-        public enum style { Starry, ColorBox }
-        static public style currStyle = style.Starry;
+        public enum skin { Starry, ColorBox }
+        static public skin currSkin = skin.Starry;
         static public Color textColor = Colors.White;
 
         static ResourceDictionary ColorBoxSkin = null, StarrySkin = null;
 
+        //初始化ResourceDictionary
         void EnsureSkins()
         {
             if (ColorBoxSkin == null)
@@ -54,10 +55,9 @@ namespace ClassroomAdministration_WPF
                 StarrySkin.Source = new Uri("StyleStarry.xaml", UriKind.Relative);
             }
         }
+        //应用ResourceDictionary
         void ApplySkin(ResourceDictionary newSkin)
         {
-         //   if (newSkin == null) return;
-
             Collection<ResourceDictionary> appMergedDictionaries = Application.Current.Resources.MergedDictionaries;
 
             if (appMergedDictionaries.Count != 0)
@@ -67,20 +67,21 @@ namespace ClassroomAdministration_WPF
 
         }
 
-        void SetStyle(style newStyle)
+        //设置皮肤
+        void SetSkin(skin newSkin)
         {
-            if (currStyle == newStyle) return;
+            if (currSkin == newSkin) return;
 
-            currStyle = newStyle;
+            currSkin = newSkin;
 
-            switch (currStyle)
+            switch (currSkin)
             {
-                case style.Starry:
+                case skin.Starry:
                     BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.tableback2));
                     ApplySkin(StarrySkin);
                     textColor = Colors.White;
                     break;
-                case style.ColorBox:
+                case skin.ColorBox:
                     BorderMain.Background = new ImageBrush(ChangeBitmapToImageSource(Properties.Resources.Color3));
                     ApplySkin(ColorBoxSkin);
                     textColor = Colors.Black;
@@ -94,6 +95,7 @@ namespace ClassroomAdministration_WPF
 
         }
 
+        //从资源中抓取图片
         public static ImageSource ChangeBitmapToImageSource(System.Drawing.Bitmap bitmap)
         {
 
@@ -146,7 +148,8 @@ namespace ClassroomAdministration_WPF
             }
 
         }
-
+        
+       // 系统消息初始化
         private void TextBlockMessageInitialize(TextBlock tb, SysMsg msg)
         {
             string sendName = DatabaseLinker.GetName(msg.SendId);
@@ -163,6 +166,7 @@ namespace ClassroomAdministration_WPF
             tb.Tag = msg;
         }
 
+        //(管理员功能)查看未审核课程
         private void TextBlockUnapprovedRentInitialize(TextBlock tb, Rent r)
         {
             string applicantName = DatabaseLinker.GetName(r.pId);
@@ -230,7 +234,7 @@ namespace ClassroomAdministration_WPF
         Rent chosenRent1 = null, chosenRent2 = null;
         TextBlock TBHighlight1 = null, TBHighlight2 = null;
 
-        //页面加载
+        //课程表页面加载
         private void GridTable_Loaded(object sender, RoutedEventArgs e)
         {
             Building.Initialize();
@@ -614,8 +618,8 @@ namespace ClassroomAdministration_WPF
             //换肤
             switch (e.Key)
             {
-                case Key.F1: SetStyle(style.Starry); break;
-                case Key.F2: SetStyle(style.ColorBox); break;
+                case Key.F1: SetSkin(skin.Starry); break;
+                case Key.F2: SetSkin(skin.ColorBox); break;
             }
 
             switch (currStatus)
@@ -890,10 +894,10 @@ namespace ClassroomAdministration_WPF
         {
             Canvas.SetLeft(imageSkin, 5);
             
-            switch (currStyle)
+            switch (currSkin)
             {
-                case style.Starry:      SetStyle(style.ColorBox); break;
-                case style.ColorBox:    SetStyle(style.Starry); break;
+                case skin.Starry:      SetSkin(skin.ColorBox); break;
+                case skin.ColorBox:    SetSkin(skin.Starry); break;
             }
         }
 

@@ -12,12 +12,12 @@ namespace ClassroomAdministration_WPF
 
         static public Brush BrushHSI(double H, double alpha = 0.3, double i = 150)
         {
-            switch (WindowIndex.currStyle)
+            switch (WindowIndex.currSkin)
             {
-                case WindowIndex.style.ColorBox:
+                case WindowIndex.skin.ColorBox:
                   //  return new SolidColorBrush(HSI(H, alpha, i));
                     return new LinearGradientBrush(HSI(H, alpha / 2, i), HSI(H, alpha, i), 90);
-                case WindowIndex.style.Starry:
+                case WindowIndex.skin.Starry:
                     return new LinearGradientBrush(HSI(H, alpha, i), HSI(H, alpha / 3, i), 90);
                     
             }
@@ -27,9 +27,9 @@ namespace ClassroomAdministration_WPF
         //从色环上提取一个颜色：0红~120绿~240蓝
         static public Color HSI(double H, double alpha = 0.3, double i = 150)
         {
-            switch (WindowIndex.currStyle)
+            switch (WindowIndex.currSkin)
             {
-                case WindowIndex.style.ColorBox:
+                case WindowIndex.skin.ColorBox:
                     double R = 0, G = 0, B = 0;
                     double I = i, S = 1, r60 = Math.PI / 3;
 
@@ -64,7 +64,7 @@ namespace ClassroomAdministration_WPF
 
                     return Color.FromArgb((byte)(alpha * 255), (byte)R, (byte)G, (byte)B);
 
-                case WindowIndex.style.Starry:
+                case WindowIndex.skin.Starry:
 
                     return Color.FromArgb((byte)(alpha * 255), (byte)(i), (byte)(H * 255 / 360), 255);
             }

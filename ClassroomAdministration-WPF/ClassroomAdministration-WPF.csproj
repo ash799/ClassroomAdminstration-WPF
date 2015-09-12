@@ -99,7 +99,6 @@
     <Compile Include="Building.cs" />
     <Compile Include="Classroom.cs" />
     <Compile Include="DatabaseLinker.cs" />
-    <Compile Include="GridHelper.cs" />
     <Compile Include="MyColor.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Rent.cs" />

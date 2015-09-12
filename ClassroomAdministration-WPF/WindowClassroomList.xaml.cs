@@ -33,12 +33,12 @@ namespace ClassroomAdministration_WPF
         private void stackPanel_Loaded(object sender, RoutedEventArgs e)
         {
 
-            switch (WindowIndex.currStyle)
+            switch (WindowIndex.currSkin)
             {
-                case WindowIndex.style.Starry:
+                case WindowIndex.skin.Starry:
                     windowClassroomList.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.tableback2));
                     break;
-                case WindowIndex.style.ColorBox:
+                case WindowIndex.skin.ColorBox:
                     windowClassroomList.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.Color1));
                     break;
             }
