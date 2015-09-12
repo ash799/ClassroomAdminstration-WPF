@@ -125,8 +125,9 @@ namespace ClassroomAdministration_WPF
         {
             listSysMsg = DatabaseLinker.GetPersonSysMsgList(person.pId);
 
-            foreach (SysMsg msg in listSysMsg)
+            for (int i = listSysMsg.Count - 1; i >= 0; --i)
             {
+                SysMsg msg = listSysMsg[i];
                 TextBlock tb = new TextBlock();
                 TextBlockMessageInitialize(tb, msg);
                 stackPanelMessage.Children.Add(tb);
@@ -152,12 +153,12 @@ namespace ClassroomAdministration_WPF
 
             tb.FontSize = 24;
             tb.Padding = new Thickness(16);
-            tb.Inlines.Add(new Bold(new Run(sendName + ":\r\n")));
+            tb.Inlines.Add(new Bold(new Run(sendName + ": ("+msg.Time.ToString("yyyy/MM/dd")+")\r\n")));
             tb.Inlines.Add(new Run("  " + msg.Info));
             tb.TextWrapping = TextWrapping.Wrap;
 
-            tb.MouseEnter += tbRent_MouseEnter;
-            tb.MouseLeave += tbRent_MouseLeave;
+          //  tb.MouseEnter += tbRent_MouseEnter;
+          //  tb.MouseLeave += tbRent_MouseLeave;
 
             tb.Tag = msg;
         }
@@ -186,13 +187,11 @@ namespace ClassroomAdministration_WPF
             TextBlock tb = sender as TextBlock;
             tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.2));
         }
-
         void tbRent_MouseLeave(object sender, MouseEventArgs e)
         {
             TextBlock tb = sender as TextBlock;
             tb.Background = null;
         }
-
         void tbRent_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Rent r = (sender as TextBlock).Tag as Rent;
@@ -591,7 +590,7 @@ namespace ClassroomAdministration_WPF
         //进入教室列表
         private void LabelClassroom_MouseEnter(object sender, MouseEventArgs e)
         {
-            LabelClassroom.Content = "选择教室";
+            LabelClassroom.Content = "进入教室列表";
             LabelClassroom.Background = new SolidColorBrush(Color.FromArgb(51, 255, 255, 255));
             LabelClassroom.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 86, 157, 229));
         }
@@ -608,7 +607,7 @@ namespace ClassroomAdministration_WPF
         }
         #endregion
 
-        #region 窗口托管
+        #region 键盘托管, 鼠标滚轮
         //全体键盘托管
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
@@ -707,7 +706,7 @@ namespace ClassroomAdministration_WPF
         }
         #endregion
 
-        #region 子窗口调用函数
+        #region 各个public函数
         public void SetClassroom(int cId)
         {
            // TextBoxCId.Text = cId.ToString();
@@ -741,7 +740,7 @@ namespace ClassroomAdministration_WPF
         public RentTable Schedule { get { return schedule1; } }
         #endregion
 
-        #region 窗口的必备控件
+        #region 窗口必备功能
 
         //窗口拖动
         private void Border_MouseDown_1(object sender, MouseButtonEventArgs e)
@@ -838,7 +837,7 @@ namespace ClassroomAdministration_WPF
 
         #endregion
 
-        #region 上侧按钮
+        #region 上侧导航按钮
         private void BorderButton_MouseEnter(object sender, MouseEventArgs e)
         {
             Border b = sender as Border;

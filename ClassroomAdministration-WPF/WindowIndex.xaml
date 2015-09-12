@@ -224,7 +224,7 @@
         <Border x:Name="BorderMessage" Width="60" Height="80" Margin="533,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderButton_MouseEnter" MouseLeave="BorderButton_MouseLeave" MouseDown="BorderMessage_MouseDown">
             <StackPanel>
                 <Image Source="Resources/message.png"  />
-                <Label Content="新消息" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0" />
+                <Label Content="系统消息" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0" />
             </StackPanel>
 
         </Border>
@@ -238,7 +238,7 @@
         <Border x:Name="BorderClassroom" Width="60" Height="80" Margin="374,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderButton_MouseEnter" MouseLeave="BorderButton_MouseLeave" MouseDown="LabelClassroom_MouseDown">
             <StackPanel>
                 <Image Source="Resources/home.png"  />
-                <Label Content="选择教室" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0"/>
+                <Label Content="教室列表" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0"/>
             </StackPanel>
 
         </Border>

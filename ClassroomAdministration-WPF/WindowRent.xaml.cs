@@ -40,10 +40,12 @@ namespace ClassroomAdministration_WPF
                 TBinfo.FontSize = 40;
                 TBhost.FontSize = 22;
                 TBrentTime.FontSize = 22;
+                TBtakepartinInfo.FontSize = 22;
                 TBclassroom.FontSize = 22;
                 TBChoose.FontSize = 22;
                 TBexit.FontSize = 22;
                 TBOK.FontSize = 22;
+                TBDecline.FontSize = 22;
             }
             rent = r;
             father = fatherWindow;
@@ -76,17 +78,25 @@ namespace ClassroomAdministration_WPF
 
             TBrentTime.Content = "时间: "+rent.Time.Display();
 
+            List<int> listPId = DatabaseLinker.GetPIdList(rent.rId);
+            TBtakepartinInfo.Content = "人数: "+listPId.Count;
+
             if (father.Schedule.Contains(rent.rId))
                 TBChoose.Content = "从我的课程表中删除";
             else
                 TBChoose.Content = "加入我的课程表";
 
-            if (rent.Approved ||  father.Peron.pId != 0) TBOK.Visibility = Visibility.Collapsed;
+            if (rent.Approved || father.Peron.pId != 0)
+            {
+                TBOK.Visibility = Visibility.Collapsed;
+                TBDecline.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void TBclassroom_MouseDown(object sender, MouseButtonEventArgs e)
         {
             father.SetClassroom(rent.cId);
+            if (rent.Time.OnceActivity) father.GotoDateClass(rent.Time.StartDate, rent.Time.StartClass);
             this.Close();
         }
         private void TBclassroom_MouseEnter(object sender, MouseEventArgs e)
@@ -134,6 +144,48 @@ namespace ClassroomAdministration_WPF
             }
         }
 
+        private void TBOK_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+            if (DatabaseLinker.ApproveRent(rent))
+            {
+                rent.GetApproved();
+
+                SysMsg msg = new SysMsg(0, rent.pId, DateTime.Now, "您申请的课程 " + rent.rId + ", " + rent.Info + " 已经通过审核.");
+                DatabaseLinker.SendSysMsg(msg);
+
+                MessageBox.Show("审核已通过.");
+                this.Close();
+            }
+
+        }
+
+        private void TBDecline_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (DatabaseLinker.DeleteRent(rent))
+            {
+                rent.GetApproved();
+
+                SysMsg msg = new SysMsg(0, rent.pId, DateTime.Now, "对不起, 您申请的课程 " + rent.rId + ", " + rent.Info + " 没有通过审核, 已被管理员删除.");
+                DatabaseLinker.SendSysMsg(msg);
+
+                MessageBox.Show("已删除课程.");
+                this.Close();
+            }
+        }
+
+        private void TBtakepartinInfo_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            string s = "";
+
+            List<int> listPId = DatabaseLinker.GetPIdList(rent.rId);
+            foreach (int pId in listPId)
+                s += DatabaseLinker.GetName(pId) + " ";
+
+            MessageBox.Show(s, "参加同学名单");
+        }
+
+
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -171,21 +223,6 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
-        private void TBOK_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-            if (DatabaseLinker.ApproveRent(rent))
-            {
-                rent.GetApproved();
-
-                SysMsg msg = new SysMsg(0, rent.pId, DateTime.Now, "Your Rent " + rent.rId + ", " + rent.Info + " has been approved.");
-                DatabaseLinker.SendSysMsg(msg);
-
-                MessageBox.Show("审核已通过.");
-                this.Close();
-            }
-            
-        }
 
     }
 }

@@ -339,6 +339,36 @@ namespace ClassroomAdministration_WPF
 
             return i > 0;
         }
+        public static bool DeleteRent(Rent r)
+        {
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<SysMsg> list = new List<SysMsg>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in DeleteRent(" + r.Info + ")");
+                return false;
+            }
+
+            mCommand.CommandText = "DELETE FROM rent WHERE rId=" + r.rId + ";"
+                                 + " DELETE FROM takepartin WHERE rId=" + r.rId + ";";
+         
+            mCommand.Prepare();
+            int i = mCommand.ExecuteNonQuery();
+
+            mConnect.Close();
+
+            return i > 0;
+        }
 
         //Get SysMsg
         public static List<SysMsg> GetPersonSysMsgList(int pId)
