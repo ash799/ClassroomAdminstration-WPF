@@ -148,6 +148,11 @@ namespace ClassroomAdministration_WPF
         {
             if (Rents.Contains(r)) Rents.Remove(r);
         }
+        public void Remove(int rId)
+        {
+            foreach (Rent r in Rents)
+                if (r.rId == rId) Rents.Remove(r);
+        }
  
         //Get From classroom and building
         public List<Rent> GetListClassroom(int cId)

@@ -58,6 +58,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RentTableOwner.cs" />
+    <Compile Include="Schedule.cs" />
     <Compile Include="WindowApplyRent.xaml.cs">
       <DependentUpon>WindowApplyRent.xaml</DependentUpon>
     </Compile>

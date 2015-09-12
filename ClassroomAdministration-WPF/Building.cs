@@ -28,8 +28,11 @@ namespace ClassroomAdministration_WPF
         }
 
         static public List<Building> AllBuildings = new List<Building>();
+        static bool initialized = false;
         static public void Initialize()
         {
+            if (initialized) return;
+
             Stream fs;
             StreamReader srIn;
             string line;
@@ -66,6 +69,7 @@ namespace ClassroomAdministration_WPF
                 Console.WriteLine("ERROR in Building Initialize");
             }
 
+            initialized = true;
         }
         static public Building GetBuilding(int id)
         {

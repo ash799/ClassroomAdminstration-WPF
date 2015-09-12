@@ -24,12 +24,16 @@ namespace ClassroomAdministration_WPF
 
         public WindowRent(Rent r, WindowIndex fatherWindow)
         {
+            if (r == null) return;
+
             InitializeComponent();
             rent = r;
             father = fatherWindow;
         }
         public WindowRent(Rent r, WindowIndex fatherWindow,string str)
         {
+            if (r == null) return;
+
             InitializeComponent();
             if (str == "big")
             {
@@ -38,13 +42,14 @@ namespace ClassroomAdministration_WPF
                 BorderBackground.Width = 450;
                 BorderBackground.Height = 450;
                 TBinfo.FontSize = 40;
-                TBhost.FontSize = 22;
-                TBrentTime.FontSize = 22;
-                TBtakepartinInfo.FontSize = 22;
-                TBclassroom.FontSize = 22;
-                TBChoose.FontSize = 22;
-                TBexit.FontSize = 22;
-                TBOK.FontSize = 22;
+
+                TBhost.FontSize =
+                TBrentTime.FontSize =
+                TBtakepartinInfo.FontSize =
+                TBclassroom.FontSize =
+                TBChoose.FontSize =
+                TBexit.FontSize =
+                TBOK.FontSize =
                 TBDecline.FontSize = 22;
             }
             rent = r;
@@ -81,12 +86,12 @@ namespace ClassroomAdministration_WPF
             List<int> listPId = DatabaseLinker.GetPIdList(rent.rId);
             TBtakepartinInfo.Content = "人数: "+listPId.Count;
 
-            if (father.Schedule.Contains(rent.rId))
+            if (father.personRentTable.Contains(rent.rId))
                 TBChoose.Content = "从我的课程表中删除";
             else
                 TBChoose.Content = "加入我的课程表";
 
-            if (rent.Approved || father.Peron.pId != 0)
+            if (rent.Approved || father.Peron is User)
             {
                 TBOK.Visibility = Visibility.Collapsed;
                 TBDecline.Visibility = Visibility.Collapsed;
@@ -117,19 +122,19 @@ namespace ClassroomAdministration_WPF
 
         private void TBChoose_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (father.Schedule.Contains(rent.rId))
+            if (father.personRentTable.Contains(rent.rId))
             {
                 if (MessageBox.Show("确定删除 "+rent.Info+"？", "删除课程", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     DatabaseLinker.DeleteTakepartin(father.Peron.pId, rent.rId);
-                    father.Schedule.Remove(rent);
+                    father.personRentTable.Remove(rent);
                     father.RefreshSchedule();
                     this.Close();
                 }
             }
             else
             {
-                Rent rr = father.Schedule.Add(rent.rId);
+                Rent rr = father.personRentTable.Add(rent.rId);
                 if (rr == null)
                     DatabaseLinker.AddTakepartin(father.Peron.pId, rent.rId);
                 else

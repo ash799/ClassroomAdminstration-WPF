@@ -6,17 +6,28 @@ using System.Threading.Tasks;
 
 namespace ClassroomAdministration_WPF
 {
-    public class Person
+    public class Person : RentTableOwner
     {
         protected int pid;
-        protected string name;
+//        protected string name;
 
         public int pId { get { return pid; } }
         public string Name { get { return name; } }
 
-        public bool ApplyRent()
+
+        public override void GetMyRentTable()
         {
-            return false;
+            RentTable = DatabaseLinker.GetPersonRentTable(pid);
+        }
+        public void DeleteFromMyRentTable(int rId)
+        {
+            if (DatabaseLinker.DeleteTakepartin(pId, rId))
+                RentTable = DatabaseLinker.GetPersonRentTable(pid);
+        }
+        public void AddToMyRentTable(int rId)
+        {
+            if (DatabaseLinker.AddTakepartin(pId, rId))
+                RentTable = DatabaseLinker.GetPersonRentTable(pid);
         }
     }
 }

@@ -1,4 +1,3 @@
-此为WPF版,原WinForm项目是 https://github.com/sugar10w/ClassroomAdministration.git 
 
 # Person
 - int pId
@@ -8,15 +7,10 @@
 ### Administrator : Person 管理员 
 - void ApproveRent() 审批
 
-# *User 用户* : Person //, IRentTableControl
+# User 用户 : Person 
 - string Department 专业
 - RentTable Schedule 课程表
 - bool IsMale 性别
-
-以下两个类暂时架空:
-### //Student : User 学生
-### //Teacher : User 老师
-到目前为止,Student和Teacher的区别只体现在UI上。老师默认申请Course,也可以申请Activity;学生只能申请Activity。
 
 ---
 
@@ -29,18 +23,9 @@
 - string Info 活动概述
 - List< int (pId) > Students 所有相关人员 //参加的同学
 
-以下两个类暂时架空:
-### //Activity : Rent 活动
-### //Course : Rent 课程
-到目前为止,Activity和Course的区别只体现在Time时间上。Activity是一次性的,Course是循环的。
-
 ---
-以下一个接口暂时架空:
-# //IRentTableControl
-- bool AddRentTable();
-- bool DeleteRentTable();
 
-# RentTable 课程表
+# RentTable 课程列表
 - List< Rent >
 
 ---
@@ -50,7 +35,7 @@
 - string Name
 - List< int (cId) > Classrooms 教学楼里所有的教室
 
-### Classroom 教室 //: IRentControl
+### Classroom 教室 
 - int cId (ClassroomId)
 - RentTable RentTable 教室使用情况
 - int bId 所在的教学楼
@@ -69,7 +54,7 @@
 - public static bool SetRent(Rent r)
 - public static bool ApproveRent(Rent r)
 
-### 数据库内容
+### MySQL数据库内容
 
 create table person
 (

@@ -217,125 +217,47 @@ namespace ClassroomAdministration_WPF
         DateTime firstDate = RentTime.FirstDate;
         DateTime currDate = RentTime.FirstDate;
         int currWeek = 0, currWeekDay = 0, currClass = 1;
-        //星期表头
-        Label[] head1, head2;
-        string[] weekDayName = RentTime.weekDayName;
+        ////星期表头
+        //Label[] head1, head2;
+        //string[] weekDayName = RentTime.weekDayName;
 
         //左侧: 个人课程表
         Person person;
-        RentTable schedule1;
-        List<TextBlock> TextBlockRents1 = new List<TextBlock>();
+        //RentTable sch1.RentTable;
+        //List<TextBlock> TextBlockRents1 = new List<TextBlock>();
         //右侧: 教室课程表
         Classroom classroom = null;
-        RentTable schedule2;
-        List<TextBlock> TextBlockRents2 = new List<TextBlock>();
+        //RentTable sch2.RentTable;
+        //List<TextBlock> TextBlockRents2 = new List<TextBlock>();
 
-        //选中的格子
-        Rent chosenRent1 = null, chosenRent2 = null;
-        TextBlock TBHighlight1 = null, TBHighlight2 = null;
+        ////选中的格子
+        //Rent sch1.ChosenRent = null, sch2.ChosenRent = null;
+        //TextBlock TBHighlight1 = null, TBHighlight2 = null;
 
         //课程表页面加载
+
+        Schedule sch1, sch2;
+
+
         private void GridTable_Loaded(object sender, RoutedEventArgs e)
         {
             Building.Initialize();
 
-            headInitialize();
+            sch1 = new Schedule(person, GridSchedule1, RectangleChosonClass1, GridScheduleHead, this);
+            sch2 = new Schedule(null, GridSchedule2, RectangleChosonClass2, GridScheduleHead2, this);
 
-            schedule1 = DatabaseLinker.GetPersonRentTable(person.pId);
-            ScheduleInitialize(GridSchedule1, schedule1, TextBlockRents1, RectangleChosonClass1);
-
-            if (chosenRent1 != null) SetCId(chosenRent1.cId);
-        }
-        //初始化星期表头
-        private void headInitialize()
-        {
-            head1 = new Label[7];
-            for (int i = 0; i < 7; ++i)
+            if (sch1.chosenRent != null)
             {
-                head1[i] = new Label();
-                head1[i].Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-                GridScheduleHead.Children.Add(head1[i]);
-                head1[i].Content = weekDayName[i];
-                head1[i].VerticalContentAlignment = VerticalAlignment.Center;
-                head1[i].HorizontalContentAlignment = HorizontalAlignment.Center;
-                head1[i].SetValue(Grid.ColumnProperty, i);
-            }
-            head2 = new Label[7];
-            for (int i = 0; i < 7; ++i)
-            {
-                head2[i] = new Label();
-                head2[i].Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-                GridScheduleHead2.Children.Add(head2[i]);
-                head2[i].Content = weekDayName[i];
-                head2[i].VerticalContentAlignment = VerticalAlignment.Center;
-                head2[i].HorizontalContentAlignment = HorizontalAlignment.Center;
-                head2[i].SetValue(Grid.ColumnProperty, i);
-            }
-
-        }
-        //初始化课表
-        private void ScheduleInitialize(Grid grid, RentTable rentTable, List<TextBlock> textBlockList, Label chosen)
-        {
-            foreach (TextBlock tb in textBlockList)
-                if (grid.Children.Contains(tb)) grid.Children.Remove(tb);
-            textBlockList.Clear();
-
-            foreach (Rent r in rentTable.Rents)
-            {
-                TextBlock tb = new TextBlock();
-                grid.Children.Add(tb);
-                textBlockList.Add(tb);
-
-                TextBlockInitialize(tb, r);
-            }
-            chosen.Visibility = Visibility.Visible;
-            if (grid.Children.Contains(chosen)) grid.Children.Remove(chosen);
-            grid.Children.Add(chosen);
-
-            SetDateClass(currDate, currClass);
-        }
-        //初始化单个课程
-        private void TextBlockInitialize(TextBlock tb, Rent r, bool MouseShow = true, bool InGrid = true)
-        {
-            tb.Tag = r;
-
-            tb.Background = MyColor.NameBrush(r.Info); //new SolidColorBrush(MyColor.NameColor(r.Info));
-            tb.Text = r.Info; if (!r.Approved) tb.Text += "(未审核)";
-            Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
-            tb.FontSize = 16;
-
-            tb.Foreground = new SolidColorBrush(textColor);
-            tb.TextWrapping = TextWrapping.Wrap;
-
-            if (InGrid)
-            {
-                tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
-                tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
-                tb.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
-            }
-
-            if (MouseShow)
-            {
-                tb.MouseEnter += tb_MouseEnter;
-                tb.MouseLeave += tb_MouseLeave;
+                SetCId(sch1.chosenRent.cId);
             }
         }
-        void tb_MouseLeave(object sender, MouseEventArgs e)
-        {
-            TextBlock tb = (TextBlock)sender;
-            Rent r = (Rent)(tb.Tag);
-            tb.Background = MyColor.NameBrush(r.Info);//new SolidColorBrush(MyColor.NameColor(r.Info));
-        }
-        void tb_MouseEnter(object sender, MouseEventArgs e)
-        {
-            TextBlock tb = (TextBlock)sender;
-            Rent r = (Rent)(tb.Tag);
-            tb.Background = MyColor.NameBrush(r.Info, 0.8);//new SolidColorBrush(MyColor.NameColor(r.Info, 0.8));
-        }
+
+ 
 
         //选择日期时间
         private void SetDateClass(DateTime date, int cc)
         {
+
             Console.WriteLine("date: " + date + ", class: " + cc);
 
             if (cc < 1 || cc > 14) return;
@@ -356,19 +278,17 @@ namespace ClassroomAdministration_WPF
             DateChosen.SelectedDate = date;
             TextBlockChosenDate.Text = date.ToString("yyyy/MM/dd");
 
-            ChosenRentControl();
-
-            RectangleChosonClass1.SetValue(Grid.ColumnProperty, currWeekDay);
-            RectangleChosonClass1.SetValue(Grid.RowProperty, currClass - 1);
-            RectangleChosonClass2.SetValue(Grid.ColumnProperty, currWeekDay);
-            RectangleChosonClass2.SetValue(Grid.RowProperty, currClass - 1);
+            sch1.SetDateClass(date, cc);
+            sch2.SetDateClass(date, cc);
         }
         private void SetDateClass(int weekDay, int cc)
         {
+
             currWeekDay = weekDay;
             currDate = firstDate + new TimeSpan(7 * (currWeek - 1) + weekDay, 0, 0, 0);
 
-            SetDateClass(currDate, cc);
+            sch1.SetDateClass(weekDay, cc);
+            sch2.SetDateClass(weekDay, cc);
         }
 
         //设置周数
@@ -377,105 +297,50 @@ namespace ClassroomAdministration_WPF
             LabelWeek.Content = person.Name + "的第" + currWeek + "周";
             if (classroom != null) LabelClassroom.Content = classroom.Name + "的第" + currWeek + "周";
 
-            ScheduleCheckoutWeek(schedule1, TextBlockRents1);
-            ScheduleCheckoutWeek(schedule2, TextBlockRents2);
-
-            ScheduleHeadCheckoutWeek(head1);
-            ScheduleHeadCheckoutWeek(head2);
+            sch1.checkoutWeek();
+            sch2.checkoutWeek();
         }
         private void SetWeeks(int w)
         {
-            if (w != currWeek)
-            {
-                currWeek = w;
-                checkoutWeek();
-            }
-
-            currWeek = w;
+            sch1.SetWeeks(w);
+            sch2.SetWeeks(w);
         }
-        //按照周数更新课程表
-        private void ScheduleCheckoutWeek(RentTable rentTable, List<TextBlock> TBList)
-        {
-            DateTime date = firstDate + new TimeSpan(7 * (currWeek - 1), 0, 0, 0);
-
-            if (rentTable == null) return;
-
-            List<Rent> list = rentTable.GetFromWeek(date);
-
-            foreach (TextBlock tb in TBList)
-                if (list.Contains((Rent)tb.Tag)) tb.Visibility = Visibility.Visible;
-                else tb.Visibility = Visibility.Collapsed;
-        }
-        private void ScheduleHeadCheckoutWeek(Label[] head)
-        {
-            for (int i = 0; i < 7; ++i)
-            {
-                DateTime theDate = firstDate + new TimeSpan(7 * (currWeek - 1) + i, 0, 0, 0);
-                head[i].Content = theDate.Month + "." + theDate.Day + weekDayName[i];
-            }
-        }
+ 
   
         //检查选中的时间点的课程
         private void ChosenRentControl()
         {
-            if (schedule1 != null && schedule2 != null)
-            {
-                chosenRent1 = schedule1.GetRentFromDateClass(currDate, currClass);
-                TBHighlight1 = Hightlight(TBHighlight1, chosenRent1, GridSchedule1);
-                chosenRent2 = schedule2.GetRentFromDateClass(currDate, currClass);
-                TBHighlight2 = Hightlight(TBHighlight2, chosenRent2, GridSchedule2);
+            //if (sch1.RentTable != null && sch2.RentTable != null)
+            //{
+            //    sch1.ChosenRent = sch1.RentTable.GetRentFromDateClass(currDate, currClass);
+            //    TBHighlight1 = Hightlight(TBHighlight1, sch1.ChosenRent, GridSchedule1);
+            //    sch2.ChosenRent = sch2.RentTable.GetRentFromDateClass(currDate, currClass);
+            //    TBHighlight2 = Hightlight(TBHighlight2, sch2.ChosenRent, GridSchedule2);
 
-                if (schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass))
-                {
-                    RectangleChosonClass1.Content = "+申请活动";
-                    RectangleChosonClass1.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-                    RectangleChosonClass2.Content = "+申请活动";
-                    RectangleChosonClass2.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
-                }
-                else
-                {
-                    RectangleChosonClass1.Content = "";//chosenRent1 == null ? "" : "查看信息";
-                    RectangleChosonClass2.Content = "";//chosenRent2 == null ? "" : "查看信息";
-                }
-            }
-            else if (schedule1 != null)
-            {
-                chosenRent1 = schedule1.GetRentFromDateClass(currDate, currClass);
-                TBHighlight1 = Hightlight(TBHighlight1, chosenRent1, GridSchedule1);
-            }
+            //    if (sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass))
+            //    {
+            //        RectangleChosonClass1.Content = "+申请活动";
+            //        RectangleChosonClass1.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
+            //        RectangleChosonClass2.Content = "+申请活动";
+            //        RectangleChosonClass2.Foreground = new SolidColorBrush(Color.FromArgb(230, 255, 255, 255));
+            //    }
+            //    else
+            //    {
+            //        RectangleChosonClass1.Content = "";//sch1.ChosenRent == null ? "" : "查看信息";
+            //        RectangleChosonClass2.Content = "";//sch2.ChosenRent == null ? "" : "查看信息";
+            //    }
+            //}
+            //else if (sch1.RentTable != null)
+            //{
+            //    sch1.ChosenRent = sch1.RentTable.GetRentFromDateClass(currDate, currClass);
+            //    TBHighlight1 = Hightlight(TBHighlight1, sch1.ChosenRent, GridSchedule1);
+            //}
+
+            sch1.ChosenRentControl();
+            sch2.ChosenRentControl();
         }
-        private TextBlock Hightlight(TextBlock tbh, Rent r, Grid grid)
-        {
-            if (grid.Children.Contains(tbh))
-            {
-                tbh.Visibility = Visibility.Collapsed;
-                grid.Children.Remove(tbh);
-            }
+ 
 
-            if (r == null) return null;
-
-            Console.WriteLine("HightLight Rent: " + r.Info);
-
-            tbh = new TextBlock();
-            grid.Children.Add(tbh);
-            TextBlockInitialize(tbh, r, false);
-
-            tbh.Background = MyColor.NameBrush(r.Info, 1);//new SolidColorBrush(MyColor.NameColor(r.Info, 1));
-           // tbh.Foreground = new SolidColorBrush(Colors.White);
-
-            if (GridSchedule1 == grid) tbh.MouseDown += RectangleChosonRent1_MouseDown;
-            else if (GridSchedule2 == grid) tbh.MouseDown += RectangleChosonRent2_MouseDown;
-
-            return tbh;
-        }
-        private TextBlock Rent2Block(Rent r)
-        {
-            foreach (TextBlock tb in TextBlockRents1)
-                if ((Rent)tb.Tag == r) return tb;
-            foreach (TextBlock tb in TextBlockRents2)
-                if ((Rent)tb.Tag == r) return tb;
-            return null;
-        }
 
         //设置教室。在教室发生变化的时候切换UI
         private void SetCId(int cId)
@@ -487,10 +352,11 @@ namespace ClassroomAdministration_WPF
             TextBoxCId.Text = cId.ToString();
 
             classroom = C;
-            schedule2 = DatabaseLinker.GetClassroomRentTable(cId);
+          
             LabelClassroom.Content = classroom.Name + "的第" + currWeek + "周";
 
-            ScheduleInitialize(GridSchedule2, schedule2, TextBlockRents2, RectangleChosonClass2);
+
+            sch2.ChangeOwner(classroom);
 
             checkoutWeek();
         }
@@ -515,7 +381,7 @@ namespace ClassroomAdministration_WPF
 
             SetDateClass(col, row + 1);
 
-            if (chosenRent1 != null) RectangleChosonRent1_MouseDown(null, null);
+            if (sch1.ChosenRent != null) RectangleChosonRent1_MouseDown(null, null);
         }
         private void GridSchedule2_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -530,7 +396,7 @@ namespace ClassroomAdministration_WPF
 
             SetDateClass(col, row + 1);
 
-            if (chosenRent2 != null) RectangleChosonRent2_MouseDown(null, null);
+            if (sch2.ChosenRent != null) RectangleChosonRent2_MouseDown(null, null);
 
         }
 
@@ -547,11 +413,11 @@ namespace ClassroomAdministration_WPF
         //单击选定框
         private void RectangleChosonRent1_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (chosenRent1 != null && chosenRent2 == null) SetCId(chosenRent1.cId);
+            if (sch1.ChosenRent != null && sch2.ChosenRent == null) SetCId(sch1.ChosenRent.cId);
 
-            if (schedule2 != null &&
-                schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass)
-                && schedule2 != null)
+            if (sch2.RentTable != null &&
+                sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass)
+                && sch2.RentTable != null)
             {
                 if (MaxBorder.IsEnabled == true)
                     new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
@@ -559,22 +425,22 @@ namespace ClassroomAdministration_WPF
                     new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
             }
             else
-                if (chosenRent1 != null)
+                if (sch1.ChosenRent != null)
                 {
                     if (MaxBorder.IsEnabled == true)
-                        new WindowRent(chosenRent1, this).ShowDialog();
-                    else new WindowRent(chosenRent1, this, "big").ShowDialog();
+                        new WindowRent(sch1.ChosenRent, this).ShowDialog();
+                    else new WindowRent(sch1.ChosenRent, this, "big").ShowDialog();
                 }
-                else if (chosenRent2 != null)
+                else if (sch2.ChosenRent != null)
                     if (MaxBorder.IsEnabled == true)
-                        new WindowRent(chosenRent2, this).ShowDialog();
-                    else new WindowRent(chosenRent2, this, "big").ShowDialog();
+                        new WindowRent(sch2.ChosenRent, this).ShowDialog();
+                    else new WindowRent(sch2.ChosenRent, this, "big").ShowDialog();
 
             if (e != null) e.Handled = true;
         }
         private void RectangleChosonRent2_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (schedule1.QuiteFreeTime(currDate, currClass) && schedule2.QuiteFreeTime(currDate, currClass) && schedule2 != null)
+            if (sch1.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable.QuiteFreeTime(currDate, currClass) && sch2.RentTable != null)
             {
                 if (MaxBorder.IsEnabled == true)
                     new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
@@ -582,11 +448,11 @@ namespace ClassroomAdministration_WPF
                     new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
             }
             else
-                if (chosenRent2 != null) //MessageBox.Show(chosenClassroomRent.Display());
+                if (sch2.ChosenRent != null) //MessageBox.Show(chosenClassroomRent.Display());
                 {
                     if (MaxBorder.IsEnabled == true)
-                        new WindowRent(chosenRent2, this).ShowDialog();
-                    else new WindowRent(chosenRent2, this, "big").ShowDialog();
+                        new WindowRent(sch2.ChosenRent, this).ShowDialog();
+                    else new WindowRent(sch2.ChosenRent, this, "big").ShowDialog();
                 }
             if (e != null) e.Handled = true;
         }
@@ -615,6 +481,9 @@ namespace ClassroomAdministration_WPF
         //全体键盘托管
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
+
+            Console.WriteLine(currDate.ToString("yyyy/MM/dd"));
+
             //换肤
             switch (e.Key)
             {
@@ -722,14 +591,17 @@ namespace ClassroomAdministration_WPF
         {
           //  SetStatus(status.Table);
 
-            schedule1 = DatabaseLinker.GetPersonRentTable(person.pId);
-            ScheduleInitialize(GridSchedule1, schedule1, TextBlockRents1, RectangleChosonClass1);
+            //sch1.RentTable = DatabaseLinker.GetPersonRentTable(person.pId);
+            //ScheduleInitialize(GridSchedule1, sch1.RentTable, TextBlockRents1, RectangleChosonClass1);
 
-            if (classroom != null)
-            {
-                schedule2 = DatabaseLinker.GetClassroomRentTable(classroom.cId);
-                ScheduleInitialize(GridSchedule2, schedule2, TextBlockRents2, RectangleChosonClass2);
-            }
+            //if (classroom != null)
+            //{
+            //    sch2.RentTable = DatabaseLinker.GetClassroomRentTable(classroom.cId);
+            //    ScheduleInitialize(GridSchedule2, sch2.RentTable, TextBlockRents2, RectangleChosonClass2);
+            //}
+
+            sch1.Reset();
+            sch2.Reset();
 
             checkoutWeek();
         }
@@ -741,7 +613,7 @@ namespace ClassroomAdministration_WPF
             checkoutWeek();
         }
         public Person Peron { get { return person; } }
-        public RentTable Schedule { get { return schedule1; } }
+        public RentTable personRentTable { get { return person.RentTable; } }
         #endregion
 
         #region 窗口必备功能

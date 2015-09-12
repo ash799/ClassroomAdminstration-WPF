@@ -10,11 +10,9 @@ namespace ClassroomAdministration_WPF
     {
 
         protected string department; // 专业
-     //   protected RentTable schedule;
         protected char sex;
 
         public string Department { get { return department;  } }
-      //  public RentTable Schedule { get { return schedule; } }
         public bool IsMale { get { return sex != 'f'; } }
 
         public User(int id, string nm, char sx = 'm', string dpt = "???")
@@ -23,8 +21,6 @@ namespace ClassroomAdministration_WPF
             this.name = nm;
             this.sex = sx;
             this.department = dpt;
-
-         //   this.schedule = scd;
         }
 
     }
