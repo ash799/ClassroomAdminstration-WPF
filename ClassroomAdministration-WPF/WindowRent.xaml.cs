@@ -43,6 +43,7 @@ namespace ClassroomAdministration_WPF
                 TBclassroom.FontSize = 22;
                 TBChoose.FontSize = 22;
                 TBexit.FontSize = 22;
+                TBOK.FontSize = 22;
             }
             rent = r;
             father = fatherWindow;
@@ -63,8 +64,10 @@ namespace ClassroomAdministration_WPF
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-            TBinfo.Content = rent.Info;
+            TBinfo.Text = rent.Info;
+            if (!rent.Approved) TBinfo.Text += " (未审核)";
             TBinfo.Background = new SolidColorBrush(MyColor.NameColor(rent.Info, 0.2));
+            TBinfo.Foreground = new SolidColorBrush(WindowIndex.textColor);
 
             TBhost.Content = "申请人: " + DatabaseLinker.GetName(rent.pId);
 
@@ -78,6 +81,7 @@ namespace ClassroomAdministration_WPF
             else
                 TBChoose.Content = "加入我的课程表";
 
+            if (rent.Approved ||  father.Peron.pId != 0) TBOK.Visibility = Visibility.Collapsed;
         }
 
         private void TBclassroom_MouseDown(object sender, MouseButtonEventArgs e)
@@ -167,28 +171,21 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
+        private void TBOK_MouseDown(object sender, MouseButtonEventArgs e)
+        {
 
+            if (DatabaseLinker.ApproveRent(rent))
+            {
+                rent.GetApproved();
 
-        ////Min Button
-        //private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
-        //{
-        //    MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
-        //}
-        //private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    MinLabel.Margin = new Thickness(0, 0, 1, 0);
-        //}
-        //private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
-        //{
-        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
-        //    MinBorder.Background = null;
-        //}
-        //private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
-        //    this.WindowState = WindowState.Minimized;
-        //    this.Owner.WindowState = WindowState.Minimized;
-        //}
+                SysMsg msg = new SysMsg(0, rent.pId, DateTime.Now, "Your Rent " + rent.rId + ", " + rent.Info + " has been approved.");
+                DatabaseLinker.SendSysMsg(msg);
+
+                MessageBox.Show("审核已通过.");
+                this.Close();
+            }
+            
+        }
 
     }
 }

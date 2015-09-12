@@ -27,6 +27,9 @@ namespace ClassroomAdministration_WPF
 
             EnsureSkins();
             ApplySkin(StarrySkin);
+
+            if (person.pId == 0) SetStatus(status.Message);
+            else SetStatus(status.Table);
         }
 
         enum status { Info, Table, Message }
@@ -105,8 +108,6 @@ namespace ClassroomAdministration_WPF
 
         }
 
-
-
         #endregion
 
         #region 个人信息逻辑
@@ -117,10 +118,82 @@ namespace ClassroomAdministration_WPF
         #endregion
 
         #region 系统消息逻辑
+
+        List<SysMsg> listSysMsg;
+
         private void GridMessage_Loaded(object sender, RoutedEventArgs e)
         {
+            listSysMsg = DatabaseLinker.GetPersonSysMsgList(person.pId);
+
+            foreach (SysMsg msg in listSysMsg)
+            {
+                TextBlock tb = new TextBlock();
+                TextBlockMessageInitialize(tb, msg);
+                stackPanelMessage.Children.Add(tb);
+            }
+
+            if (person.pId == 0)
+            {
+                List<Rent> listRent = DatabaseLinker.GetUnapprovedRentTable();
+
+                foreach (Rent r in listRent)
+                {
+                    TextBlock tb = new TextBlock();
+                    TextBlockUnapprovedRentInitialize(tb, r);
+                    stackPanelMessage.Children.Add(tb);
+                }
+            }
 
         }
+
+        private void TextBlockMessageInitialize(TextBlock tb, SysMsg msg)
+        {
+            string sendName = DatabaseLinker.GetName(msg.SendId);
+
+            tb.FontSize = 24;
+            tb.Padding = new Thickness(16);
+            tb.Inlines.Add(new Bold(new Run(sendName + ":\r\n")));
+            tb.Inlines.Add(new Run("  " + msg.Info));
+            tb.TextWrapping = TextWrapping.Wrap;
+
+            tb.Tag = msg;
+        }
+
+        private void TextBlockUnapprovedRentInitialize(TextBlock tb, Rent r)
+        {
+            string applicantName = DatabaseLinker.GetName(r.pId);
+           string s = r.Info;
+            Classroom c = Building.GetClassroom(r.cId); if (c != null) s += ("@" + c.Name);
+
+            tb.Inlines.Add(new Bold(new Run(applicantName + ":\r\n")));
+            tb.Inlines.Add(new Run("  " + s));
+
+            tb.FontSize = 24;
+            tb.Padding = new Thickness(16);
+
+            tb.MouseDown += tbRent_MouseDown;
+            tb.MouseEnter += tb_MouseEnter;
+            tb.MouseLeave += tbRent_MouseLeave;
+
+            tb.Tag = r;
+        }
+
+        void tbRent_MouseLeave(object sender, MouseEventArgs e)
+        {
+            TextBlock tb = sender as TextBlock;
+            tb.Background = null;
+        }
+
+        void tbRent_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Rent r = (sender as TextBlock).Tag as Rent;
+
+            if (MaxBorder.IsEnabled == true)
+                new WindowRent(r, this).ShowDialog();
+            else new WindowRent(r, this, "big").ShowDialog();
+        }
+        
+
         #endregion
 
         #region 课程表逻辑
@@ -210,20 +283,24 @@ namespace ClassroomAdministration_WPF
             SetDateClass(currDate, currClass);
         }
         //初始化单个课程
-        private void TextBlockInitialize(TextBlock tb, Rent r, bool MouseShow = true)
+        private void TextBlockInitialize(TextBlock tb, Rent r, bool MouseShow = true, bool InGrid = true)
         {
             tb.Tag = r;
 
             tb.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
-            tb.Text = r.Info;
+            tb.Text = r.Info; if (!r.Approved) tb.Text += "(未审核)";
             Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
             tb.FontSize = 16;
 
             tb.Foreground = new SolidColorBrush(textColor);
             tb.TextWrapping = TextWrapping.Wrap;
-            tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
-            tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
-            tb.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
+
+            if (InGrid)
+            {
+                tb.SetValue(Grid.ColumnProperty, r.Time.WeekDay);
+                tb.SetValue(Grid.RowProperty, r.Time.StartClass - 1);
+                tb.SetValue(Grid.RowSpanProperty, r.Time.KeepClass);
+            }
 
             if (MouseShow)
             {
@@ -372,7 +449,7 @@ namespace ClassroomAdministration_WPF
             TextBlockInitialize(tbh, r, false);
 
             tbh.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 1));
-            tbh.Foreground = new SolidColorBrush(Colors.White);
+           // tbh.Foreground = new SolidColorBrush(Colors.White);
 
             if (GridSchedule1 == grid) tbh.MouseDown += RectangleChosonRent1_MouseDown;
             else if (GridSchedule2 == grid) tbh.MouseDown += RectangleChosonRent2_MouseDown;
@@ -625,10 +702,14 @@ namespace ClassroomAdministration_WPF
         public void SetClassroom(int cId)
         {
            // TextBoxCId.Text = cId.ToString();
+            SetStatus(status.Table);
             SetCId(cId);
+            checkoutWeek();
         }
         public void RefreshSchedule()
         {
+            SetStatus(status.Table);
+
             schedule1 = DatabaseLinker.GetPersonRentTable(person.pId);
             ScheduleInitialize(GridSchedule1, schedule1, TextBlockRents1, RectangleChosonClass1);
 
@@ -642,7 +723,10 @@ namespace ClassroomAdministration_WPF
         }
         public void GotoDateClass(DateTime date, int cc)
         {
+            SetStatus(status.Table);
+
             SetDateClass(date, cc);
+            checkoutWeek();
         }
         public Person Peron { get { return person; } }
         public RentTable Schedule { get { return schedule1; } }
@@ -757,28 +841,52 @@ namespace ClassroomAdministration_WPF
             b.BorderThickness = new Thickness(0);
         }
 
+        private void SetStatus(status S)
+        {
+            currStatus = S;
+            GridInfo.Visibility = currStatus == status.Info ? Visibility.Visible : Visibility.Collapsed;
+            GridTable.Visibility = currStatus == status.Table ? Visibility.Visible : Visibility.Collapsed;
+            GridMessage.Visibility = currStatus == status.Message ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void BorderInfo_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currStatus = status.Info;
-            GridInfo.Visibility = Visibility.Visible;
-            GridTable.Visibility = Visibility.Collapsed;
-            GridMessage.Visibility = Visibility.Collapsed;
+            SetStatus(status.Info);
         }
 
         private void BorderTable_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currStatus = status.Table;
-            GridInfo.Visibility = Visibility.Collapsed;
-            GridTable.Visibility = Visibility.Visible;
-            GridMessage.Visibility = Visibility.Collapsed;
+            SetStatus(status.Table);
         }
 
         private void BorderMessage_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currStatus = status.Message;
-            GridInfo.Visibility = Visibility.Collapsed;
-            GridTable.Visibility = Visibility.Collapsed;
-            GridMessage.Visibility = Visibility.Visible;
+            SetStatus(status.Message);
+        }
+
+
+        private void SkinBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SkinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+        }
+        private void SkinBorder_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SkinBorder.Background = null;
+            Canvas.SetLeft(imageSkin, 5);
+        }
+        private void SkinBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Canvas.SetLeft(imageSkin, 3);
+        }
+        private void SkinBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Canvas.SetLeft(imageSkin, 5);
+            
+            switch (currStyle)
+            {
+                case style.Starry:      SetStyle(style.ColorBox); break;
+                case style.ColorBox:    SetStyle(style.Starry); break;
+            }
         }
 
         #endregion

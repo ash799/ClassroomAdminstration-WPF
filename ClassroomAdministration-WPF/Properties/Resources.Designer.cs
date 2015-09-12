@@ -162,6 +162,16 @@ namespace ClassroomAdministration_WPF.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap home {
+            get {
+                object obj = ResourceManager.GetObject("home", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap info {
             get {
                 object obj = ResourceManager.GetObject("info", resourceCulture);
@@ -195,6 +205,16 @@ namespace ClassroomAdministration_WPF.Properties {
         internal static System.Drawing.Bitmap rentback {
             get {
                 object obj = ResourceManager.GetObject("rentback", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap skin {
+            get {
+                object obj = ResourceManager.GetObject("skin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

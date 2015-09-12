@@ -35,23 +35,6 @@ namespace ClassroomAdministration_WPF
             classChosen = cc;
             father = f;
         }
-
-        private void BorderBackground_Loaded(object sender, RoutedEventArgs e)
-        {
-            switch (WindowIndex.currStyle)
-            {
-                case WindowIndex.style.Starry:
-                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.applyback));
-                    break;
-                case WindowIndex.style.ColorBox:
-                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.Color1));
-                    break;
-            }
-
-            TBinfo.Foreground = new SolidColorBrush(WindowIndex.textColor);
-        }
-
-
         public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f, string str = "")
         {
             InitializeComponent();
@@ -95,24 +78,35 @@ namespace ClassroomAdministration_WPF
                 }
             TBrentTime.Content = "时间: " + date.Month + "月" + date.Day + "日, 第" + classStart + "节至第" + classEnd + "节";
         }
+        private void BorderBackground_Loaded(object sender, RoutedEventArgs e)
+        {
+            switch (WindowIndex.currStyle)
+            {
+                case WindowIndex.style.Starry:
+                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.applyback));
+                    break;
+                case WindowIndex.style.ColorBox:
+                    BorderBackground.Background = new ImageBrush(WindowIndex.ChangeBitmapToImageSource(Properties.Resources.Color1));
+                    break;
+            }
+
+            TBinfo.Foreground = new SolidColorBrush(WindowIndex.textColor);
+        }
 
         private void TBclassroom_MouseEnter(object sender, MouseEventArgs e)
         {
             Label tb = (Label)sender;
             tb.Background = new SolidColorBrush(MyColor.NameColor(TBinfo.Text, 0.2));
         }
-
         private void TBclassroom_MouseLeave(object sender, MouseEventArgs e)
         {
             Label tb = (Label)sender;
             tb.Background = null;
         }
-
         private void TBexit_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.Close();
         }
-
         private void TBChoose_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (TBinfo.Text.Trim()=="") 
@@ -163,27 +157,5 @@ namespace ClassroomAdministration_WPF
             this.Close();
         }
 
-
-
-        ////Min Button
-        //private void MinBorder_MouseEnter(object sender, MouseEventArgs e)
-        //{
-        //    MinBorder.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
-        //}
-        //private void MinBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    MinLabel.Margin = new Thickness(0, 0, 1, 0);
-        //}
-        //private void MinBorder_MouseLeave(object sender, MouseEventArgs e)
-        //{
-        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
-        //    MinBorder.Background = null;
-        //}
-        //private void MinBorder_MouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    MinLabel.Margin = new Thickness(0, 0, 3, 0);
-        //    this.WindowState = WindowState.Minimized;
-        //    this.Owner.WindowState = WindowState.Minimized;
-        //}
     }
 }

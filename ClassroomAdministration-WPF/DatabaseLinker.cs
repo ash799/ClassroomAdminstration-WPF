@@ -119,7 +119,7 @@ namespace ClassroomAdministration_WPF
             while (mReader.Read())
             {
                 cId = int.Parse(mReader["cId"].ToString());
-                pId = int.Parse(mReader["pId"].ToString());
+                if (!int.TryParse(mReader["pId"].ToString(), out pId)) pId = 0;
                 approved = "True" == mReader["approved"].ToString();
                 info = mReader["info"].ToString();
                 rentTime = new RentTime(
@@ -241,7 +241,7 @@ namespace ClassroomAdministration_WPF
             return new RentTable(list);
 
         }
-        public static RentTable GetUnapprovedRentTable()
+        public static List<Rent> GetUnapprovedRentTable()
         {
             MySqlConnection mConnect = null;
             MySqlCommand mCommand = null;
@@ -273,7 +273,7 @@ namespace ClassroomAdministration_WPF
             }
 
             mConnect.Close();
-            return new RentTable(list);
+            return list;
         }
 
         public static bool SetRent(Rent r)
@@ -375,6 +375,74 @@ namespace ClassroomAdministration_WPF
             }
             mConnect.Close();
             return list;
+        }
+        public static bool SendSysMsg(SysMsg msg)
+        {
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<SysMsg> list = new List<SysMsg>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in SendSysMsg(" + msg.Info + ")");
+                return false;
+            }
+
+            mCommand.CommandText = "INSERT INTO SysMsg VALUES";
+            mCommand.CommandText += " (" 
+                                + msg.SendId + ", " 
+                                + msg.RecvId + ", '" 
+                                + msg.Time.ToString("yyyy-MM-dd") + "', " 
+                                + "'" + msg.Info 
+                                + "');";
+
+            mCommand.Prepare();
+            int i = mCommand.ExecuteNonQuery();
+
+            mConnect.Close();
+
+            return i > 0;
+        }
+        public static bool DeleteSysMsg(SysMsg msg)
+        {
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<SysMsg> list = new List<SysMsg>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in DeleteSysMsg(" + msg.Info + ")");
+                return false;
+            }
+
+            mCommand.CommandText = "DELETE FROM SysMsg WHERE ";
+            mCommand.CommandText += "sendId=" + msg.SendId
+                                + " and recvId=" + msg.RecvId
+                                + " and time = '" + msg.Time.ToString("yyyy-MM-dd") + "'"
+                                + " and info = '" + msg.Info + "';";
+
+            mCommand.Prepare();
+            int i = mCommand.ExecuteNonQuery();
+
+            mConnect.Close();
+
+            return i > 0;
         }
 
         //Get takepartin

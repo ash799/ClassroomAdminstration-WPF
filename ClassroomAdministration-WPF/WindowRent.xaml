@@ -14,13 +14,14 @@
             <Label x:Name="CloseLabel" Content="x" Foreground="#FFFFFFFF" RenderTransformOrigin="1.026,0.284" Margin="4,0,0.333,0" FontSize="16"/>
         </Border>
         <StackPanel Margin="0,28,0,0">
-        <Label x:Name="TBinfo" Margin="0"  Content="数学" VerticalAlignment="Top" FontSize="24" Padding="24,16,24,10" Foreground="White"/>
+        <TextBlock x:Name="TBinfo" Margin="0"  TextWrapping="Wrap" Text="数学" VerticalAlignment="Top" FontSize="24" Padding="24,16,24,10" Foreground="White"/>
         <Label x:Name="TBhost"  Content="申请人: Admin" Margin="0" FontSize="14" Padding="36,5,24,5" Foreground="White"/>
         <Label x:Name="TBrentTime"  Content="上课时间" Margin="0" FontSize="14" Padding="36,5,24,5" Foreground="White"/>
         <Label x:Name="TBclassroom"  Content="教室: 一教101" Margin="0" FontSize="14" Padding="36,5,24,5" MouseDown="TBclassroom_MouseDown" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave" Foreground="White"/>
         <Label x:Name="TBChoose"  Content="加入我的课程表" Margin="0" FontSize="14" Padding="36,5,24,5" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave" MouseDown="TBChoose_MouseDown" Foreground="White"/>
         <Label x:Name="TBexit"  Content="取消" Margin="0" FontSize="14" Padding="36,5,24,5" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave" MouseDown="TBexit_MouseDown" Foreground="White"/>
+            <Label x:Name="TBOK"  Content="通过申请" Margin="0" FontSize="14" Padding="36,5,24,5" MouseEnter="TBclassroom_MouseEnter" MouseLeave="TBclassroom_MouseLeave" Foreground="White" MouseDown="TBOK_MouseDown"/>
 
-    </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

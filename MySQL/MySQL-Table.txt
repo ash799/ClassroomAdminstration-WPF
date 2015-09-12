@@ -45,3 +45,4 @@ info			varchar(280)
 
 insert into sysmsg values(0,2014010205,'2015-09-05','Your application R4902145 has been approved.');
 insert into sysmsg values(0,0,'2015-09-03','Vacation from 2015-09-03 to 2015-09-05. ');
+insert into sysmsg values(0,0,'2015-09-12','补退选(I): 2015.9.16(Wed) 13:00 ~ 9.22(Tue) 16:00 此阶段所有课程可选可退。');
