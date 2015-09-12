@@ -206,10 +206,9 @@
         
     </Grid>
 
-        <Grid x:Name="GridInfo" Loaded="GridInfo_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
-        </Grid>
+        <Grid x:Name="GridInfo" Loaded="GridInfo_Loaded" Margin="10,95,10,3" />
 
-        <Grid x:Name="GridMessage" Loaded="GridMessage_Loaded" Margin="10,95,10,3" >
+        <Grid x:Name="GridMessage" Loaded="GridMessage_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" >
                 <StackPanel x:Name="stackPanelMessage" />
             </ScrollViewer>

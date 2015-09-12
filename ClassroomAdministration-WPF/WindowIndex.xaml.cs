@@ -156,6 +156,9 @@ namespace ClassroomAdministration_WPF
             tb.Inlines.Add(new Run("  " + msg.Info));
             tb.TextWrapping = TextWrapping.Wrap;
 
+            tb.MouseEnter += tbRent_MouseEnter;
+            tb.MouseLeave += tbRent_MouseLeave;
+
             tb.Tag = msg;
         }
 
@@ -172,10 +175,16 @@ namespace ClassroomAdministration_WPF
             tb.Padding = new Thickness(16);
 
             tb.MouseDown += tbRent_MouseDown;
-            tb.MouseEnter += tb_MouseEnter;
+            tb.MouseEnter += tbRent_MouseEnter;
             tb.MouseLeave += tbRent_MouseLeave;
 
             tb.Tag = r;
+        }
+
+        void tbRent_MouseEnter(object sender, MouseEventArgs e)
+        {
+            TextBlock tb = sender as TextBlock;
+            tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.2));
         }
 
         void tbRent_MouseLeave(object sender, MouseEventArgs e)
@@ -287,7 +296,7 @@ namespace ClassroomAdministration_WPF
         {
             tb.Tag = r;
 
-            tb.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
+            tb.Background = MyColor.NameBrush(r.Info); //new SolidColorBrush(MyColor.NameColor(r.Info));
             tb.Text = r.Info; if (!r.Approved) tb.Text += "(未审核)";
             Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
             tb.FontSize = 16;
@@ -312,13 +321,13 @@ namespace ClassroomAdministration_WPF
         {
             TextBlock tb = (TextBlock)sender;
             Rent r = (Rent)(tb.Tag);
-            tb.Background = new SolidColorBrush(MyColor.NameColor(r.Info));
+            tb.Background = MyColor.NameBrush(r.Info);//new SolidColorBrush(MyColor.NameColor(r.Info));
         }
         void tb_MouseEnter(object sender, MouseEventArgs e)
         {
             TextBlock tb = (TextBlock)sender;
             Rent r = (Rent)(tb.Tag);
-            tb.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 0.8));
+            tb.Background = MyColor.NameBrush(r.Info, 0.8);//new SolidColorBrush(MyColor.NameColor(r.Info, 0.8));
         }
 
         //选择日期时间
@@ -448,7 +457,7 @@ namespace ClassroomAdministration_WPF
             grid.Children.Add(tbh);
             TextBlockInitialize(tbh, r, false);
 
-            tbh.Background = new SolidColorBrush(MyColor.NameColor(r.Info, 1));
+            tbh.Background = MyColor.NameBrush(r.Info, 1);//new SolidColorBrush(MyColor.NameColor(r.Info, 1));
            // tbh.Foreground = new SolidColorBrush(Colors.White);
 
             if (GridSchedule1 == grid) tbh.MouseDown += RectangleChosonRent1_MouseDown;
@@ -480,7 +489,7 @@ namespace ClassroomAdministration_WPF
 
             ScheduleInitialize(GridSchedule2, schedule2, TextBlockRents2, RectangleChosonClass2);
 
-            // ChosenRentControl();
+            checkoutWeek();
         }
 
         #endregion      
@@ -708,7 +717,7 @@ namespace ClassroomAdministration_WPF
         }
         public void RefreshSchedule()
         {
-            SetStatus(status.Table);
+          //  SetStatus(status.Table);
 
             schedule1 = DatabaseLinker.GetPersonRentTable(person.pId);
             ScheduleInitialize(GridSchedule1, schedule1, TextBlockRents1, RectangleChosonClass1);

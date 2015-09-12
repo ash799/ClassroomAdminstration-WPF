@@ -9,6 +9,21 @@ namespace ClassroomAdministration_WPF
 {
     class MyColor
     {
+
+        static public Brush BrushHSI(double H, double alpha = 0.3, double i = 150)
+        {
+            switch (WindowIndex.currStyle)
+            {
+                case WindowIndex.style.ColorBox:
+                  //  return new SolidColorBrush(HSI(H, alpha, i));
+                    return new LinearGradientBrush(HSI(H, alpha / 2, i), HSI(H, alpha, i), 90);
+                case WindowIndex.style.Starry:
+                    return new LinearGradientBrush(HSI(H, alpha, i), HSI(H, alpha / 3, i), 90);
+                    
+            }
+            return new SolidColorBrush(HSI(H, alpha, i));
+        }
+
         //从色环上提取一个颜色：0红~120绿~240蓝
         static public Color HSI(double H, double alpha = 0.3, double i = 150)
         {
@@ -47,15 +62,17 @@ namespace ClassroomAdministration_WPF
                     if (G > 255) G = 255;
                     if (B > 255) B = 255;
 
-                    return Color.FromArgb((byte)(alpha * 200), (byte)R, (byte)G, (byte)B);
+                    return Color.FromArgb((byte)(alpha * 255), (byte)R, (byte)G, (byte)B);
 
                 case WindowIndex.style.Starry:
 
-                    return Color.FromArgb((byte)(alpha * i * 0.5), 255, 255, 255);
+                    return Color.FromArgb((byte)(alpha * 255), (byte)(i), (byte)(H * 255 / 360), 255);
             }
 
             return Color.FromArgb((byte)(alpha * i * 0.5), 255, 255, 255);
         }
+
+
 
         static public int NameColorId(string s)
         {
@@ -67,7 +84,10 @@ namespace ClassroomAdministration_WPF
         {
             return HSI(NameColorId(s), alpha, i);
         }
-        
+        static public Brush NameBrush(string s, double alpha = 0.3, double i = 150)
+        {
+            return BrushHSI(NameColorId(s), alpha, i);
+        }
         
     }
 }
