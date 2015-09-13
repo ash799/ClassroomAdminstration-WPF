@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="申请活动" Height="300" Width="300" Loaded="Window_Loaded_1" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True">
     <Grid Background="Transparent">
-        <Border x:Name="BorderBackground" HorizontalAlignment="Left" Height="300" VerticalAlignment="Top" Width="300" 
+        <Border x:Name="BorderBackground" 
                  MouseLeftButtonDown="Border_MouseLeftButtonDown_1" 
                  CornerRadius="6" BorderBrush="#DFFFFFFF" BorderThickness="0.666" Loaded="BorderBackground_Loaded" >
             <Border.Background>

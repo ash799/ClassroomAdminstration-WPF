@@ -28,12 +28,8 @@ namespace ClassroomAdministration_WPF
             InitializeComponent();
             rent = r;
             father = fatherWindow;
-        }
-        public WindowRent(Rent r, WindowIndex fatherWindow,string str)
-        {
 
-            InitializeComponent();
-            if (str == "big")
+            if (father.WindowState == WindowState.Maximized)
             {
                 this.Width = 450;
                 this.Height = 450;
@@ -50,8 +46,7 @@ namespace ClassroomAdministration_WPF
                 TBOK.FontSize =
                 TBDecline.FontSize = 22;
             }
-            rent = r;
-            father = fatherWindow;
+
         }
 
         private void BorderBackground_Loaded(object sender, RoutedEventArgs e)
@@ -101,7 +96,11 @@ namespace ClassroomAdministration_WPF
         private void TBclassroom_MouseDown(object sender, MouseButtonEventArgs e)
         {
             father.SetClassroom(rent.cId);
-            if (rent.Time.OnceActivity) father.GotoDateClass(rent.Time.StartDate, rent.Time.StartClass);
+            if (rent.Time.OnceActivity)
+            {
+                Console.WriteLine("ONE ACTIVITY");
+                father.GotoDateClass(rent.Time.StartDate, rent.Time.StartClass);
+            }
             this.Close();
         }
         private void TBclassroom_MouseEnter(object sender, MouseEventArgs e)
@@ -187,6 +186,7 @@ namespace ClassroomAdministration_WPF
             foreach (int pId in listPId)
                 s += DatabaseLinker.GetName(pId) + " ";
 
+            if (listPId.Count == 0) s = "暂时没有人参加。";
             MessageBox.Show(s, "参加同学名单");
         }
 

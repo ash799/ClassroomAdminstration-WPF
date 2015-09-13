@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,18 +34,10 @@ namespace ClassroomAdministration_WPF
             date = dt;
             classChosen = cc;
             father = f;
-        }
-        public WindowApplyRent(Person p, Classroom clsr, DateTime dt, int cc, WindowIndex f, string str = "")
-        {
-            InitializeComponent();
 
-            person = p;
-            classroom = clsr;
-            date = dt;
-            classChosen = cc;
-            father = f;
-            if (str == "big")
+            if (father.WindowState == WindowState.Maximized)
             {
+                Console.WriteLine("Max!");
                 this.Width = 450;
                 this.Height = 450;
                 BorderBackground.Width = 450;
@@ -53,12 +45,13 @@ namespace ClassroomAdministration_WPF
 
                 TBinfo.FontSize = 40;
 
-                TBhost.FontSize = 22;
-                TBrentTime.FontSize = 22;
-                TBclassroom.FontSize = 22;
-                TBChoose.FontSize = 22;
+                TBhost.FontSize =
+                TBrentTime.FontSize =
+                TBclassroom.FontSize =
+                TBChoose.FontSize =
                 TBexit.FontSize = 22;
             }
+
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)

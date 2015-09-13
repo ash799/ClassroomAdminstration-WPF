@@ -59,25 +59,25 @@ namespace ClassroomAdministration_WPF
                 foreach (Classroom classroom in building.Classrooms)
                 {
                     TextBlock tb = new TextBlock();
-                    tb.Height = 100;
-                    tb.Width = 100;
+                    tb.Height = 125;
+                    tb.Width = 125;
                     tb.FontSize = 16;
-                    tb.Margin = new Thickness(5, 5, 5, 5);
+                    tb.Margin = new Thickness(5);
                     tb.TextWrapping = TextWrapping.Wrap;
 
                     Rent rent = rentTable.GetClassroom(classroom.cId);
                     if (rent == null)
                     {
-                        tb.Height = 50;
-                        tb.Width = 50;
+                        tb.Height = 60;
+                        tb.Width = 60;
                         tb.FontSize = 12;
                         tb.Text = classroom.Name;
-                        tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.05));
+                        tb.Background = MyColor.NameBrush(tb.Text, 0.05); //new SolidColorBrush(MyColor.NameColor(tb.Text, 0.05));
                     }
                     else
                     {
                         tb.Text = classroom.Name + ":" + rent.Info;
-                        tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text));
+                        tb.Background = MyColor.NameBrush(tb.Text); //new SolidColorBrush(MyColor.NameColor(tb.Text));
                     }
 
                     tb.Tag = classroom;
@@ -99,11 +99,11 @@ namespace ClassroomAdministration_WPF
             TextBlock tb = (TextBlock)sender;
             if (!tb.Text.Contains(":"))
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.05));
+                tb.Background = MyColor.NameBrush(tb.Text,0.05);//new SolidColorBrush(MyColor.NameColor(tb.Text, 0.05));
             }
             else
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text));
+                tb.Background = MyColor.NameBrush(tb.Text); // new SolidColorBrush(MyColor.NameColor(tb.Text));
             }
         }
 
@@ -112,11 +112,11 @@ namespace ClassroomAdministration_WPF
             TextBlock tb = (TextBlock)sender;
             if (!tb.Text.Contains(":"))
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5)); 
+                tb.Background = MyColor.NameBrush(tb.Text, 0.5);//new SolidColorBrush(MyColor.NameColor(tb.Text, 0.5)); 
             }
             else
             {
-                tb.Background = new SolidColorBrush(MyColor.NameColor(tb.Text, 0.8)); 
+                tb.Background = MyColor.NameBrush(tb.Text,0.8);//new SolidColorBrush(MyColor.NameColor(tb.Text, 0.8)); 
             }
         }
 

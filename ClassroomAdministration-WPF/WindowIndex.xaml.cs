@@ -121,7 +121,62 @@ namespace ClassroomAdministration_WPF
         #region 个人信息逻辑
         private void GridInfo_Loaded(object sender, RoutedEventArgs e)
         {
+            textBlockPersonName.Text = person.Name;
+            textBlockPId.Text = "学号：" + person.pId;
 
+            if (person is Administrator)
+                textBlockDepartment.Text = "管理员用户";
+            else textBlockDepartment.Text = "专业：" + (person as User).Department;
+
+            List<Rent> listRent = DatabaseLinker.GetMyApplyingRents(person.pId);
+            foreach (Rent r in listRent)
+            {
+                TextBlock tb = new TextBlock();
+                MyTextBlockInitialize(tb, r);
+                if (r.Approved) wrapPanelRents.Children.Add(tb);
+                else wrapPanelRentsUnapproved.Children.Add(tb);
+            }
+        }
+
+        private void MyTextBlockInitialize(TextBlock tb, Rent r)
+        {
+            tb.Tag = r;
+            tb.Height = 125; tb.Width = 125;
+            tb.Margin = new Thickness(10);
+
+            tb.Background = MyColor.NameBrush(r.Info);
+            tb.Text = r.Info; if (!r.Approved) tb.Text += "(未审核)";
+            Classroom c = Building.GetClassroom(r.cId); if (c != null) tb.Text += ("@" + c.Name);
+            tb.FontSize = 16;
+
+          //  tb.Foreground = new SolidColorBrush(textColor);
+            tb.TextWrapping = TextWrapping.Wrap;
+
+            tb.MouseDown += tb_MouseDown;
+
+            tb.MouseEnter += tb_MouseEnter;
+            tb.MouseLeave += tb_MouseLeave;
+
+        }
+        void tb_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Rent r = (sender as TextBlock).Tag as Rent;
+         
+            new WindowRent(r, this).ShowDialog();
+
+            e.Handled = false;
+        }
+        void tb_MouseLeave(object sender, MouseEventArgs e)
+        {
+            TextBlock tb = (TextBlock)sender;
+            Rent r = (Rent)(tb.Tag);
+            tb.Background = MyColor.NameBrush(r.Info);
+        }
+        void tb_MouseEnter(object sender, MouseEventArgs e)
+        {
+            TextBlock tb = (TextBlock)sender;
+            Rent r = (Rent)(tb.Tag);
+            tb.Background = MyColor.NameBrush(r.Info, 0.8);
         }
         #endregion
 
@@ -206,9 +261,9 @@ namespace ClassroomAdministration_WPF
         {
             Rent r = (sender as TextBlock).Tag as Rent;
 
-            if (MaxBorder.IsEnabled == true)
-                new WindowRent(r, this).ShowDialog();
-            else new WindowRent(r, this, "big").ShowDialog();
+           
+            new WindowRent(r, this).ShowDialog();
+         
         }
         
 
@@ -317,6 +372,9 @@ namespace ClassroomAdministration_WPF
         {
             if (CouldApply())
             {
+                RectangleChosonClass1.Visibility = Visibility.Visible;
+                RectangleChosonClass2.Visibility = Visibility.Visible;
+
                 RectangleChosonClass1.Content = "+申请课程";
                 RectangleChosonClass2.Content = "+申请课程";
             }
@@ -324,11 +382,13 @@ namespace ClassroomAdministration_WPF
             {
                 RectangleChosonClass1.Content = "";
                 RectangleChosonClass2.Content = "";
+
+                RectangleChosonClass1.Visibility = sch1.ChosenRent == null ? Visibility.Visible : Visibility.Collapsed;
+                RectangleChosonClass2.Visibility = (sch2.ChosenRent == null && classroom != null) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
         private bool CouldApply()
         {
-            Console.WriteLine("Checking...");
 
             if (classroom == null) return false;
 
@@ -382,10 +442,7 @@ namespace ClassroomAdministration_WPF
         {
             if (CouldApply())
             {
-                if (MaxBorder.IsEnabled == true)
-                    new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
-                else
-                    new WindowApplyRent(person, classroom, currDate, currClass, this, "big").ShowDialog();
+                 new WindowApplyRent(person, classroom, currDate, currClass, this).ShowDialog();
             }
         }
 
@@ -409,7 +466,7 @@ namespace ClassroomAdministration_WPF
         }
         #endregion
 
-        #region 键盘托管, 鼠标滚轮
+        #region 键盘 & 鼠标滚轮
         //全体键盘托管
         private void Window_PreviewKeyDown_1(object sender, KeyEventArgs e)
         {
@@ -430,20 +487,18 @@ namespace ClassroomAdministration_WPF
                     {
                         switch (e.Key)
                         {
-                            case Key.Up:        if (currClass > 1) --currClass; break;
-                            case Key.Down:      if (currClass < cntRow) ++currClass; break;
-                            case Key.Left:      if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0); break;
-                            case Key.Right:     if (currDate < lastDate) currDate += new TimeSpan(1, 0, 0, 0); break;
-                            case Key.Home:      currClass = 1; break;
-                            case Key.End:       currClass = cntRow; break;
-                            case Key.PageUp:    if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0); break;
-                            case Key.PageDown:  if (currWeek < 23) currDate += new TimeSpan(7, 0, 0, 0); break;
+                            case Key.Up: if (currClass > 1) --currClass; break;
+                            case Key.Down: if (currClass < cntRow) ++currClass; break;
+                            case Key.Left: if (currDate > firstDate) currDate -= new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Right: if (currDate < lastDate) currDate += new TimeSpan(1, 0, 0, 0); break;
+                            case Key.Home: currClass = 1; break;
+                            case Key.End: currClass = cntRow; break;
+                            case Key.PageUp: if (currWeek > 1) currDate -= new TimeSpan(7, 0, 0, 0); break;
+                            case Key.PageDown: if (currWeek < 23) currDate += new TimeSpan(7, 0, 0, 0); break;
                             case Key.Enter:
                                 Rent r = sch1.ChosenRent;
                                 if (r == null) break;
-                                if (MaxBorder.IsEnabled == true)
-                                    new WindowRent(r, this).ShowDialog();
-                                else new WindowRent(r, this, "big").ShowDialog();
+                                new WindowRent(r, this).ShowDialog();
                                 break;
                         }
                         SetDateClass(currDate, currClass);

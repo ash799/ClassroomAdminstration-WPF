@@ -275,6 +275,40 @@ namespace ClassroomAdministration_WPF
             mConnect.Close();
             return list;
         }
+        public static List<Rent> GetMyApplyingRents(int pId)
+        {
+            MySqlConnection mConnect = null;
+            MySqlCommand mCommand = null;
+
+            List<Rent> list = new List<Rent>();
+
+            try
+            {
+                mConnect = new MySqlConnection("server=localhost;user id=root;Password=;database=classroomad");
+                mCommand = new MySqlCommand();
+                mCommand.Connection = mConnect;
+                mConnect.Open();
+            }
+            catch
+            {
+                Console.WriteLine("FAILED to link MySQL in GetMyApplyingRents(" + pId + ")");
+                return null;
+            }
+
+            mCommand.CommandText = "SELECT rId FROM rent WHERE ";
+            mCommand.CommandText += " pId=" + pId + "; ";
+
+            MySqlDataReader mReader = mCommand.ExecuteReader();
+
+            while (mReader.Read())
+            {
+                int rId = int.Parse(mReader["rId"].ToString());
+                list.Add(GetRent(rId));
+            }
+
+            mConnect.Close();
+            return list;
+        }
 
         public static bool SetRent(Rent r)
         {

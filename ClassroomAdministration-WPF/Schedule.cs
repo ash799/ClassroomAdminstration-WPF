@@ -13,11 +13,11 @@ namespace ClassroomAdministration_WPF
 
     class Schedule
     {
-		
-		RentTableOwner Owner;
 
-		Grid GridScheduleHead; 
-		Grid GridSchedule; Label RectangleChosonClass;
+        RentTableOwner Owner;
+
+        Grid GridScheduleHead;
+        Grid GridSchedule; Label RectangleChosonClass;
 
         WindowIndex Father;
 
@@ -27,7 +27,7 @@ namespace ClassroomAdministration_WPF
         public Schedule(RentTableOwner owner, Grid gridSchdule, Label rectangleChosonClass, Grid gridScheduleHead, WindowIndex father)
         {
             Owner = owner;
-            
+
             GridSchedule = gridSchdule;
             GridScheduleHead = gridScheduleHead;
             RectangleChosonClass = rectangleChosonClass;
@@ -81,7 +81,7 @@ namespace ClassroomAdministration_WPF
         //星期表头
         Label[] head;
         string[] weekDayName = RentTime.weekDayName;
-        
+
         //课程TextBlock列表
         public List<TextBlock> TextBlockRents = new List<TextBlock>();
 
@@ -156,9 +156,9 @@ namespace ClassroomAdministration_WPF
         {
             Rent r = (sender as TextBlock).Tag as Rent;
 
-            if (Father.MaxBorder.IsEnabled)
-                new WindowRent(r, Father).ShowDialog();
-            else new WindowRent(r, Father, "big").ShowDialog();
+
+            new WindowRent(r, Father).ShowDialog();
+
 
             e.Handled = false;
         }
@@ -257,7 +257,7 @@ namespace ClassroomAdministration_WPF
 
             if (r == null) return null;
 
-        //    Console.WriteLine("HightLight Rent: " + r.Info);
+            //    Console.WriteLine("HightLight Rent: " + r.Info);
 
             tbh = new TextBlock();
             grid.Children.Add(tbh);

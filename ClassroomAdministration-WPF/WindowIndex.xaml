@@ -18,6 +18,7 @@
             <Border.Background>
                 <ImageBrush ImageSource="Resources/tableback2.jpg"/>
             </Border.Background>
+            
         </Border>
         
         
@@ -53,7 +54,7 @@
             </Border>
         </Canvas>
         
-        <Grid x:Name="GridTable" Loaded="GridTable_Loaded" Margin="10,95,10,3" >
+        <Grid x:Name="GridTable" Loaded="GridTable_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="472*" MinWidth="350"/>
             <ColumnDefinition Width="429*" MinWidth="350"/>
@@ -205,7 +206,19 @@
         
     </Grid>
 
-        <Grid x:Name="GridInfo" Loaded="GridInfo_Loaded" Margin="10,95,10,3" />
+        <Grid x:Name="GridInfo" Loaded="GridInfo_Loaded" Margin="10,95,10,3">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="stackPanelInfo">
+                <TextBlock x:Name="textBlockPersonName" Text="用户姓名"  FontSize="36" Margin="0" Padding="36,36,18,18"/>
+                <TextBlock x:Name="textBlockPId" Text="学号：" FontSize="24" Padding="48,10,18,10" />
+                <TextBlock x:Name="textBlockDepartment" Text="专业：" FontSize="24" Padding="48,10,18,10"  />
+                <TextBlock  Text="正在审核的活动：" FontSize="24" Padding="48,10,18,10" />
+                <WrapPanel x:Name="wrapPanelRentsUnapproved" Margin="36,0,18,0"/>
+                <TextBlock  Text="通过审核的活动：" FontSize="24" Padding="48,10,18,10" />
+                <WrapPanel x:Name="wrapPanelRents" Margin="36,0,18,0"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
 
         <Grid x:Name="GridMessage" Loaded="GridMessage_Loaded" Margin="10,95,10,3" Visibility="Collapsed" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" >
@@ -233,7 +246,6 @@
                 <Label Content="回到课表" FontSize="12" Foreground="White" RenderTransformOrigin="0.488,0.712" HorizontalContentAlignment="Center" Padding="0,5,0,0" />
             </StackPanel>
         </Border>
-
         <Border x:Name="BorderClassroom" Width="60" Height="80" Margin="374,10,0,0" CornerRadius="7" BorderBrush="#7FFFFFFF" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="BorderButton_MouseEnter" MouseLeave="BorderButton_MouseLeave" MouseDown="LabelClassroom_MouseDown">
             <StackPanel>
                 <Image Source="Resources/home.png"  />
